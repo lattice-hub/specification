@@ -44,6 +44,12 @@ message ConfigFilePersistent {
   string post_cmd = 3;
 }
 
+message PlaceholderValue {
+  // 占位符名称
+  string placeholder = 1;
+  // 占位符对应的值
+  repeated MatchString values = 2;
+}
 
 message ConfigFile {
   google.protobuf.UInt64Value id = 1;
@@ -67,6 +73,15 @@ message ConfigFile {
   google.protobuf.StringValue encrypt_algo = 17;
   ConfigFileSupportedClient supported_client = 18 [ json_name = "supported_client" ];
   ConfigFilePersistent persistent = 19  [ json_name = "persistent" ];
+
+  // 文件类型
+  enum ConfigFileType {
+    CONFIG_FILE = 0; // 普通配置文件
+    CONFIG_TEMPLATE = 1; // 配置模板
+  }
+  ConfigFileType config_type = 200 [ json_name = "config_type" ];
+  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
 }
 
 enum ConfigFileSupportedClient {
@@ -106,6 +121,15 @@ message ConfigFileRelease {
   google.protobuf.UInt64Value config_file_id = 20 [ json_name = "config_file_id"];
   ConfigFileSupportedClient supported_client = 21 [ json_name = "supported_client" ];
   ConfigFilePersistent persistent = 22  [ json_name = "persistent" ];
+
+  // 文件类型
+  enum ConfigFileType {
+    CONFIG_FILE = 0; // 普通配置文件
+    CONFIG_TEMPLATE = 1; // 配置模板
+  }
+  ConfigFileType config_type = 200 [ json_name = "config_type" ];
+  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
 }
 
 message ConfigFileReleaseHistory {
@@ -128,6 +152,15 @@ message ConfigFileReleaseHistory {
   // 配置发布失败的原因
   google.protobuf.StringValue reason = 17;
   google.protobuf.StringValue release_description = 18;
+
+  // 文件类型
+  enum ConfigFileType {
+    CONFIG_FILE = 0; // 普通配置文件
+    CONFIG_TEMPLATE = 1; // 配置模板
+  }
+  ConfigFileType config_type = 200 [ json_name = "config_type" ];
+  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
 }
 
 message ConfigFileTemplate {
@@ -160,6 +193,15 @@ message ClientConfigFileInfo {
   google.protobuf.StringValue release_time = 11 [ json_name = "release_time" ];
   ConfigClientType client_type = 12 [ json_name = "client_type" ];
   ConfigFilePersistent persistent = 14  [ json_name = "persistent" ];
+
+  // 文件类型
+  enum ConfigFileType {
+    CONFIG_FILE = 0; // 普通配置文件
+    CONFIG_TEMPLATE = 1; // 配置模板
+  }
+  ConfigFileType config_type = 200 [ json_name = "config_type" ];
+  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
 }
 
 enum ConfigClientType {
@@ -200,6 +242,15 @@ message ConfigFilePublishInfo {
   // 加密算法
   google.protobuf.StringValue encrypt_algo = 17;
   ConfigFilePersistent persistent = 19 [ json_name = "persistent" ];
+
+  // 文件类型
+  enum ConfigFileType {
+    CONFIG_FILE = 0; // 普通配置文件
+    CONFIG_TEMPLATE = 1; // 配置模板
+  }
+  ConfigFileType config_type = 200 [ json_name = "config_type" ];
+  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
 }
 
 message ConfigFileGroupRequest {

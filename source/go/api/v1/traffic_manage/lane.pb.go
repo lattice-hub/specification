@@ -127,7 +127,7 @@ type TrafficEntry struct {
 
 	// 标记流量入口类型
 	// type == "pole.io/gateway/spring-cloud-gateway", 则 selector 为
-	// ServiceGatewaySelector type == "/service, 则 selector 为
+	// ServiceGatewaySelector type == "pole.io/service, 则 selector 为
 	// ServiceSelector
 	Type     string     `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	Selector *anypb.Any `protobuf:"bytes,2,opt,name=selector,proto3" json:"selector,omitempty"`
