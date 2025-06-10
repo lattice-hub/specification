@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.tencent.polaris.specification.server.test.naming;
+package io.pole.specification.server.test.naming;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,11 +25,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.UInt32Value;
-import com.tencent.polaris.specification.api.v1.model.CodeProto;
-import com.tencent.polaris.specification.api.v1.service.manage.PolarisGRPCGrpc;
-import com.tencent.polaris.specification.api.v1.service.manage.RequestProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ResponseProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ServiceProto;
+import io.pole.specification.api.v1.model.CodeProto;
+import io.pole.specification.api.v1.service.manage.PolarisGRPCGrpc;
+import io.pole.specification.api.v1.service.manage.RequestProto;
+import io.pole.specification.api.v1.service.manage.ResponseProto;
+import io.pole.specification.api.v1.service.manage.ServiceProto;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.tencent.polaris.specification.client.test;
+package io.pole.specification.client.test;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -24,16 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.util.JsonFormat;
-import com.tencent.polaris.specification.api.v1.fault.tolerance.CircuitBreakerProto;
-import com.tencent.polaris.specification.api.v1.service.manage.PolarisGRPCGrpc;
-import com.tencent.polaris.specification.api.v1.service.manage.RequestProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ResponseProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ServiceProto;
+import io.pole.specification.api.v1.fault.tolerance.CircuitBreakerProto;
+import io.pole.specification.api.v1.service.manage.PolarisGRPCGrpc;
+import io.pole.specification.api.v1.service.manage.RequestProto;
+import io.pole.specification.api.v1.service.manage.ResponseProto;
+import io.pole.specification.api.v1.service.manage.ServiceProto;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.tencent.polaris.specification.api.v1.model.CodeProto.Code.ExecuteSuccess_VALUE;
+import static io.pole.specification.api.v1.model.CodeProto.Code.ExecuteSuccess_VALUE;
 
 public class CircuitBreakerResolver {
 

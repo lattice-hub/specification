@@ -6,7 +6,7 @@
 
     <groupId>io.pole</groupId>
     <artifactId>pole-specification</artifactId>
-    <version>0.1.0</version>
+    <version>##VERSION##</version>
 
     <properties>
         <grpc.version>1.50.0</grpc.version>
@@ -181,8 +181,8 @@
                                 <link>http://docs.oracle.com/javase/8/docs/api</link>
                             </links>
                             <doclint>none</doclint>
-                            <doctitle>Pole.io Java Specification ${project.version} API</doctitle>
-                            <windowtitle>Pole.io Polaris Java Specification ${project.version} API</windowtitle>
+                            <doctitle>Tencent Polaris Java Specification ${project.version} API</doctitle>
+                            <windowtitle>Tencent Polaris Java Specification ${project.version} API</windowtitle>
                         </configuration>
                     </plugin>
                 </plugins>

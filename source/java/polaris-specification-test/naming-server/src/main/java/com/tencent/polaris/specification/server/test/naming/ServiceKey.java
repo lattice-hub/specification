@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.tencent.polaris.specification.server.test.naming;
+package io.pole.specification.server.test.naming;
 
 import java.util.Objects;
 

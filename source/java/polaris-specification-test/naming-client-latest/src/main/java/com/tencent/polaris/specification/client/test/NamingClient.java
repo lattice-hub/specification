@@ -15,9 +15,9 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.tencent.polaris.specification.client.test;
+package io.pole.specification.client.test;
 
-import com.tencent.polaris.specification.api.v1.service.manage.PolarisGRPCGrpc;
+import io.pole.specification.api.v1.service.manage.PolarisGRPCGrpc;
 import io.grpc.ManagedChannelBuilder;
 
 public class NamingClient {

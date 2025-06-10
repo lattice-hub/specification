@@ -80,7 +80,7 @@ bash build.sh
 
 - Rust语言
 
-Rust的编译相关工程在`/source/rust/polaris-specification`，通过以下命令可以构建
+Rust的编译相关工程在`/source/rust/pole-specification`，通过以下命令可以构建
 
 ```shell
 cd source/rust
@@ -89,12 +89,12 @@ bash build.sh
 
 ### 如何使用
 
-- Java语言，只需要添加`polaris-specification`的依赖即可完成。
+- Java语言，只需要添加`pole-specification`的依赖即可完成。
 
 ```xml
 <dependency>
-    <groupId>com.tencent.polaris</groupId>
-    <artifactId>polaris-specification</artifactId>
+    <groupId>io.pole</groupId>
+    <artifactId>pole-specification</artifactId>
     <!-- 版本号可换成最新版本号-->
     <version>v1.3.0</version>
 </dependency>
@@ -106,9 +106,9 @@ bash build.sh
 require github.com/pole-io/specification v1.3.0
 ```
 
-- Rust语言，修改`cargo.toml`，添加```polaris-specification```的依赖。
+- Rust语言，修改`cargo.toml`，添加```pole-specification```的依赖。
 
 ```toml
 [dependencies]
-polaris-specification = "1.3"
+pole-specification = "1.3"
 ```

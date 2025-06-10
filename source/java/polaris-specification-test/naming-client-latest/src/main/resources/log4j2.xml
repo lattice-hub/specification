@@ -17,7 +17,7 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.tencent.polaris" level="info">
+        <Logger name="io.pole" level="info">
             <AppenderRef ref="RollingFile"/>
         </Logger>
         <Root level="error">

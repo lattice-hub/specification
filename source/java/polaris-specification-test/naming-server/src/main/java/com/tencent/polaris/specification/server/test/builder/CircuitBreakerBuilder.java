@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.tencent.polaris.specification.server.test.builder;
+package io.pole.specification.server.test.builder;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,10 +27,10 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.UInt32Value;
 import com.google.protobuf.util.JsonFormat;
-import com.tencent.polaris.specification.api.v1.fault.tolerance.CircuitBreakerProto;
-import com.tencent.polaris.specification.api.v1.model.CodeProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ResponseProto;
-import com.tencent.polaris.specification.api.v1.service.manage.ServiceProto;
+import io.pole.specification.api.v1.fault.tolerance.CircuitBreakerProto;
+import io.pole.specification.api.v1.model.CodeProto;
+import io.pole.specification.api.v1.service.manage.ResponseProto;
+import io.pole.specification.api.v1.service.manage.ServiceProto;
 
 public class CircuitBreakerBuilder {
 

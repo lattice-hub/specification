@@ -1,10 +1,10 @@
 # Polaris-rust
 
-[![crates.io](https://img.shields.io/crates/v/polaris-specification.svg)](https://crates.io/crates/polaris-specification)
-[![docs.rs](https://docs.rs/polaris-specification/badge.svg)](https://docs.rs/polaris-specification/)
-[![License](https://img.shields.io/crates/l/polaris-specification)](LICENSE-APACHE)
+[![crates.io](https://img.shields.io/crates/v/pole-specification.svg)](https://crates.io/crates/pole-specification)
+[![docs.rs](https://docs.rs/pole-specification/badge.svg)](https://docs.rs/pole-specification/)
+[![License](https://img.shields.io/crates/l/pole-specification)](LICENSE-APACHE)
 [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release//specification?include_prereleases)](https://github.com/pole-io/specification)
-[![Crates.io](https://img.shields.io/crates/d/polaris-specification)](https://crates.io/crates/polaris-specification)
+[![Crates.io](https://img.shields.io/crates/d/pole-specification)](https://crates.io/crates/pole-specification)
 
 ## Introduction
 Service Governance Specification for Polaris Rust SDK.
@@ -13,7 +13,7 @@ Service Governance Specification for Polaris Rust SDK.
 Add the following to your `Cargo.toml`: 
 ```toml 
 [dependencies]
-polaris-specification = "1.3.2"
+pole-specification = "1.3.2"
 ```
 
 ## License
