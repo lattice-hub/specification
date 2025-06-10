@@ -40,7 +40,7 @@ def run_protoc(
 
 def run():
     current = os.getcwd()
-    output_dir = f"{current}/source/python/src/polarismesh_specification/api/v1"
+    output_dir = f"{current}/source/python/src/pole_specification/api/v1"
     api_definition_path = f"{current}/api/v1"
     api_definitions = ["model", "service_manage", "traffic_manage", "fault_tolerance", "config_manage", "security"]
     api_definition_relations = {

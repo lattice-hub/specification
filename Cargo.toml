@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "source/rust/polaris-specification",
+    "source/rust/pole-specification",
 ]
 resolver = "2"
 
@@ -9,7 +9,7 @@ opt-level = 3
 
 [workspace.package]
 edition = "2021"
-authors = ["https://github.com/polarismesh"]
+authors = ["https://github.com/pole-io"]
 
 [workspace.dependencies]
 bytes = "1.4.0"

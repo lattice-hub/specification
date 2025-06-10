@@ -43,5 +43,5 @@ jobs:
         run: |
           cd source/java
           bash build.sh
-          cd polaris-specification
+          cd pole-specification
           mvn --batch-mode -U -Psonatype clean deploy -DskipTests

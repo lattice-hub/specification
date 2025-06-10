@@ -6,15 +6,15 @@ import "google/protobuf/any.proto";
 import "model.proto";
 import "routing.proto";
 
-option go_package = "github.com/polarismesh/specification/source/go/api/v1/traffic_manage";
+option go_package = "github.com/pole-io/specification/source/go/api/v1/traffic_manage";
 option java_package = "com.tencent.polaris.specification.api.v1.traffic.manage";
 option java_outer_classname = "LaneProto";
 
 // 流量入口
 message TrafficEntry {
   // 标记流量入口类型
-  // type == "polarismesh.cn/gateway/spring-cloud-gateway", 则 selector 为
-  // ServiceGatewaySelector type == "polarismesh.cn/service, 则 selector 为
+  // type == "pole.io/gateway/spring-cloud-gateway", 则 selector 为
+  // ServiceGatewaySelector type == "pole.io/service, 则 selector 为
   // ServiceSelector
   string type = 1;
   google.protobuf.Any selector = 2;

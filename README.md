@@ -6,11 +6,12 @@
 
 README：
 
-- [介绍](#介绍)
-  - [服务治理标准](#服务治理标准)
+- [服务治理标准](#服务治理标准)
+  - [介绍](#介绍)
+  - [服务治理标准](#服务治理标准-1)
   - [服务治理接口](#服务治理接口)
-- [如何构建](#如何构建)
-  - [如何使用](#如何使用)
+  - [如何构建](#如何构建)
+    - [如何使用](#如何使用)
 
 ## 介绍
 
@@ -60,7 +61,7 @@ README：
 
 - Java语言
 
-Java的编译相关的工程在`/source/java/polaris-specification`下，通过以下命令可以构建：
+Java的编译相关的工程在`/source/java/pole-specification`下，通过以下命令可以构建：
 
 ```shell
 cd source/java
@@ -99,10 +100,10 @@ bash build.sh
 </dependency>
 ```
 
-- Go语言，修改go.mod，添加```github.com/polarismesh/specification```的依赖。
+- Go语言，修改go.mod，添加```github.com/pole-io/specification```的依赖。
 
 ```shell
-require github.com/polarismesh/specification v1.3.0
+require github.com/pole-io/specification v1.3.0
 ```
 
 - Rust语言，修改`cargo.toml`，添加```polaris-specification```的依赖。

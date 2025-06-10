@@ -4,7 +4,7 @@ package v1;
 
 import "google/protobuf/wrappers.proto";
 import "model.proto";
-option go_package = "github.com/polarismesh/specification/source/go/api/v1/config_manage";
+option go_package = "github.com/pole-io/specification/source/go/api/v1/config_manage";
 option java_package = "com.tencent.polaris.specification.api.v1.config.manage";
 option java_outer_classname = "ConfigFileProto";
 
@@ -210,6 +210,18 @@ message ConfigFileGroupRequest {
   ConfigClientType client_type = 13 [ json_name = "client_type" ];
 }
 
+// 主调服务信息数据
+message Caller {
+  string namespace = 2;
+  string service = 3;
+  // 客户端标签
+  repeated ClientLabel labels = 10;
+}
+
+message ConfigDiscoverFilter {
+  // pole.io 自定义信息
+  Caller caller = 1;
+}
 
 message ConfigDiscoverRequest {
   enum ConfigDiscoverRequestType {
@@ -221,6 +233,9 @@ message ConfigDiscoverRequest {
   ConfigDiscoverRequestType type = 1;
   ClientConfigFileInfo config_file = 2 [ json_name = "config_file" ];
   string revision = 3;
+
+  // pole.io 自定义信息
+  ConfigDiscoverFilter filter = 500;
 }
 
 message ConfigDiscoverResponse {

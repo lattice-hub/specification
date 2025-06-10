@@ -28,7 +28,7 @@ jobs:
           override: true
       - name: Build rust
         run: |
-          cd source/rust/polaris-specification
+          cd source/rust/pole-specification
           echo "run sed start"
           sed -i 's/^version = ".*"/version = "'${VERSION:1}'"/g' Cargo.toml
           echo "run sed end"
@@ -36,7 +36,7 @@ jobs:
           pwd
           cd ../
           bash build.sh
-          cd polaris-specification
+          cd pole-specification
           rm build.rs
         env:
           VERSION: ${{ steps.get_version.outputs.VERSION }}
@@ -49,4 +49,4 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: publish
-          args: --package polaris-specification --allow-dirty
+          args: --package pole-specification --allow-dirty

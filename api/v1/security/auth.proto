@@ -4,7 +4,7 @@ package v1;
 
 import "google/protobuf/wrappers.proto";
 
-option go_package = "github.com/polarismesh/specification/source/go/api/v1/security";
+option go_package = "github.com/pole-io/specification/source/go/api/v1/security";
 option java_package = "com.tencent.polaris.specification.api.v1.security";
 option java_outer_classname = "SecurityProto";
 

@@ -7,7 +7,7 @@
 package config_manage
 
 import (
-	model "github.com/polarismesh/specification/source/go/api/v1/model"
+	model "github.com/pole-io/specification/source/go/api/v1/model"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
@@ -166,7 +166,7 @@ func (x ConfigDiscoverRequest_ConfigDiscoverRequestType) Number() protoreflect.E
 
 // Deprecated: Use ConfigDiscoverRequest_ConfigDiscoverRequestType.Descriptor instead.
 func (ConfigDiscoverRequest_ConfigDiscoverRequestType) EnumDescriptor() ([]byte, []int) {
-	return file_config_file_proto_rawDescGZIP(), []int{12, 0}
+	return file_config_file_proto_rawDescGZIP(), []int{14, 0}
 }
 
 type ConfigDiscoverResponse_ConfigDiscoverResponseType int32
@@ -218,7 +218,7 @@ func (x ConfigDiscoverResponse_ConfigDiscoverResponseType) Number() protoreflect
 
 // Deprecated: Use ConfigDiscoverResponse_ConfigDiscoverResponseType.Descriptor instead.
 func (ConfigDiscoverResponse_ConfigDiscoverResponseType) EnumDescriptor() ([]byte, []int) {
-	return file_config_file_proto_rawDescGZIP(), []int{13, 0}
+	return file_config_file_proto_rawDescGZIP(), []int{15, 0}
 }
 
 type ConfigFileGroup struct {
@@ -1759,6 +1759,119 @@ func (x *ConfigFileGroupRequest) GetClientType() ConfigClientType {
 	return ConfigClientType_SDK
 }
 
+// 主调服务信息数据
+type Caller struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Namespace string `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
+	Service   string `protobuf:"bytes,3,opt,name=service,proto3" json:"service,omitempty"`
+	// 客户端标签
+	Labels []*model.ClientLabel `protobuf:"bytes,10,rep,name=labels,proto3" json:"labels,omitempty"`
+}
+
+func (x *Caller) Reset() {
+	*x = Caller{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_config_file_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Caller) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Caller) ProtoMessage() {}
+
+func (x *Caller) ProtoReflect() protoreflect.Message {
+	mi := &file_config_file_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Caller.ProtoReflect.Descriptor instead.
+func (*Caller) Descriptor() ([]byte, []int) {
+	return file_config_file_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *Caller) GetNamespace() string {
+	if x != nil {
+		return x.Namespace
+	}
+	return ""
+}
+
+func (x *Caller) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *Caller) GetLabels() []*model.ClientLabel {
+	if x != nil {
+		return x.Labels
+	}
+	return nil
+}
+
+type ConfigDiscoverFilter struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// pole.io 自定义信息
+	Caller *Caller `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
+}
+
+func (x *ConfigDiscoverFilter) Reset() {
+	*x = ConfigDiscoverFilter{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_config_file_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConfigDiscoverFilter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfigDiscoverFilter) ProtoMessage() {}
+
+func (x *ConfigDiscoverFilter) ProtoReflect() protoreflect.Message {
+	mi := &file_config_file_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfigDiscoverFilter.ProtoReflect.Descriptor instead.
+func (*ConfigDiscoverFilter) Descriptor() ([]byte, []int) {
+	return file_config_file_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ConfigDiscoverFilter) GetCaller() *Caller {
+	if x != nil {
+		return x.Caller
+	}
+	return nil
+}
+
 type ConfigDiscoverRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1767,12 +1880,14 @@ type ConfigDiscoverRequest struct {
 	Type       ConfigDiscoverRequest_ConfigDiscoverRequestType `protobuf:"varint,1,opt,name=type,proto3,enum=v1.ConfigDiscoverRequest_ConfigDiscoverRequestType" json:"type,omitempty"`
 	ConfigFile *ClientConfigFileInfo                           `protobuf:"bytes,2,opt,name=config_file,proto3" json:"config_file,omitempty"`
 	Revision   string                                          `protobuf:"bytes,3,opt,name=revision,proto3" json:"revision,omitempty"`
+	// pole.io 自定义信息
+	Filter *ConfigDiscoverFilter `protobuf:"bytes,500,opt,name=filter,proto3" json:"filter,omitempty"`
 }
 
 func (x *ConfigDiscoverRequest) Reset() {
 	*x = ConfigDiscoverRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_config_file_proto_msgTypes[12]
+		mi := &file_config_file_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1785,7 +1900,7 @@ func (x *ConfigDiscoverRequest) String() string {
 func (*ConfigDiscoverRequest) ProtoMessage() {}
 
 func (x *ConfigDiscoverRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_config_file_proto_msgTypes[12]
+	mi := &file_config_file_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1798,7 +1913,7 @@ func (x *ConfigDiscoverRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigDiscoverRequest.ProtoReflect.Descriptor instead.
 func (*ConfigDiscoverRequest) Descriptor() ([]byte, []int) {
-	return file_config_file_proto_rawDescGZIP(), []int{12}
+	return file_config_file_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ConfigDiscoverRequest) GetType() ConfigDiscoverRequest_ConfigDiscoverRequestType {
@@ -1822,6 +1937,13 @@ func (x *ConfigDiscoverRequest) GetRevision() string {
 	return ""
 }
 
+func (x *ConfigDiscoverRequest) GetFilter() *ConfigDiscoverFilter {
+	if x != nil {
+		return x.Filter
+	}
+	return nil
+}
+
 type ConfigDiscoverResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1839,7 +1961,7 @@ type ConfigDiscoverResponse struct {
 func (x *ConfigDiscoverResponse) Reset() {
 	*x = ConfigDiscoverResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_config_file_proto_msgTypes[13]
+		mi := &file_config_file_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1852,7 +1974,7 @@ func (x *ConfigDiscoverResponse) String() string {
 func (*ConfigDiscoverResponse) ProtoMessage() {}
 
 func (x *ConfigDiscoverResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_config_file_proto_msgTypes[13]
+	mi := &file_config_file_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1865,7 +1987,7 @@ func (x *ConfigDiscoverResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigDiscoverResponse.ProtoReflect.Descriptor instead.
 func (*ConfigDiscoverResponse) Descriptor() ([]byte, []int) {
-	return file_config_file_proto_rawDescGZIP(), []int{13}
+	return file_config_file_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ConfigDiscoverResponse) GetCode() uint32 {
@@ -2418,72 +2540,85 @@ var file_config_file_proto_rawDesc = []byte{
 	0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22,
-	0xa2, 0x02, 0x0a, 0x15, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76,
-	0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x47, 0x0a, 0x04, 0x74, 0x79, 0x70,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x33, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e,
-	0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65,
-	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79,
-	0x70, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69,
-	0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66,
-	0x6f, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x1a,
-	0x0a, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x22, 0x68, 0x0a, 0x19, 0x43, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f,
-	0x57, 0x4e, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46,
-	0x49, 0x4c, 0x45, 0x10, 0x01, 0x12, 0x15, 0x0a, 0x11, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f,
-	0x46, 0x49, 0x4c, 0x45, 0x5f, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x10, 0x02, 0x12, 0x16, 0x0a, 0x12,
-	0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x47, 0x52, 0x4f, 0x55,
-	0x50, 0x53, 0x10, 0x03, 0x22, 0xdb, 0x03, 0x0a, 0x16, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44,
-	0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x63,
-	0x6f, 0x64, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73,
-	0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73,
-	0x69, 0x6f, 0x6e, 0x12, 0x49, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x0e, 0x32, 0x35, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73,
-	0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x43, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x3a,
-	0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x05, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43,
-	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x63,
-	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x46, 0x0a, 0x11, 0x63, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x18,
-	0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e,
-	0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52,
-	0x11, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x61, 0x6d,
-	0x65, 0x73, 0x12, 0x43, 0x0a, 0x12, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c,
-	0x65, 0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13,
-	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x47, 0x72,
-	0x6f, 0x75, 0x70, 0x52, 0x12, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65,
-	0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73, 0x22, 0x69, 0x0a, 0x1a, 0x43, 0x6f, 0x6e, 0x66, 0x69,
-	0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e,
-	0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c,
-	0x45, 0x10, 0x01, 0x12, 0x15, 0x0a, 0x11, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49,
-	0x4c, 0x45, 0x5f, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x10, 0x02, 0x12, 0x16, 0x0a, 0x12, 0x43, 0x4f,
-	0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x47, 0x52, 0x4f, 0x55, 0x50, 0x53,
-	0x10, 0x03, 0x2a, 0x4d, 0x0a, 0x19, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65,
-	0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x12,
-	0x0e, 0x0a, 0x0a, 0x43, 0x4c, 0x49, 0x45, 0x4e, 0x54, 0x5f, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12,
-	0x10, 0x0a, 0x0c, 0x43, 0x4c, 0x49, 0x45, 0x4e, 0x54, 0x5f, 0x41, 0x47, 0x45, 0x4e, 0x54, 0x10,
-	0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x43, 0x4c, 0x49, 0x45, 0x4e, 0x54, 0x5f, 0x41, 0x4c, 0x4c, 0x10,
-	0x02, 0x2a, 0x26, 0x0a, 0x10, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x43, 0x6c, 0x69, 0x65, 0x6e,
-	0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x07, 0x0a, 0x03, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12, 0x09,
-	0x0a, 0x05, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x10, 0x01, 0x42, 0x8e, 0x01, 0x0a, 0x36, 0x63, 0x6f,
-	0x6d, 0x2e, 0x74, 0x65, 0x6e, 0x63, 0x65, 0x6e, 0x74, 0x2e, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69,
-	0x73, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x2e, 0x6d, 0x61,
-	0x6e, 0x61, 0x67, 0x65, 0x42, 0x0f, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65,
-	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x5a, 0x43, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
-	0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x6d, 0x65, 0x73, 0x68, 0x2f, 0x73, 0x70,
-	0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x73, 0x6f, 0x75, 0x72,
-	0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x63, 0x6f, 0x6e,
-	0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x69, 0x0a, 0x06, 0x43, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x61, 0x6d,
+	0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x61,
+	0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x12, 0x27, 0x0a, 0x06, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x73, 0x18, 0x0a, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x0f, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x4c, 0x61, 0x62,
+	0x65, 0x6c, 0x52, 0x06, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x73, 0x22, 0x3a, 0x0a, 0x14, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x46, 0x69, 0x6c, 0x74,
+	0x65, 0x72, 0x12, 0x22, 0x0a, 0x06, 0x63, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x52, 0x06,
+	0x63, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x22, 0xd5, 0x02, 0x0a, 0x15, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x47, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x33,
+	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76,
+	0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54,
+	0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x63, 0x6f, 0x6e,
+	0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18,
+	0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x46, 0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x5f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f,
+	0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f,
+	0x6e, 0x12, 0x31, 0x0a, 0x06, 0x66, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x18, 0xf4, 0x03, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69,
+	0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x46, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x52, 0x06, 0x66, 0x69,
+	0x6c, 0x74, 0x65, 0x72, 0x22, 0x68, 0x0a, 0x19, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69,
+	0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x79, 0x70,
+	0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x0f,
+	0x0a, 0x0b, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x10, 0x01, 0x12,
+	0x15, 0x0a, 0x11, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x4e,
+	0x61, 0x6d, 0x65, 0x73, 0x10, 0x02, 0x12, 0x16, 0x0a, 0x12, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47,
+	0x5f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x47, 0x52, 0x4f, 0x55, 0x50, 0x53, 0x10, 0x03, 0x22, 0xdb,
+	0x03, 0x0a, 0x16, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65,
+	0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x12, 0x0a,
+	0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x69, 0x6e, 0x66,
+	0x6f, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x49, 0x0a,
+	0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x35, 0x2e, 0x76, 0x31,
+	0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69,
+	0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x54, 0x79,
+	0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x66,
+	0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46,
+	0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f,
+	0x66, 0x69, 0x6c, 0x65, 0x12, 0x46, 0x0a, 0x11, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66,
+	0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x18, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x46, 0x69, 0x6c, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x11, 0x63, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x12, 0x43, 0x0a, 0x12,
+	0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x67, 0x72, 0x6f, 0x75,
+	0x70, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x52, 0x12, 0x63,
+	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x5f, 0x67, 0x72, 0x6f, 0x75, 0x70,
+	0x73, 0x22, 0x69, 0x0a, 0x1a, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f,
+	0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b,
+	0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x10, 0x01, 0x12, 0x15, 0x0a,
+	0x11, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x4e, 0x61, 0x6d,
+	0x65, 0x73, 0x10, 0x02, 0x12, 0x16, 0x0a, 0x12, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x5f, 0x46,
+	0x49, 0x4c, 0x45, 0x5f, 0x47, 0x52, 0x4f, 0x55, 0x50, 0x53, 0x10, 0x03, 0x2a, 0x4d, 0x0a, 0x19,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72,
+	0x74, 0x65, 0x64, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x0a, 0x43, 0x4c, 0x49,
+	0x45, 0x4e, 0x54, 0x5f, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x43, 0x4c, 0x49,
+	0x45, 0x4e, 0x54, 0x5f, 0x41, 0x47, 0x45, 0x4e, 0x54, 0x10, 0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x43,
+	0x4c, 0x49, 0x45, 0x4e, 0x54, 0x5f, 0x41, 0x4c, 0x4c, 0x10, 0x02, 0x2a, 0x26, 0x0a, 0x10, 0x43,
+	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x07, 0x0a, 0x03, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x67, 0x65, 0x6e,
+	0x74, 0x10, 0x01, 0x42, 0x8a, 0x01, 0x0a, 0x36, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x65, 0x6e, 0x63,
+	0x65, 0x6e, 0x74, 0x2e, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x2e, 0x73, 0x70, 0x65, 0x63,
+	0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31,
+	0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x42, 0x0f,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x5a,
+	0x3f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x65,
+	0x2d, 0x69, 0x6f, 0x2f, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x2f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f,
+	0x76, 0x31, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2499,7 +2634,7 @@ func file_config_file_proto_rawDescGZIP() []byte {
 }
 
 var file_config_file_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_config_file_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_config_file_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_config_file_proto_goTypes = []interface{}{
 	(ConfigFileSupportedClient)(0),                         // 0: v1.ConfigFileSupportedClient
 	(ConfigClientType)(0),                                  // 1: v1.ConfigClientType
@@ -2517,156 +2652,161 @@ var file_config_file_proto_goTypes = []interface{}{
 	(*ConfigFileExportRequest)(nil),                        // 13: v1.ConfigFileExportRequest
 	(*ConfigFilePublishInfo)(nil),                          // 14: v1.ConfigFilePublishInfo
 	(*ConfigFileGroupRequest)(nil),                         // 15: v1.ConfigFileGroupRequest
-	(*ConfigDiscoverRequest)(nil),                          // 16: v1.ConfigDiscoverRequest
-	(*ConfigDiscoverResponse)(nil),                         // 17: v1.ConfigDiscoverResponse
-	nil,                                                    // 18: v1.ConfigFileGroup.MetadataEntry
-	nil,                                                    // 19: v1.ConfigFileGroupRequest.ClientLabelsEntry
-	(*wrapperspb.UInt64Value)(nil),                         // 20: google.protobuf.UInt64Value
-	(*wrapperspb.StringValue)(nil),                         // 21: google.protobuf.StringValue
-	(*wrapperspb.BoolValue)(nil),                           // 22: google.protobuf.BoolValue
-	(*model.ClientLabel)(nil),                              // 23: v1.ClientLabel
+	(*Caller)(nil),                                         // 16: v1.Caller
+	(*ConfigDiscoverFilter)(nil),                           // 17: v1.ConfigDiscoverFilter
+	(*ConfigDiscoverRequest)(nil),                          // 18: v1.ConfigDiscoverRequest
+	(*ConfigDiscoverResponse)(nil),                         // 19: v1.ConfigDiscoverResponse
+	nil,                                                    // 20: v1.ConfigFileGroup.MetadataEntry
+	nil,                                                    // 21: v1.ConfigFileGroupRequest.ClientLabelsEntry
+	(*wrapperspb.UInt64Value)(nil),                         // 22: google.protobuf.UInt64Value
+	(*wrapperspb.StringValue)(nil),                         // 23: google.protobuf.StringValue
+	(*wrapperspb.BoolValue)(nil),                           // 24: google.protobuf.BoolValue
+	(*model.ClientLabel)(nil),                              // 25: v1.ClientLabel
 }
 var file_config_file_proto_depIdxs = []int32{
-	20,  // 0: v1.ConfigFileGroup.id:type_name -> google.protobuf.UInt64Value
-	21,  // 1: v1.ConfigFileGroup.name:type_name -> google.protobuf.StringValue
-	21,  // 2: v1.ConfigFileGroup.namespace:type_name -> google.protobuf.StringValue
-	21,  // 3: v1.ConfigFileGroup.comment:type_name -> google.protobuf.StringValue
-	21,  // 4: v1.ConfigFileGroup.create_time:type_name -> google.protobuf.StringValue
-	21,  // 5: v1.ConfigFileGroup.create_by:type_name -> google.protobuf.StringValue
-	21,  // 6: v1.ConfigFileGroup.modify_time:type_name -> google.protobuf.StringValue
-	21,  // 7: v1.ConfigFileGroup.modify_by:type_name -> google.protobuf.StringValue
-	20,  // 8: v1.ConfigFileGroup.fileCount:type_name -> google.protobuf.UInt64Value
-	21,  // 9: v1.ConfigFileGroup.user_ids:type_name -> google.protobuf.StringValue
-	21,  // 10: v1.ConfigFileGroup.group_ids:type_name -> google.protobuf.StringValue
-	21,  // 11: v1.ConfigFileGroup.remove_user_ids:type_name -> google.protobuf.StringValue
-	21,  // 12: v1.ConfigFileGroup.remove_group_ids:type_name -> google.protobuf.StringValue
-	22,  // 13: v1.ConfigFileGroup.editable:type_name -> google.protobuf.BoolValue
-	21,  // 14: v1.ConfigFileGroup.owner:type_name -> google.protobuf.StringValue
-	21,  // 15: v1.ConfigFileGroup.business:type_name -> google.protobuf.StringValue
-	21,  // 16: v1.ConfigFileGroup.department:type_name -> google.protobuf.StringValue
-	18,  // 17: v1.ConfigFileGroup.metadata:type_name -> v1.ConfigFileGroup.MetadataEntry
-	22,  // 18: v1.ConfigFileGroup.deleteable:type_name -> google.protobuf.BoolValue
-	20,  // 19: v1.ConfigFile.id:type_name -> google.protobuf.UInt64Value
-	21,  // 20: v1.ConfigFile.name:type_name -> google.protobuf.StringValue
-	21,  // 21: v1.ConfigFile.namespace:type_name -> google.protobuf.StringValue
-	21,  // 22: v1.ConfigFile.group:type_name -> google.protobuf.StringValue
-	21,  // 23: v1.ConfigFile.content:type_name -> google.protobuf.StringValue
-	21,  // 24: v1.ConfigFile.format:type_name -> google.protobuf.StringValue
-	21,  // 25: v1.ConfigFile.comment:type_name -> google.protobuf.StringValue
-	21,  // 26: v1.ConfigFile.status:type_name -> google.protobuf.StringValue
+	22,  // 0: v1.ConfigFileGroup.id:type_name -> google.protobuf.UInt64Value
+	23,  // 1: v1.ConfigFileGroup.name:type_name -> google.protobuf.StringValue
+	23,  // 2: v1.ConfigFileGroup.namespace:type_name -> google.protobuf.StringValue
+	23,  // 3: v1.ConfigFileGroup.comment:type_name -> google.protobuf.StringValue
+	23,  // 4: v1.ConfigFileGroup.create_time:type_name -> google.protobuf.StringValue
+	23,  // 5: v1.ConfigFileGroup.create_by:type_name -> google.protobuf.StringValue
+	23,  // 6: v1.ConfigFileGroup.modify_time:type_name -> google.protobuf.StringValue
+	23,  // 7: v1.ConfigFileGroup.modify_by:type_name -> google.protobuf.StringValue
+	22,  // 8: v1.ConfigFileGroup.fileCount:type_name -> google.protobuf.UInt64Value
+	23,  // 9: v1.ConfigFileGroup.user_ids:type_name -> google.protobuf.StringValue
+	23,  // 10: v1.ConfigFileGroup.group_ids:type_name -> google.protobuf.StringValue
+	23,  // 11: v1.ConfigFileGroup.remove_user_ids:type_name -> google.protobuf.StringValue
+	23,  // 12: v1.ConfigFileGroup.remove_group_ids:type_name -> google.protobuf.StringValue
+	24,  // 13: v1.ConfigFileGroup.editable:type_name -> google.protobuf.BoolValue
+	23,  // 14: v1.ConfigFileGroup.owner:type_name -> google.protobuf.StringValue
+	23,  // 15: v1.ConfigFileGroup.business:type_name -> google.protobuf.StringValue
+	23,  // 16: v1.ConfigFileGroup.department:type_name -> google.protobuf.StringValue
+	20,  // 17: v1.ConfigFileGroup.metadata:type_name -> v1.ConfigFileGroup.MetadataEntry
+	24,  // 18: v1.ConfigFileGroup.deleteable:type_name -> google.protobuf.BoolValue
+	22,  // 19: v1.ConfigFile.id:type_name -> google.protobuf.UInt64Value
+	23,  // 20: v1.ConfigFile.name:type_name -> google.protobuf.StringValue
+	23,  // 21: v1.ConfigFile.namespace:type_name -> google.protobuf.StringValue
+	23,  // 22: v1.ConfigFile.group:type_name -> google.protobuf.StringValue
+	23,  // 23: v1.ConfigFile.content:type_name -> google.protobuf.StringValue
+	23,  // 24: v1.ConfigFile.format:type_name -> google.protobuf.StringValue
+	23,  // 25: v1.ConfigFile.comment:type_name -> google.protobuf.StringValue
+	23,  // 26: v1.ConfigFile.status:type_name -> google.protobuf.StringValue
 	7,   // 27: v1.ConfigFile.tags:type_name -> v1.ConfigFileTag
-	21,  // 28: v1.ConfigFile.create_time:type_name -> google.protobuf.StringValue
-	21,  // 29: v1.ConfigFile.create_by:type_name -> google.protobuf.StringValue
-	21,  // 30: v1.ConfigFile.modify_time:type_name -> google.protobuf.StringValue
-	21,  // 31: v1.ConfigFile.modify_by:type_name -> google.protobuf.StringValue
-	21,  // 32: v1.ConfigFile.release_time:type_name -> google.protobuf.StringValue
-	21,  // 33: v1.ConfigFile.release_by:type_name -> google.protobuf.StringValue
-	22,  // 34: v1.ConfigFile.encrypted:type_name -> google.protobuf.BoolValue
-	21,  // 35: v1.ConfigFile.encrypt_algo:type_name -> google.protobuf.StringValue
+	23,  // 28: v1.ConfigFile.create_time:type_name -> google.protobuf.StringValue
+	23,  // 29: v1.ConfigFile.create_by:type_name -> google.protobuf.StringValue
+	23,  // 30: v1.ConfigFile.modify_time:type_name -> google.protobuf.StringValue
+	23,  // 31: v1.ConfigFile.modify_by:type_name -> google.protobuf.StringValue
+	23,  // 32: v1.ConfigFile.release_time:type_name -> google.protobuf.StringValue
+	23,  // 33: v1.ConfigFile.release_by:type_name -> google.protobuf.StringValue
+	24,  // 34: v1.ConfigFile.encrypted:type_name -> google.protobuf.BoolValue
+	23,  // 35: v1.ConfigFile.encrypt_algo:type_name -> google.protobuf.StringValue
 	0,   // 36: v1.ConfigFile.supported_client:type_name -> v1.ConfigFileSupportedClient
 	5,   // 37: v1.ConfigFile.persistent:type_name -> v1.ConfigFilePersistent
-	21,  // 38: v1.ConfigFileTag.key:type_name -> google.protobuf.StringValue
-	21,  // 39: v1.ConfigFileTag.value:type_name -> google.protobuf.StringValue
-	20,  // 40: v1.ConfigFileRelease.id:type_name -> google.protobuf.UInt64Value
-	21,  // 41: v1.ConfigFileRelease.name:type_name -> google.protobuf.StringValue
-	21,  // 42: v1.ConfigFileRelease.namespace:type_name -> google.protobuf.StringValue
-	21,  // 43: v1.ConfigFileRelease.group:type_name -> google.protobuf.StringValue
-	21,  // 44: v1.ConfigFileRelease.file_name:type_name -> google.protobuf.StringValue
-	21,  // 45: v1.ConfigFileRelease.content:type_name -> google.protobuf.StringValue
-	21,  // 46: v1.ConfigFileRelease.comment:type_name -> google.protobuf.StringValue
-	21,  // 47: v1.ConfigFileRelease.md5:type_name -> google.protobuf.StringValue
-	20,  // 48: v1.ConfigFileRelease.version:type_name -> google.protobuf.UInt64Value
-	21,  // 49: v1.ConfigFileRelease.create_time:type_name -> google.protobuf.StringValue
-	21,  // 50: v1.ConfigFileRelease.create_by:type_name -> google.protobuf.StringValue
-	21,  // 51: v1.ConfigFileRelease.modify_time:type_name -> google.protobuf.StringValue
-	21,  // 52: v1.ConfigFileRelease.modify_by:type_name -> google.protobuf.StringValue
+	23,  // 38: v1.ConfigFileTag.key:type_name -> google.protobuf.StringValue
+	23,  // 39: v1.ConfigFileTag.value:type_name -> google.protobuf.StringValue
+	22,  // 40: v1.ConfigFileRelease.id:type_name -> google.protobuf.UInt64Value
+	23,  // 41: v1.ConfigFileRelease.name:type_name -> google.protobuf.StringValue
+	23,  // 42: v1.ConfigFileRelease.namespace:type_name -> google.protobuf.StringValue
+	23,  // 43: v1.ConfigFileRelease.group:type_name -> google.protobuf.StringValue
+	23,  // 44: v1.ConfigFileRelease.file_name:type_name -> google.protobuf.StringValue
+	23,  // 45: v1.ConfigFileRelease.content:type_name -> google.protobuf.StringValue
+	23,  // 46: v1.ConfigFileRelease.comment:type_name -> google.protobuf.StringValue
+	23,  // 47: v1.ConfigFileRelease.md5:type_name -> google.protobuf.StringValue
+	22,  // 48: v1.ConfigFileRelease.version:type_name -> google.protobuf.UInt64Value
+	23,  // 49: v1.ConfigFileRelease.create_time:type_name -> google.protobuf.StringValue
+	23,  // 50: v1.ConfigFileRelease.create_by:type_name -> google.protobuf.StringValue
+	23,  // 51: v1.ConfigFileRelease.modify_time:type_name -> google.protobuf.StringValue
+	23,  // 52: v1.ConfigFileRelease.modify_by:type_name -> google.protobuf.StringValue
 	7,   // 53: v1.ConfigFileRelease.tags:type_name -> v1.ConfigFileTag
-	22,  // 54: v1.ConfigFileRelease.active:type_name -> google.protobuf.BoolValue
-	21,  // 55: v1.ConfigFileRelease.format:type_name -> google.protobuf.StringValue
-	21,  // 56: v1.ConfigFileRelease.release_description:type_name -> google.protobuf.StringValue
-	21,  // 57: v1.ConfigFileRelease.release_type:type_name -> google.protobuf.StringValue
-	23,  // 58: v1.ConfigFileRelease.beta_labels:type_name -> v1.ClientLabel
-	20,  // 59: v1.ConfigFileRelease.config_file_id:type_name -> google.protobuf.UInt64Value
+	24,  // 54: v1.ConfigFileRelease.active:type_name -> google.protobuf.BoolValue
+	23,  // 55: v1.ConfigFileRelease.format:type_name -> google.protobuf.StringValue
+	23,  // 56: v1.ConfigFileRelease.release_description:type_name -> google.protobuf.StringValue
+	23,  // 57: v1.ConfigFileRelease.release_type:type_name -> google.protobuf.StringValue
+	25,  // 58: v1.ConfigFileRelease.beta_labels:type_name -> v1.ClientLabel
+	22,  // 59: v1.ConfigFileRelease.config_file_id:type_name -> google.protobuf.UInt64Value
 	0,   // 60: v1.ConfigFileRelease.supported_client:type_name -> v1.ConfigFileSupportedClient
 	5,   // 61: v1.ConfigFileRelease.persistent:type_name -> v1.ConfigFilePersistent
-	20,  // 62: v1.ConfigFileReleaseHistory.id:type_name -> google.protobuf.UInt64Value
-	21,  // 63: v1.ConfigFileReleaseHistory.name:type_name -> google.protobuf.StringValue
-	21,  // 64: v1.ConfigFileReleaseHistory.namespace:type_name -> google.protobuf.StringValue
-	21,  // 65: v1.ConfigFileReleaseHistory.group:type_name -> google.protobuf.StringValue
-	21,  // 66: v1.ConfigFileReleaseHistory.file_name:type_name -> google.protobuf.StringValue
-	21,  // 67: v1.ConfigFileReleaseHistory.content:type_name -> google.protobuf.StringValue
-	21,  // 68: v1.ConfigFileReleaseHistory.format:type_name -> google.protobuf.StringValue
-	21,  // 69: v1.ConfigFileReleaseHistory.comment:type_name -> google.protobuf.StringValue
-	21,  // 70: v1.ConfigFileReleaseHistory.md5:type_name -> google.protobuf.StringValue
-	21,  // 71: v1.ConfigFileReleaseHistory.type:type_name -> google.protobuf.StringValue
-	21,  // 72: v1.ConfigFileReleaseHistory.status:type_name -> google.protobuf.StringValue
+	22,  // 62: v1.ConfigFileReleaseHistory.id:type_name -> google.protobuf.UInt64Value
+	23,  // 63: v1.ConfigFileReleaseHistory.name:type_name -> google.protobuf.StringValue
+	23,  // 64: v1.ConfigFileReleaseHistory.namespace:type_name -> google.protobuf.StringValue
+	23,  // 65: v1.ConfigFileReleaseHistory.group:type_name -> google.protobuf.StringValue
+	23,  // 66: v1.ConfigFileReleaseHistory.file_name:type_name -> google.protobuf.StringValue
+	23,  // 67: v1.ConfigFileReleaseHistory.content:type_name -> google.protobuf.StringValue
+	23,  // 68: v1.ConfigFileReleaseHistory.format:type_name -> google.protobuf.StringValue
+	23,  // 69: v1.ConfigFileReleaseHistory.comment:type_name -> google.protobuf.StringValue
+	23,  // 70: v1.ConfigFileReleaseHistory.md5:type_name -> google.protobuf.StringValue
+	23,  // 71: v1.ConfigFileReleaseHistory.type:type_name -> google.protobuf.StringValue
+	23,  // 72: v1.ConfigFileReleaseHistory.status:type_name -> google.protobuf.StringValue
 	7,   // 73: v1.ConfigFileReleaseHistory.tags:type_name -> v1.ConfigFileTag
-	21,  // 74: v1.ConfigFileReleaseHistory.create_time:type_name -> google.protobuf.StringValue
-	21,  // 75: v1.ConfigFileReleaseHistory.create_by:type_name -> google.protobuf.StringValue
-	21,  // 76: v1.ConfigFileReleaseHistory.modify_time:type_name -> google.protobuf.StringValue
-	21,  // 77: v1.ConfigFileReleaseHistory.modify_by:type_name -> google.protobuf.StringValue
-	21,  // 78: v1.ConfigFileReleaseHistory.reason:type_name -> google.protobuf.StringValue
-	21,  // 79: v1.ConfigFileReleaseHistory.release_description:type_name -> google.protobuf.StringValue
-	20,  // 80: v1.ConfigFileTemplate.id:type_name -> google.protobuf.UInt64Value
-	21,  // 81: v1.ConfigFileTemplate.name:type_name -> google.protobuf.StringValue
-	21,  // 82: v1.ConfigFileTemplate.content:type_name -> google.protobuf.StringValue
-	21,  // 83: v1.ConfigFileTemplate.format:type_name -> google.protobuf.StringValue
-	21,  // 84: v1.ConfigFileTemplate.comment:type_name -> google.protobuf.StringValue
-	21,  // 85: v1.ConfigFileTemplate.create_time:type_name -> google.protobuf.StringValue
-	21,  // 86: v1.ConfigFileTemplate.create_by:type_name -> google.protobuf.StringValue
-	21,  // 87: v1.ConfigFileTemplate.modify_time:type_name -> google.protobuf.StringValue
-	21,  // 88: v1.ConfigFileTemplate.modify_by:type_name -> google.protobuf.StringValue
-	21,  // 89: v1.ClientConfigFileInfo.namespace:type_name -> google.protobuf.StringValue
-	21,  // 90: v1.ClientConfigFileInfo.group:type_name -> google.protobuf.StringValue
-	21,  // 91: v1.ClientConfigFileInfo.file_name:type_name -> google.protobuf.StringValue
-	21,  // 92: v1.ClientConfigFileInfo.content:type_name -> google.protobuf.StringValue
-	20,  // 93: v1.ClientConfigFileInfo.version:type_name -> google.protobuf.UInt64Value
-	21,  // 94: v1.ClientConfigFileInfo.md5:type_name -> google.protobuf.StringValue
+	23,  // 74: v1.ConfigFileReleaseHistory.create_time:type_name -> google.protobuf.StringValue
+	23,  // 75: v1.ConfigFileReleaseHistory.create_by:type_name -> google.protobuf.StringValue
+	23,  // 76: v1.ConfigFileReleaseHistory.modify_time:type_name -> google.protobuf.StringValue
+	23,  // 77: v1.ConfigFileReleaseHistory.modify_by:type_name -> google.protobuf.StringValue
+	23,  // 78: v1.ConfigFileReleaseHistory.reason:type_name -> google.protobuf.StringValue
+	23,  // 79: v1.ConfigFileReleaseHistory.release_description:type_name -> google.protobuf.StringValue
+	22,  // 80: v1.ConfigFileTemplate.id:type_name -> google.protobuf.UInt64Value
+	23,  // 81: v1.ConfigFileTemplate.name:type_name -> google.protobuf.StringValue
+	23,  // 82: v1.ConfigFileTemplate.content:type_name -> google.protobuf.StringValue
+	23,  // 83: v1.ConfigFileTemplate.format:type_name -> google.protobuf.StringValue
+	23,  // 84: v1.ConfigFileTemplate.comment:type_name -> google.protobuf.StringValue
+	23,  // 85: v1.ConfigFileTemplate.create_time:type_name -> google.protobuf.StringValue
+	23,  // 86: v1.ConfigFileTemplate.create_by:type_name -> google.protobuf.StringValue
+	23,  // 87: v1.ConfigFileTemplate.modify_time:type_name -> google.protobuf.StringValue
+	23,  // 88: v1.ConfigFileTemplate.modify_by:type_name -> google.protobuf.StringValue
+	23,  // 89: v1.ClientConfigFileInfo.namespace:type_name -> google.protobuf.StringValue
+	23,  // 90: v1.ClientConfigFileInfo.group:type_name -> google.protobuf.StringValue
+	23,  // 91: v1.ClientConfigFileInfo.file_name:type_name -> google.protobuf.StringValue
+	23,  // 92: v1.ClientConfigFileInfo.content:type_name -> google.protobuf.StringValue
+	22,  // 93: v1.ClientConfigFileInfo.version:type_name -> google.protobuf.UInt64Value
+	23,  // 94: v1.ClientConfigFileInfo.md5:type_name -> google.protobuf.StringValue
 	7,   // 95: v1.ClientConfigFileInfo.tags:type_name -> v1.ConfigFileTag
-	22,  // 96: v1.ClientConfigFileInfo.encrypted:type_name -> google.protobuf.BoolValue
-	21,  // 97: v1.ClientConfigFileInfo.public_key:type_name -> google.protobuf.StringValue
-	21,  // 98: v1.ClientConfigFileInfo.name:type_name -> google.protobuf.StringValue
-	21,  // 99: v1.ClientConfigFileInfo.release_time:type_name -> google.protobuf.StringValue
+	24,  // 96: v1.ClientConfigFileInfo.encrypted:type_name -> google.protobuf.BoolValue
+	23,  // 97: v1.ClientConfigFileInfo.public_key:type_name -> google.protobuf.StringValue
+	23,  // 98: v1.ClientConfigFileInfo.name:type_name -> google.protobuf.StringValue
+	23,  // 99: v1.ClientConfigFileInfo.release_time:type_name -> google.protobuf.StringValue
 	1,   // 100: v1.ClientConfigFileInfo.client_type:type_name -> v1.ConfigClientType
 	5,   // 101: v1.ClientConfigFileInfo.persistent:type_name -> v1.ConfigFilePersistent
-	21,  // 102: v1.ClientWatchConfigFileRequest.client_ip:type_name -> google.protobuf.StringValue
-	21,  // 103: v1.ClientWatchConfigFileRequest.service_name:type_name -> google.protobuf.StringValue
+	23,  // 102: v1.ClientWatchConfigFileRequest.client_ip:type_name -> google.protobuf.StringValue
+	23,  // 103: v1.ClientWatchConfigFileRequest.service_name:type_name -> google.protobuf.StringValue
 	11,  // 104: v1.ClientWatchConfigFileRequest.watch_files:type_name -> v1.ClientConfigFileInfo
 	1,   // 105: v1.ClientWatchConfigFileRequest.client_type:type_name -> v1.ConfigClientType
-	21,  // 106: v1.ConfigFileExportRequest.namespace:type_name -> google.protobuf.StringValue
-	21,  // 107: v1.ConfigFileExportRequest.groups:type_name -> google.protobuf.StringValue
-	21,  // 108: v1.ConfigFileExportRequest.names:type_name -> google.protobuf.StringValue
-	20,  // 109: v1.ConfigFileExportRequest.ids:type_name -> google.protobuf.UInt64Value
-	21,  // 110: v1.ConfigFilePublishInfo.release_name:type_name -> google.protobuf.StringValue
-	21,  // 111: v1.ConfigFilePublishInfo.namespace:type_name -> google.protobuf.StringValue
-	21,  // 112: v1.ConfigFilePublishInfo.group:type_name -> google.protobuf.StringValue
-	21,  // 113: v1.ConfigFilePublishInfo.file_name:type_name -> google.protobuf.StringValue
-	21,  // 114: v1.ConfigFilePublishInfo.content:type_name -> google.protobuf.StringValue
-	21,  // 115: v1.ConfigFilePublishInfo.comment:type_name -> google.protobuf.StringValue
-	21,  // 116: v1.ConfigFilePublishInfo.format:type_name -> google.protobuf.StringValue
-	21,  // 117: v1.ConfigFilePublishInfo.release_description:type_name -> google.protobuf.StringValue
-	21,  // 118: v1.ConfigFilePublishInfo.create_by:type_name -> google.protobuf.StringValue
-	21,  // 119: v1.ConfigFilePublishInfo.modify_by:type_name -> google.protobuf.StringValue
+	23,  // 106: v1.ConfigFileExportRequest.namespace:type_name -> google.protobuf.StringValue
+	23,  // 107: v1.ConfigFileExportRequest.groups:type_name -> google.protobuf.StringValue
+	23,  // 108: v1.ConfigFileExportRequest.names:type_name -> google.protobuf.StringValue
+	22,  // 109: v1.ConfigFileExportRequest.ids:type_name -> google.protobuf.UInt64Value
+	23,  // 110: v1.ConfigFilePublishInfo.release_name:type_name -> google.protobuf.StringValue
+	23,  // 111: v1.ConfigFilePublishInfo.namespace:type_name -> google.protobuf.StringValue
+	23,  // 112: v1.ConfigFilePublishInfo.group:type_name -> google.protobuf.StringValue
+	23,  // 113: v1.ConfigFilePublishInfo.file_name:type_name -> google.protobuf.StringValue
+	23,  // 114: v1.ConfigFilePublishInfo.content:type_name -> google.protobuf.StringValue
+	23,  // 115: v1.ConfigFilePublishInfo.comment:type_name -> google.protobuf.StringValue
+	23,  // 116: v1.ConfigFilePublishInfo.format:type_name -> google.protobuf.StringValue
+	23,  // 117: v1.ConfigFilePublishInfo.release_description:type_name -> google.protobuf.StringValue
+	23,  // 118: v1.ConfigFilePublishInfo.create_by:type_name -> google.protobuf.StringValue
+	23,  // 119: v1.ConfigFilePublishInfo.modify_by:type_name -> google.protobuf.StringValue
 	7,   // 120: v1.ConfigFilePublishInfo.tags:type_name -> v1.ConfigFileTag
-	21,  // 121: v1.ConfigFilePublishInfo.md5:type_name -> google.protobuf.StringValue
-	22,  // 122: v1.ConfigFilePublishInfo.encrypted:type_name -> google.protobuf.BoolValue
-	21,  // 123: v1.ConfigFilePublishInfo.encrypt_algo:type_name -> google.protobuf.StringValue
+	23,  // 121: v1.ConfigFilePublishInfo.md5:type_name -> google.protobuf.StringValue
+	24,  // 122: v1.ConfigFilePublishInfo.encrypted:type_name -> google.protobuf.BoolValue
+	23,  // 123: v1.ConfigFilePublishInfo.encrypt_algo:type_name -> google.protobuf.StringValue
 	5,   // 124: v1.ConfigFilePublishInfo.persistent:type_name -> v1.ConfigFilePersistent
-	21,  // 125: v1.ConfigFileGroupRequest.revision:type_name -> google.protobuf.StringValue
+	23,  // 125: v1.ConfigFileGroupRequest.revision:type_name -> google.protobuf.StringValue
 	4,   // 126: v1.ConfigFileGroupRequest.config_file_group:type_name -> v1.ConfigFileGroup
-	19,  // 127: v1.ConfigFileGroupRequest.client_labels:type_name -> v1.ConfigFileGroupRequest.ClientLabelsEntry
+	21,  // 127: v1.ConfigFileGroupRequest.client_labels:type_name -> v1.ConfigFileGroupRequest.ClientLabelsEntry
 	1,   // 128: v1.ConfigFileGroupRequest.client_type:type_name -> v1.ConfigClientType
-	2,   // 129: v1.ConfigDiscoverRequest.type:type_name -> v1.ConfigDiscoverRequest.ConfigDiscoverRequestType
-	11,  // 130: v1.ConfigDiscoverRequest.config_file:type_name -> v1.ClientConfigFileInfo
-	3,   // 131: v1.ConfigDiscoverResponse.type:type_name -> v1.ConfigDiscoverResponse.ConfigDiscoverResponseType
-	11,  // 132: v1.ConfigDiscoverResponse.config_file:type_name -> v1.ClientConfigFileInfo
-	11,  // 133: v1.ConfigDiscoverResponse.config_file_names:type_name -> v1.ClientConfigFileInfo
-	4,   // 134: v1.ConfigDiscoverResponse.config_file_groups:type_name -> v1.ConfigFileGroup
-	135, // [135:135] is the sub-list for method output_type
-	135, // [135:135] is the sub-list for method input_type
-	135, // [135:135] is the sub-list for extension type_name
-	135, // [135:135] is the sub-list for extension extendee
-	0,   // [0:135] is the sub-list for field type_name
+	25,  // 129: v1.Caller.labels:type_name -> v1.ClientLabel
+	16,  // 130: v1.ConfigDiscoverFilter.caller:type_name -> v1.Caller
+	2,   // 131: v1.ConfigDiscoverRequest.type:type_name -> v1.ConfigDiscoverRequest.ConfigDiscoverRequestType
+	11,  // 132: v1.ConfigDiscoverRequest.config_file:type_name -> v1.ClientConfigFileInfo
+	17,  // 133: v1.ConfigDiscoverRequest.filter:type_name -> v1.ConfigDiscoverFilter
+	3,   // 134: v1.ConfigDiscoverResponse.type:type_name -> v1.ConfigDiscoverResponse.ConfigDiscoverResponseType
+	11,  // 135: v1.ConfigDiscoverResponse.config_file:type_name -> v1.ClientConfigFileInfo
+	11,  // 136: v1.ConfigDiscoverResponse.config_file_names:type_name -> v1.ClientConfigFileInfo
+	4,   // 137: v1.ConfigDiscoverResponse.config_file_groups:type_name -> v1.ConfigFileGroup
+	138, // [138:138] is the sub-list for method output_type
+	138, // [138:138] is the sub-list for method input_type
+	138, // [138:138] is the sub-list for extension type_name
+	138, // [138:138] is the sub-list for extension extendee
+	0,   // [0:138] is the sub-list for field type_name
 }
 
 func init() { file_config_file_proto_init() }
@@ -2820,7 +2960,7 @@ func file_config_file_proto_init() {
 			}
 		}
 		file_config_file_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfigDiscoverRequest); i {
+			switch v := v.(*Caller); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2832,6 +2972,30 @@ func file_config_file_proto_init() {
 			}
 		}
 		file_config_file_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConfigDiscoverFilter); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_config_file_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConfigDiscoverRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_config_file_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConfigDiscoverResponse); i {
 			case 0:
 				return &v.state
@@ -2850,7 +3014,7 @@ func file_config_file_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_config_file_proto_rawDesc,
 			NumEnums:      4,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

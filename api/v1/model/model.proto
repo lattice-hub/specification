@@ -4,7 +4,7 @@ package v1;
 
 import "google/protobuf/wrappers.proto";
 
-option go_package = "github.com/polarismesh/specification/source/go/api/v1/model";
+option go_package = "github.com/pole-io/specification/source/go/api/v1/model";
 
 option java_package = "com.tencent.polaris.specification.api.v1.model";
 option java_outer_classname = "ModelProto";
@@ -69,3 +69,4 @@ message API {
   // API的路径，支持多种匹配方式
   MatchString path = 3 [ json_name = "path" ];
 }
+

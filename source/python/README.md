@@ -1,21 +1,22 @@
-# polarismesh-specification
+# pole-specification
 
-[![PyPI - Version](https://img.shields.io/pypi/v/polarismesh-specification.svg)](https://pypi.org/project/polarismesh-specification)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/polarismesh-specification.svg)](https://pypi.org/project/polarismesh-specification)
+[![PyPI - Version](https://img.shields.io/pypi/v/pole-specification.svg)](https://pypi.org/project/pole-specification)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pole-specification.svg)](https://pypi.org/project/pole-specification)
 
 -----
 
 **Table of Contents**
 
-- [Installation](#installation)
-- [License](#license)
+- [pole-specification](#pole-specification)
+  - [Installation](#installation)
+  - [License](#license)
 
 ## Installation
 
 ```console
-pip install polarismesh-specification
+pip install pole-specification
 ```
 
 ## License
 
-`polarismesh-specification` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`pole-specification` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.

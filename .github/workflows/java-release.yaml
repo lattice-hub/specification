@@ -22,6 +22,6 @@ jobs:
         run: |
           cd source/java
           bash build.sh
-          cd polaris-specification
+          cd pole-specification
           cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import;
           mvn clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} -DskipTests -B -U

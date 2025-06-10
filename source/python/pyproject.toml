@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "polarismesh-specification"
+name = "pole-specification"
 description = ''
 readme = "README.md"
 requires-python = ">=3.7"
@@ -25,19 +25,19 @@ dynamic = ["version"]
 license-files = { paths = ["LICENSE.txt"] }
 
 [project.urls]
-Documentation = "https://github.com/polarismesh/specification#readme"
-Issues = "https://github.com/polarismesh/specification/issues"
-Source = "https://github.com/polarismesh/specification"
+Documentation = "https://github.com/pole-io/specification#readme"
+Issues = "https://github.com/pole-io/specification/issues"
+Source = "https://github.com/pole-io/specification"
 
 [tool.hatch.version]
-path = "src/polarismesh_specification/__about__.py"
+path = "src/pole_specification/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = ["pytest",
     "pytest-cov",
 ]
 [tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/polarismesh_specification --cov=tests {args}"
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/pole_specification --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
 
 [tool.hatch.build.targets.sdist]
@@ -49,7 +49,7 @@ python = ["37", "38", "39", "310", "311"]
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = ["src/polarismesh_specification/__about__.py",
+omit = ["src/pole_specification/__about__.py",
 ]
 
 [tool.coverage.report]

@@ -23,7 +23,7 @@ protoc_dir="protoc"
 protoc_include="${workdir}/source/protoc/protoc-linux-x86_64/include"
 
 python_root_dir=${workdir}/source/python
-python_source_dir=${python_root_dir}/polarismesh_specification/api/v1
+python_source_dir=${python_root_dir}/pole_specification/api/v1
 
 function detection_protoc() {
   protoc_dir=${workdir}/source/protoc/protoc-${CURRENT_OS}-${CURRENT_ARCH}

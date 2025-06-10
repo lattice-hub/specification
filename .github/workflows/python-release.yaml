@@ -22,8 +22,8 @@ jobs:
           pip install grpcio-tools
           python source/python/build.py
           cd source/python/
-          sed -i "s/#VERSION#/${VERSION}/g" src/polarismesh_specification/__about__.py
-          cat src/polarismesh_specification/__about__.py
+          sed -i "s/#VERSION#/${VERSION}/g" src/pole_specification/__about__.py
+          cat src/_specification/__about__.py
           pip install --upgrade hatch
           hatch build
           hatch publish --no-prompt

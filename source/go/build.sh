@@ -53,7 +53,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --go_out=plugins=grpc:"${out_dir}" \
         --proto_path="${protoc_dir}"/include \
         --proto_path=. ${proto_files_model}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/model" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/model" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/model"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -66,7 +66,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
         --proto_path=. ${proto_files_fault_tolerance}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/fault_tolerance" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/fault_tolerance" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/fault_tolerance"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -79,7 +79,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
         --proto_path=. ${proto_files_traffic_manage}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/traffic_manage" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/traffic_manage" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/traffic_manage"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -92,7 +92,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
         --proto_path=. ${proto_files_config_manage}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/config_manage" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/config_manage" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/config_manage"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -105,7 +105,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
         --proto_path=. ${proto_files_security}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/security" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/security" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/security"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -122,7 +122,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path="${fault_tolerance_dir}" \
         --proto_path="${security_dir}" \
         --proto_path=. ${proto_files_service_manage}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/service_manage" "${out_dir}/api/v1"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/service_manage" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/service_manage"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
@@ -134,7 +134,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --go_out=plugins=grpc:"${out_dir}" \
         --proto_path="${protoc_dir}"/include \
         --proto_path=. ${proto_files_ratelimiter}
-    mv "${out_dir}/github.com/polarismesh/specification/source/go/api/v1/traffic_manage/ratelimiter" "${out_dir}/api/v1/traffic_manage"
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/traffic_manage/ratelimiter" "${out_dir}/api/v1/traffic_manage"
     pushd "${out_dir}/api/v1/traffic_manage/ratelimiter"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd

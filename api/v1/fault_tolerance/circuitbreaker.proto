@@ -6,7 +6,7 @@ import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "model.proto";
 
-option go_package = "github.com/polarismesh/specification/source/go/api/v1/fault_tolerance";
+option go_package = "github.com/pole-io/specification/source/go/api/v1/fault_tolerance";
 option java_package = "com.tencent.polaris.specification.api.v1.fault.tolerance";
 option java_outer_classname = "CircuitBreakerProto";
 

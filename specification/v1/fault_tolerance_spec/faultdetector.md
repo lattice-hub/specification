@@ -68,7 +68,7 @@
 通过往目标的TCP端口，发送SYNC包，探测这个端口是否在监听，如果节点存在，但是端口没有监听则返回RST包。如果目标不可达，则SYNC包会超时。
 
 ```
-apiVersion: polarismesh.cn/v1
+apiVersion: pole.io/v1
 kind: FaultDetector
 metadata:
   name: fault-detect-rule
@@ -96,7 +96,7 @@ spec:
 通过往目标的UDP端口，发送UDP报文，假如端口没有监听或者目标不可达，则会收到一个ICMP目标不可达的消息。
 
 ```
-apiVersion: polarismesh.cn/v1
+apiVersion: pole.io/v1
 kind: FaultDetector
 metadata:
   name: fault-detect-rule
@@ -131,7 +131,7 @@ spec:
 - 收到5XX错误：目标服务出现异常
 
 ```
-apiVersion: polarismesh.cn/v1
+apiVersion: pole.io/v1
 kind: FaultDetector
 metadata:
   name: fault-detect-rule
@@ -166,7 +166,7 @@ spec:
 - 收到Unavailable错误：目标服务出现异常
 
 ```
-apiVersion: polarismesh.cn/v1
+apiVersion: pole.io/v1
 kind: FaultDetector
 metadata:
   name: fault-detect-rule
