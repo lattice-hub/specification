@@ -10,17 +10,8 @@ option java_package = "io.pole.specification.api.v1.service.manage";
 option java_outer_classname = "RequestProto";
 
 
-// 主调服务信息数据
-message Caller {
-  string namespace = 2;
-  string service = 3;
-  // 客户端标签
-  repeated ClientLabel labels = 10;
-}
-
 message DiscoverFilter {
   bool OnlyHealthyInstance = 1;
-
   // pole.io 自定义信息
   Caller caller = 100;
 }
