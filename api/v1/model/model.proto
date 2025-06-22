@@ -78,3 +78,22 @@ message API {
   MatchString path = 3 [ json_name = "path" ];
 }
 
+// 治理规则发布请求
+message RuleRelease {
+
+  enum RuleType {
+    RouteRules = 0;
+    RateLimitRules = 1;
+    CircuitBreakerRules = 2;
+    FaultDetectRules = 3;
+    LaneRules = 4;
+  }
+
+  string id = 1 [ json_name = "id" ];
+  string name = 2 [ json_name = "name" ];
+  string description = 3 [ json_name = "description" ];
+  string release_type = 4 [ json_name = "release_type" ];
+  ClientLabel client_label = 5 [ json_name = "client_label" ];
+  uint64 version = 6 [ json_name = "version" ];
+  RuleType resource = 7 [ json_name = "resource" ];
+}
