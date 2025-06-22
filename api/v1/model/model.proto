@@ -90,10 +90,11 @@ message RuleRelease {
   }
 
   string id = 1 [ json_name = "id" ];
-  string name = 2 [ json_name = "name" ];
-  string description = 3 [ json_name = "description" ];
-  string release_type = 4 [ json_name = "release_type" ];
-  ClientLabel client_label = 5 [ json_name = "client_label" ];
-  uint64 version = 6 [ json_name = "version" ];
-  RuleType resource = 7 [ json_name = "resource" ];
+  string rule_id = 2 [ json_name = "rule_id" ];
+  string name = 3 [ json_name = "name" ];
+  string description = 4 [ json_name = "description" ];
+  string release_type = 5 [ json_name = "release_type" ];
+  ClientLabel client_label = 6 [ json_name = "client_label" ];
+  uint64 version = 7 [ json_name = "version" ];
+  RuleType resource = 8 [ json_name = "resource" ];
 }
