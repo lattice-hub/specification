@@ -31,11 +31,11 @@ security_dir=${workdir}/api/v1/security
 ratelimiter_dir=${workdir}/api/v1/traffic_manage/ratelimiter
 out_dir=${workdir}/source/go
 
-proto_files_model="model.proto namespace.proto code.proto"
-proto_files_service_manage="client.proto service.proto request.proto response.proto grpcapi.proto heartbeat.proto configrelease.proto contract.proto"
+proto_files_model="types.proto response.proto namespace.proto code.proto"
+proto_files_service_manage="client.proto service.proto grpcapi.proto heartbeat.proto contract.proto"
 proto_files_traffic_manage="routing.proto ratelimit.proto lane.proto lossless.proto"
 proto_files_fault_tolerance="circuitbreaker.proto fault_detector.proto"
-proto_files_config_manage="config_file.proto config_file_response.proto grpc_config_api.proto"
+proto_files_config_manage="config_file.proto grpc_config_api.proto"
 proto_files_security="auth.proto block_allow_list.proto"
 proto_files_ratelimiter="ratelimiter.proto grpcapi_ratelimiter.proto"
 
@@ -104,6 +104,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --go_out=plugins=grpc:"${out_dir}" \
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
+        --proto_path="${traffic_manage_dir}" \
         --proto_path=. ${proto_files_security}
     mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/security" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/security"

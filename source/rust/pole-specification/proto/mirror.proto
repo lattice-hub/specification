@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/duration.proto";
+import "types.proto";
+import "routing.proto";
+
+option go_package = "github.com/pole-io/specification/source/go/api/v1/traffic_manage";
+option java_package = "io.pole.specification.api.v1.traffic.manage";
+option java_outer_classname = "TrafficMirrorProto";
+
+// 流量镜像规则
+message TrafficMirror {
+    string id = 1;
+    // 流量镜像规则名称
+    string name = 2;
+    // 流量镜像规则描述
+    string description = 3;
+    // 流量镜像规则集合
+    repeated MirrorRule rules = 4;
+    // 流量镜像规则revision信息
+    string revision = 8;
+    // 创建时间
+    string ctime = 20;
+    // 修改时间
+    string mtime = 21;
+    // 规则资源元数据
+    map<string, string> metadata = 30;
+    // 操作标志位
+    bool editable = 40 [ json_name = "editable" ];
+    bool deleteable = 41 [ json_name = "deleteable" ];
+}
+
+message MirrorRule {
+    // 源服务
+    MirrorSource source = 1;
+    // 目标服务
+    MirrorDestination destination = 2;
+    // 流量镜像百分比，0-100
+    uint32 mirror_percent = 3 [json_name = "mirror_percent"];
+    // 流量镜像持续时间，默认无限制
+    google.protobuf.Duration duration = 4;
+    // 子规则是否禁用，默认启用
+    bool disable = 5;
+}
+
+message MirrorSource {
+    // 源服务所在的命名空间
+    string namespace = 1;
+    // 源服务名称
+    string service = 2;
+    // 流量匹配规则
+    TrafficMatchRule traffic_match_rule = 3 [ json_name = "traffic_match_rule" ];
+}
+
+message MirrorDestination {
+    // 目标服务所在的命名空间
+    string namespace = 1;
+    // 目标服务名称
+    string service = 2;
+    // 目标服务实例标签选择器
+    map<string, MatchString> labels = 3;
+}
