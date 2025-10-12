@@ -99,7 +99,8 @@ message RuleRelease {
   ClientLabel client_label = 7 [ json_name = "client_label" ];
   uint64 version = 8 [ json_name = "version" ];
   RuleType resource = 9 [ json_name = "resource" ];
+  bool active = 10 [ json_name = "active" ];
 
-  string ctime = 20;
-  string mtime = 21;
+  string ctime = 20 [ json_name = "ctime" ];
+  string mtime = 21 [ json_name = "mtime" ];
 }
