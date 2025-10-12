@@ -87,6 +87,7 @@ message RuleRelease {
     CircuitBreakerRules = 2;
     FaultDetectRules = 3;
     LaneRules = 4;
+    LosslessRules = 5;
   }
 
   string id = 1 [ json_name = "id" ];

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package v1;
 
+import "google/protobuf/duration.proto";
+
 option go_package = "github.com/pole-io/specification/source/go/api/v1/traffic_manage";
 option java_package = "io.pole.specification.api.v1.traffic.manage";
 option java_outer_classname = "LosslessProto";
@@ -36,8 +38,6 @@ message LosslessOnline {
   DelayRegister delayRegister = 1 [ json_name = "delay_register" ];
   // configuration for warmup
   Warmup warmup = 2 [ json_name = "warmup" ];
-  // configuration for readiness probe
-  Readiness readiness = 3 [ json_name = "readiness" ];
 }
 
 message DelayRegister {
@@ -52,7 +52,7 @@ message DelayRegister {
   // delay register strategy
   DelayStrategy strategy = 2 [ json_name = "strategy" ];
   // delay register time by second, active when strategy == DELAY_BY_TIME
-  int32 intervalSecond = 3 [ json_name = "interval_second" ];
+  google.protobuf.Duration interval = 3 [ json_name = "interval" ];
   // protocol to do health check, default http, active when strategy == DELAY_BY_HEALTH_CHECK
   string healthCheckProtocol = 4 [ json_name = "health_check_protocol" ];
   // method to do health check, default GET, active when strategy == DELAY_BY_HEALTH_CHECK
@@ -60,14 +60,14 @@ message DelayRegister {
   // path to do health check, no default value, active when strategy == DELAY_BY_HEALTH_CHECK
   string healthCheckPath = 6 [ json_name = "health_check_path" ];
   // health check interval second, default is 30, active when strategy == DELAY_BY_HEALTH_CHECK
-  string healthCheckIntervalSecond = 7 [ json_name = "health_check_interval_second" ];
+  google.protobuf.Duration healthCheckInterval = 7 [ json_name = "health_check_interval" ];
 }
 
 message Warmup {
   // enable warmup
   bool enable = 1 [ json_name = "enable" ];
   // total warmup interval by second
-  int32 intervalSecond = 2 [ json_name = "interval_second" ];
+  google.protobuf.Duration interval = 2 [ json_name = "interval" ];
   // warmup stop when most of the instances in service are in warmup status
   bool enableOverloadProtection = 3 [ json_name = "enable_overload_protection" ];
   // the threshold to active overload protection, default is 50, threshld = sum(WarmupInstances)/sum(AllInstances)*100
@@ -76,12 +76,9 @@ message Warmup {
   int32 curvature = 5 [ json_name = "curvature" ];
 }
 
-message Readiness {
-  // enable /readiness expose
-  bool enable = 1 [ json_name = "enable" ];
-}
-
 message LosslessOffline {
   // enable /offline expose
   bool enable = 1 [ json_name = "enable" ];
+  // configuration for draining
+  google.protobuf.Duration interval = 2 [ json_name = "interval" ];
 }
