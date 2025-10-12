@@ -26,6 +26,9 @@ enum ResourceType {
   CircuitBreakerRules = 5;
   FaultDetectRules = 6;
   LaneRules = 7;
+  LosslessRules = 8;
+  TrafficMirrorRules = 9;
+  TrafficSecurityRules = 10;
   Users = 20;
   UserGroups = 21;
   Roles = 22;
