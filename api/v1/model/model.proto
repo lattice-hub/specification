@@ -57,8 +57,7 @@ message Summary {
   // 服务总数
   uint32 total_service_count = 1 [ json_name = "total_service_count" ];
   // 健康实例总数
-  uint32 total_health_instance_count = 2
-      [ json_name = "total_health_instance_count" ];
+  uint32 total_health_instance_count = 2 [ json_name = "total_health_instance_count" ];
   // 实例总数
   uint32 total_instance_count = 3 [ json_name = "total_instance_count" ];
 }
@@ -88,6 +87,8 @@ message RuleRelease {
     FaultDetectRules = 3;
     LaneRules = 4;
     LosslessRules = 5;
+    TrafficMirrorRules = 6;
+    TrafficSecurityRules = 7;
   }
 
   string id = 1 [ json_name = "id" ];
@@ -96,7 +97,7 @@ message RuleRelease {
   string release_name = 4 [ json_name = "release_name" ];
   string description = 5 [ json_name = "description" ];
   string release_type = 6 [ json_name = "release_type" ];
-  ClientLabel client_label = 7 [ json_name = "client_label" ];
+  repeated ClientLabel client_labels = 7 [ json_name = "client_labels" ];
   uint64 version = 8 [ json_name = "version" ];
   RuleType resource = 9 [ json_name = "resource" ];
   bool active = 10 [ json_name = "active" ];
