@@ -85,9 +85,9 @@ message RuleRelease {
     CircuitBreakerRules = 2;
     FaultDetectRules = 3;
     LaneRules = 4;
-    Lossless = 5;
-    Mirror = 6;
-    Security = 7;
+    LosslessRules = 5;
+    MirrorRules = 6;
+    SecurityRules = 7;
   }
 
   string id = 1 [ json_name = "id" ];
