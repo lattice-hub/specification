@@ -13,10 +13,12 @@ option java_outer_classname = "RateLimitProto";
 message RateLimit {
     // 限流规则唯一标识
   string id = 1;
+  // 限流规则名称
+  string name = 2;
   // 限流规则所属服务名
-  string service = 2;
+  string service = 3;
   // 限流规则所属命名空间
-  string namespace = 3;
+  string namespace = 4;
   // 限流规则优先级，0值最高
   uint32 priority = 5;
   // 限流类型
