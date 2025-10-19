@@ -93,3 +93,10 @@ message HealthCheck {
 message HeartbeatHealthCheck {
   uint32 ttl = 1;
 }
+
+message InstanceLabels { 
+  string namespace = 2;
+  string service = 3;
+  string service_id = 4;
+  map<string, StringList> labels = 1;
+}
