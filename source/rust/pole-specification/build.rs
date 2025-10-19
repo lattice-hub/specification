@@ -11,18 +11,22 @@ fn main() -> Result<()> {
         }
     }
 
-    let mut config = prost_build::Config::new();
-    config.protoc_arg("--experimental_allow_proto3_optional");
-    config.default_package_filename("specification");
-    config
-        .out_dir("src")
-        .compile_protos(&proto_list, &["proto/"])
-        .unwrap();
+    // let mut config = prost_build::Config::new();
+    // config.protoc_arg("--experimental_allow_proto3_optional");
+    // config.default_package_filename("specification");
+    // config
+    //     .out_dir("src")
+    //     .type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]")
+    //     .compile_protos(&proto_list, &["proto/"])
+    //     .unwrap();
 
-    tonic_build::configure()
+    tonic_prost_build::configure()
         .build_server(true)
         .out_dir("src")
-        .compile(&proto_list, &["proto/"])
+        .compile_protos(
+            &proto_list,
+            &["proto/".into()],
+        )
         .unwrap();
     Ok(())
 }

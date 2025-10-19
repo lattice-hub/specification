@@ -36,12 +36,14 @@ message RateLimit {
   Report report = 12;
   // 分布式限流服务集群
   RateLimitCluster cluster = 16;
-  // 限流规则标签数据
-  map<string, string> metadata = 17 [ json_name = "metadata" ];
+  // customResponse 限流触发后的响应
+  CustomResponse customResponse = 17 [ json_name = "custom_response" ];
   // 限流规则创建时间
-  string ctime = 18;
+  string ctime = 20;
   // 限流规则修改时间
-  string mtime = 19;
+  string mtime = 21;
+  // 限流规则标签数据
+  map<string, string> metadata = 22 [ json_name = "metadata" ];
   // 操作标志位
   bool editable = 30 [ json_name = "editable" ];
   bool deleteable = 31 [ json_name = "deleteable" ];
@@ -125,6 +127,8 @@ message ConcurrencyAmount {
 
 // custom response text when limited
 message CustomResponse {
+  string code = 1 [ json_name = "code" ];
+  map<string, string> headers = 2 [ json_name = "headers" ];
   string body = 3 [ json_name = "body" ];
 }
 

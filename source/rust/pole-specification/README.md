@@ -7,13 +7,13 @@
 [![Crates.io](https://img.shields.io/crates/d/pole-specification)](https://crates.io/crates/pole-specification)
 
 ## Introduction
-Service Governance Specification for Polaris Rust SDK.
+Service Governance Specification for Pole Rust SDK.
 
 ## Install
 Add the following to your `Cargo.toml`: 
 ```toml 
 [dependencies]
-pole-specification = "1.3.2"
+pole-specification = "0.1.0"
 ```
 
 ## License

@@ -12,7 +12,7 @@ import "circuitbreaker.proto";
 import "namespace.proto";
 import "fault_detector.proto";
 import "lane.proto";
-import "routing.proto";
+import "router.proto";
 import "lossless.proto";
 import "block_allow_list.proto";
 import "response.proto";
