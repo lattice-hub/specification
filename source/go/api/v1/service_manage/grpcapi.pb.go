@@ -650,49 +650,49 @@ var file_grpcapi_proto_rawDesc = []byte{
 	0x4f, 0x53, 0x53, 0x4c, 0x45, 0x53, 0x53, 0x10, 0x1a, 0x12, 0x14, 0x0a, 0x10, 0x42, 0x4c, 0x4f,
 	0x43, 0x4b, 0x5f, 0x41, 0x4c, 0x4c, 0x4f, 0x57, 0x5f, 0x52, 0x55, 0x4c, 0x45, 0x10, 0x1b, 0x12,
 	0x17, 0x0a, 0x13, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x53, 0x55, 0x42, 0x53, 0x43,
-	0x52, 0x49, 0x42, 0x45, 0x52, 0x53, 0x10, 0x32, 0x32, 0xdc, 0x02, 0x0a, 0x0b, 0x50, 0x6f, 0x6c,
-	0x61, 0x72, 0x69, 0x73, 0x47, 0x52, 0x50, 0x43, 0x12, 0x2a, 0x0a, 0x0c, 0x52, 0x65, 0x70, 0x6f,
-	0x72, 0x74, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6c,
-	0x69, 0x65, 0x6e, 0x74, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x12, 0x30, 0x0a, 0x10, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72,
-	0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x49, 0x6e,
-	0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x32, 0x0a, 0x12, 0x44, 0x65, 0x72, 0x65, 0x67, 0x69,
-	0x73, 0x74, 0x65, 0x72, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x0c, 0x2e, 0x76,
-	0x31, 0x2e, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3b, 0x0a, 0x08, 0x44, 0x69,
-	0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x69, 0x73, 0x63,
-	0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x76, 0x31,
-	0x2e, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x40, 0x0a, 0x09, 0x48, 0x65, 0x61, 0x72, 0x74,
-	0x62, 0x65, 0x61, 0x74, 0x12, 0x15, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62,
-	0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x76, 0x31,
-	0x2e, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x3c, 0x0a, 0x15, 0x52, 0x65, 0x70,
-	0x6f, 0x72, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x61,
-	0x63, 0x74, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x43,
-	0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x32, 0xae, 0x01, 0x0a, 0x14, 0x50, 0x6f, 0x6c, 0x61,
-	0x72, 0x69, 0x73, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x47, 0x52, 0x50, 0x43,
-	0x12, 0x4a, 0x0a, 0x11, 0x42, 0x61, 0x74, 0x63, 0x68, 0x47, 0x65, 0x74, 0x48, 0x65, 0x61, 0x72,
-	0x74, 0x62, 0x65, 0x61, 0x74, 0x12, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x48, 0x65,
-	0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x19, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61,
-	0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x11,
-	0x42, 0x61, 0x74, 0x63, 0x68, 0x44, 0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61,
-	0x74, 0x12, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62,
-	0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x76, 0x31,
-	0x2e, 0x44, 0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x83, 0x01, 0x0a, 0x2b, 0x69, 0x6f, 0x2e,
-	0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
-	0x65, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x42, 0x12, 0x50, 0x6f, 0x6c, 0x61, 0x72, 0x69,
-	0x73, 0x47, 0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5a, 0x40, 0x67, 0x69,
-	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x65, 0x2d, 0x69, 0x6f,
-	0x2f, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x73,
-	0x6f, 0x75, 0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f,
-	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x49, 0x42, 0x45, 0x52, 0x53, 0x10, 0x32, 0x32, 0xdd, 0x02, 0x0a, 0x0c, 0x44, 0x69, 0x73,
+	0x63, 0x6f, 0x76, 0x65, 0x72, 0x47, 0x52, 0x50, 0x43, 0x12, 0x2a, 0x0a, 0x0c, 0x52, 0x65, 0x70,
+	0x6f, 0x72, 0x74, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x30, 0x0a, 0x10, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65,
+	0x72, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x49,
+	0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x32, 0x0a, 0x12, 0x44, 0x65, 0x72, 0x65, 0x67,
+	0x69, 0x73, 0x74, 0x65, 0x72, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x0c, 0x2e,
+	0x76, 0x31, 0x2e, 0x49, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31,
+	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3b, 0x0a, 0x08, 0x44,
+	0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x69, 0x73,
+	0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x76,
+	0x31, 0x2e, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x40, 0x0a, 0x09, 0x48, 0x65, 0x61, 0x72,
+	0x74, 0x62, 0x65, 0x61, 0x74, 0x12, 0x15, 0x2e, 0x76, 0x31, 0x2e, 0x48, 0x65, 0x61, 0x72, 0x74,
+	0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x76,
+	0x31, 0x2e, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x3c, 0x0a, 0x15, 0x52, 0x65,
+	0x70, 0x6f, 0x72, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x43, 0x6f, 0x6e, 0x74, 0x72,
+	0x61, 0x63, 0x74, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x43, 0x6f, 0x6e, 0x74, 0x72, 0x61, 0x63, 0x74, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x32, 0xab, 0x01, 0x0a, 0x11, 0x50, 0x6f, 0x6c,
+	0x65, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x47, 0x52, 0x50, 0x43, 0x12, 0x4a,
+	0x0a, 0x11, 0x42, 0x61, 0x74, 0x63, 0x68, 0x47, 0x65, 0x74, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62,
+	0x65, 0x61, 0x74, 0x12, 0x18, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x48, 0x65, 0x61, 0x72,
+	0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e,
+	0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x11, 0x42, 0x61,
+	0x74, 0x63, 0x68, 0x44, 0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x12,
+	0x18, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61,
+	0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x76, 0x31, 0x2e, 0x44,
+	0x65, 0x6c, 0x48, 0x65, 0x61, 0x72, 0x74, 0x62, 0x65, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x83, 0x01, 0x0a, 0x2b, 0x69, 0x6f, 0x2e, 0x70, 0x6f,
+	0x6c, 0x65, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
+	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x42, 0x12, 0x50, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x47,
+	0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5a, 0x40, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x65, 0x2d, 0x69, 0x6f, 0x2f, 0x73,
+	0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x73, 0x6f, 0x75,
+	0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x73, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -756,22 +756,22 @@ var file_grpcapi_proto_depIdxs = []int32{
 	14, // 16: v1.DiscoverResponse.nearbyRouteRules:type_name -> v1.RouteRule
 	15, // 17: v1.DiscoverResponse.losslessRules:type_name -> v1.LosslessRule
 	16, // 18: v1.DiscoverResponse.blockAllowListRule:type_name -> v1.BlockAllowListRule
-	17, // 19: v1.PolarisGRPC.ReportClient:input_type -> v1.Client
-	8,  // 20: v1.PolarisGRPC.RegisterInstance:input_type -> v1.Instance
-	8,  // 21: v1.PolarisGRPC.DeregisterInstance:input_type -> v1.Instance
-	3,  // 22: v1.PolarisGRPC.Discover:input_type -> v1.DiscoverRequest
-	18, // 23: v1.PolarisGRPC.Heartbeat:input_type -> v1.HeartbeatsRequest
-	9,  // 24: v1.PolarisGRPC.ReportServiceContract:input_type -> v1.ServiceContract
-	19, // 25: v1.PolarisHeartbeatGRPC.BatchGetHeartbeat:input_type -> v1.GetHeartbeatsRequest
-	20, // 26: v1.PolarisHeartbeatGRPC.BatchDelHeartbeat:input_type -> v1.DelHeartbeatsRequest
-	21, // 27: v1.PolarisGRPC.ReportClient:output_type -> v1.Response
-	21, // 28: v1.PolarisGRPC.RegisterInstance:output_type -> v1.Response
-	21, // 29: v1.PolarisGRPC.DeregisterInstance:output_type -> v1.Response
-	4,  // 30: v1.PolarisGRPC.Discover:output_type -> v1.DiscoverResponse
-	22, // 31: v1.PolarisGRPC.Heartbeat:output_type -> v1.HeartbeatsResponse
-	21, // 32: v1.PolarisGRPC.ReportServiceContract:output_type -> v1.Response
-	23, // 33: v1.PolarisHeartbeatGRPC.BatchGetHeartbeat:output_type -> v1.GetHeartbeatsResponse
-	24, // 34: v1.PolarisHeartbeatGRPC.BatchDelHeartbeat:output_type -> v1.DelHeartbeatsResponse
+	17, // 19: v1.DiscoverGRPC.ReportClient:input_type -> v1.Client
+	8,  // 20: v1.DiscoverGRPC.RegisterInstance:input_type -> v1.Instance
+	8,  // 21: v1.DiscoverGRPC.DeregisterInstance:input_type -> v1.Instance
+	3,  // 22: v1.DiscoverGRPC.Discover:input_type -> v1.DiscoverRequest
+	18, // 23: v1.DiscoverGRPC.Heartbeat:input_type -> v1.HeartbeatsRequest
+	9,  // 24: v1.DiscoverGRPC.ReportServiceContract:input_type -> v1.ServiceContract
+	19, // 25: v1.PoleHeartbeatGRPC.BatchGetHeartbeat:input_type -> v1.GetHeartbeatsRequest
+	20, // 26: v1.PoleHeartbeatGRPC.BatchDelHeartbeat:input_type -> v1.DelHeartbeatsRequest
+	21, // 27: v1.DiscoverGRPC.ReportClient:output_type -> v1.Response
+	21, // 28: v1.DiscoverGRPC.RegisterInstance:output_type -> v1.Response
+	21, // 29: v1.DiscoverGRPC.DeregisterInstance:output_type -> v1.Response
+	4,  // 30: v1.DiscoverGRPC.Discover:output_type -> v1.DiscoverResponse
+	22, // 31: v1.DiscoverGRPC.Heartbeat:output_type -> v1.HeartbeatsResponse
+	21, // 32: v1.DiscoverGRPC.ReportServiceContract:output_type -> v1.Response
+	23, // 33: v1.PoleHeartbeatGRPC.BatchGetHeartbeat:output_type -> v1.GetHeartbeatsResponse
+	24, // 34: v1.PoleHeartbeatGRPC.BatchDelHeartbeat:output_type -> v1.DelHeartbeatsResponse
 	27, // [27:35] is the sub-list for method output_type
 	19, // [19:27] is the sub-list for method input_type
 	19, // [19:19] is the sub-list for extension type_name
@@ -855,10 +855,10 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// PolarisGRPCClient is the client API for PolarisGRPC service.
+// DiscoverGRPCClient is the client API for DiscoverGRPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PolarisGRPCClient interface {
+type DiscoverGRPCClient interface {
 	// 客户端上报
 	ReportClient(ctx context.Context, in *Client, opts ...grpc.CallOption) (*model.Response, error)
 	// 被调方注册服务实例
@@ -866,72 +866,72 @@ type PolarisGRPCClient interface {
 	// 被调方反注册服务实例
 	DeregisterInstance(ctx context.Context, in *Instance, opts ...grpc.CallOption) (*model.Response, error)
 	// 统一发现接口
-	Discover(ctx context.Context, opts ...grpc.CallOption) (PolarisGRPC_DiscoverClient, error)
+	Discover(ctx context.Context, opts ...grpc.CallOption) (DiscoverGRPC_DiscoverClient, error)
 	// 被调方批量上报心跳
-	Heartbeat(ctx context.Context, opts ...grpc.CallOption) (PolarisGRPC_HeartbeatClient, error)
+	Heartbeat(ctx context.Context, opts ...grpc.CallOption) (DiscoverGRPC_HeartbeatClient, error)
 	// 上报服务契约
 	ReportServiceContract(ctx context.Context, in *ServiceContract, opts ...grpc.CallOption) (*model.Response, error)
 }
 
-type polarisGRPCClient struct {
+type discoverGRPCClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPolarisGRPCClient(cc grpc.ClientConnInterface) PolarisGRPCClient {
-	return &polarisGRPCClient{cc}
+func NewDiscoverGRPCClient(cc grpc.ClientConnInterface) DiscoverGRPCClient {
+	return &discoverGRPCClient{cc}
 }
 
-func (c *polarisGRPCClient) ReportClient(ctx context.Context, in *Client, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *discoverGRPCClient) ReportClient(ctx context.Context, in *Client, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisGRPC/ReportClient", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.DiscoverGRPC/ReportClient", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisGRPCClient) RegisterInstance(ctx context.Context, in *Instance, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *discoverGRPCClient) RegisterInstance(ctx context.Context, in *Instance, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisGRPC/RegisterInstance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.DiscoverGRPC/RegisterInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisGRPCClient) DeregisterInstance(ctx context.Context, in *Instance, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *discoverGRPCClient) DeregisterInstance(ctx context.Context, in *Instance, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisGRPC/DeregisterInstance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.DiscoverGRPC/DeregisterInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption) (PolarisGRPC_DiscoverClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_PolarisGRPC_serviceDesc.Streams[0], "/v1.PolarisGRPC/Discover", opts...)
+func (c *discoverGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption) (DiscoverGRPC_DiscoverClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_DiscoverGRPC_serviceDesc.Streams[0], "/v1.DiscoverGRPC/Discover", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &polarisGRPCDiscoverClient{stream}
+	x := &discoverGRPCDiscoverClient{stream}
 	return x, nil
 }
 
-type PolarisGRPC_DiscoverClient interface {
+type DiscoverGRPC_DiscoverClient interface {
 	Send(*DiscoverRequest) error
 	Recv() (*DiscoverResponse, error)
 	grpc.ClientStream
 }
 
-type polarisGRPCDiscoverClient struct {
+type discoverGRPCDiscoverClient struct {
 	grpc.ClientStream
 }
 
-func (x *polarisGRPCDiscoverClient) Send(m *DiscoverRequest) error {
+func (x *discoverGRPCDiscoverClient) Send(m *DiscoverRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *polarisGRPCDiscoverClient) Recv() (*DiscoverResponse, error) {
+func (x *discoverGRPCDiscoverClient) Recv() (*DiscoverResponse, error) {
 	m := new(DiscoverResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -939,30 +939,30 @@ func (x *polarisGRPCDiscoverClient) Recv() (*DiscoverResponse, error) {
 	return m, nil
 }
 
-func (c *polarisGRPCClient) Heartbeat(ctx context.Context, opts ...grpc.CallOption) (PolarisGRPC_HeartbeatClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_PolarisGRPC_serviceDesc.Streams[1], "/v1.PolarisGRPC/Heartbeat", opts...)
+func (c *discoverGRPCClient) Heartbeat(ctx context.Context, opts ...grpc.CallOption) (DiscoverGRPC_HeartbeatClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_DiscoverGRPC_serviceDesc.Streams[1], "/v1.DiscoverGRPC/Heartbeat", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &polarisGRPCHeartbeatClient{stream}
+	x := &discoverGRPCHeartbeatClient{stream}
 	return x, nil
 }
 
-type PolarisGRPC_HeartbeatClient interface {
+type DiscoverGRPC_HeartbeatClient interface {
 	Send(*HeartbeatsRequest) error
 	Recv() (*HeartbeatsResponse, error)
 	grpc.ClientStream
 }
 
-type polarisGRPCHeartbeatClient struct {
+type discoverGRPCHeartbeatClient struct {
 	grpc.ClientStream
 }
 
-func (x *polarisGRPCHeartbeatClient) Send(m *HeartbeatsRequest) error {
+func (x *discoverGRPCHeartbeatClient) Send(m *HeartbeatsRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *polarisGRPCHeartbeatClient) Recv() (*HeartbeatsResponse, error) {
+func (x *discoverGRPCHeartbeatClient) Recv() (*HeartbeatsResponse, error) {
 	m := new(HeartbeatsResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -970,17 +970,17 @@ func (x *polarisGRPCHeartbeatClient) Recv() (*HeartbeatsResponse, error) {
 	return m, nil
 }
 
-func (c *polarisGRPCClient) ReportServiceContract(ctx context.Context, in *ServiceContract, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *discoverGRPCClient) ReportServiceContract(ctx context.Context, in *ServiceContract, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisGRPC/ReportServiceContract", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.DiscoverGRPC/ReportServiceContract", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PolarisGRPCServer is the server API for PolarisGRPC service.
-type PolarisGRPCServer interface {
+// DiscoverGRPCServer is the server API for DiscoverGRPC service.
+type DiscoverGRPCServer interface {
 	// 客户端上报
 	ReportClient(context.Context, *Client) (*model.Response, error)
 	// 被调方注册服务实例
@@ -988,113 +988,113 @@ type PolarisGRPCServer interface {
 	// 被调方反注册服务实例
 	DeregisterInstance(context.Context, *Instance) (*model.Response, error)
 	// 统一发现接口
-	Discover(PolarisGRPC_DiscoverServer) error
+	Discover(DiscoverGRPC_DiscoverServer) error
 	// 被调方批量上报心跳
-	Heartbeat(PolarisGRPC_HeartbeatServer) error
+	Heartbeat(DiscoverGRPC_HeartbeatServer) error
 	// 上报服务契约
 	ReportServiceContract(context.Context, *ServiceContract) (*model.Response, error)
 }
 
-// UnimplementedPolarisGRPCServer can be embedded to have forward compatible implementations.
-type UnimplementedPolarisGRPCServer struct {
+// UnimplementedDiscoverGRPCServer can be embedded to have forward compatible implementations.
+type UnimplementedDiscoverGRPCServer struct {
 }
 
-func (*UnimplementedPolarisGRPCServer) ReportClient(context.Context, *Client) (*model.Response, error) {
+func (*UnimplementedDiscoverGRPCServer) ReportClient(context.Context, *Client) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReportClient not implemented")
 }
-func (*UnimplementedPolarisGRPCServer) RegisterInstance(context.Context, *Instance) (*model.Response, error) {
+func (*UnimplementedDiscoverGRPCServer) RegisterInstance(context.Context, *Instance) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterInstance not implemented")
 }
-func (*UnimplementedPolarisGRPCServer) DeregisterInstance(context.Context, *Instance) (*model.Response, error) {
+func (*UnimplementedDiscoverGRPCServer) DeregisterInstance(context.Context, *Instance) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeregisterInstance not implemented")
 }
-func (*UnimplementedPolarisGRPCServer) Discover(PolarisGRPC_DiscoverServer) error {
+func (*UnimplementedDiscoverGRPCServer) Discover(DiscoverGRPC_DiscoverServer) error {
 	return status.Errorf(codes.Unimplemented, "method Discover not implemented")
 }
-func (*UnimplementedPolarisGRPCServer) Heartbeat(PolarisGRPC_HeartbeatServer) error {
+func (*UnimplementedDiscoverGRPCServer) Heartbeat(DiscoverGRPC_HeartbeatServer) error {
 	return status.Errorf(codes.Unimplemented, "method Heartbeat not implemented")
 }
-func (*UnimplementedPolarisGRPCServer) ReportServiceContract(context.Context, *ServiceContract) (*model.Response, error) {
+func (*UnimplementedDiscoverGRPCServer) ReportServiceContract(context.Context, *ServiceContract) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReportServiceContract not implemented")
 }
 
-func RegisterPolarisGRPCServer(s *grpc.Server, srv PolarisGRPCServer) {
-	s.RegisterService(&_PolarisGRPC_serviceDesc, srv)
+func RegisterDiscoverGRPCServer(s *grpc.Server, srv DiscoverGRPCServer) {
+	s.RegisterService(&_DiscoverGRPC_serviceDesc, srv)
 }
 
-func _PolarisGRPC_ReportClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DiscoverGRPC_ReportClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Client)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisGRPCServer).ReportClient(ctx, in)
+		return srv.(DiscoverGRPCServer).ReportClient(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisGRPC/ReportClient",
+		FullMethod: "/v1.DiscoverGRPC/ReportClient",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisGRPCServer).ReportClient(ctx, req.(*Client))
+		return srv.(DiscoverGRPCServer).ReportClient(ctx, req.(*Client))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisGRPC_RegisterInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DiscoverGRPC_RegisterInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Instance)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisGRPCServer).RegisterInstance(ctx, in)
+		return srv.(DiscoverGRPCServer).RegisterInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisGRPC/RegisterInstance",
+		FullMethod: "/v1.DiscoverGRPC/RegisterInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisGRPCServer).RegisterInstance(ctx, req.(*Instance))
+		return srv.(DiscoverGRPCServer).RegisterInstance(ctx, req.(*Instance))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisGRPC_DeregisterInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DiscoverGRPC_DeregisterInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Instance)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisGRPCServer).DeregisterInstance(ctx, in)
+		return srv.(DiscoverGRPCServer).DeregisterInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisGRPC/DeregisterInstance",
+		FullMethod: "/v1.DiscoverGRPC/DeregisterInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisGRPCServer).DeregisterInstance(ctx, req.(*Instance))
+		return srv.(DiscoverGRPCServer).DeregisterInstance(ctx, req.(*Instance))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisGRPC_Discover_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PolarisGRPCServer).Discover(&polarisGRPCDiscoverServer{stream})
+func _DiscoverGRPC_Discover_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DiscoverGRPCServer).Discover(&discoverGRPCDiscoverServer{stream})
 }
 
-type PolarisGRPC_DiscoverServer interface {
+type DiscoverGRPC_DiscoverServer interface {
 	Send(*DiscoverResponse) error
 	Recv() (*DiscoverRequest, error)
 	grpc.ServerStream
 }
 
-type polarisGRPCDiscoverServer struct {
+type discoverGRPCDiscoverServer struct {
 	grpc.ServerStream
 }
 
-func (x *polarisGRPCDiscoverServer) Send(m *DiscoverResponse) error {
+func (x *discoverGRPCDiscoverServer) Send(m *DiscoverResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *polarisGRPCDiscoverServer) Recv() (*DiscoverRequest, error) {
+func (x *discoverGRPCDiscoverServer) Recv() (*DiscoverRequest, error) {
 	m := new(DiscoverRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1102,25 +1102,25 @@ func (x *polarisGRPCDiscoverServer) Recv() (*DiscoverRequest, error) {
 	return m, nil
 }
 
-func _PolarisGRPC_Heartbeat_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PolarisGRPCServer).Heartbeat(&polarisGRPCHeartbeatServer{stream})
+func _DiscoverGRPC_Heartbeat_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DiscoverGRPCServer).Heartbeat(&discoverGRPCHeartbeatServer{stream})
 }
 
-type PolarisGRPC_HeartbeatServer interface {
+type DiscoverGRPC_HeartbeatServer interface {
 	Send(*HeartbeatsResponse) error
 	Recv() (*HeartbeatsRequest, error)
 	grpc.ServerStream
 }
 
-type polarisGRPCHeartbeatServer struct {
+type discoverGRPCHeartbeatServer struct {
 	grpc.ServerStream
 }
 
-func (x *polarisGRPCHeartbeatServer) Send(m *HeartbeatsResponse) error {
+func (x *discoverGRPCHeartbeatServer) Send(m *HeartbeatsResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *polarisGRPCHeartbeatServer) Recv() (*HeartbeatsRequest, error) {
+func (x *discoverGRPCHeartbeatServer) Recv() (*HeartbeatsRequest, error) {
 	m := new(HeartbeatsRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -1128,55 +1128,55 @@ func (x *polarisGRPCHeartbeatServer) Recv() (*HeartbeatsRequest, error) {
 	return m, nil
 }
 
-func _PolarisGRPC_ReportServiceContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DiscoverGRPC_ReportServiceContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ServiceContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisGRPCServer).ReportServiceContract(ctx, in)
+		return srv.(DiscoverGRPCServer).ReportServiceContract(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisGRPC/ReportServiceContract",
+		FullMethod: "/v1.DiscoverGRPC/ReportServiceContract",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisGRPCServer).ReportServiceContract(ctx, req.(*ServiceContract))
+		return srv.(DiscoverGRPCServer).ReportServiceContract(ctx, req.(*ServiceContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _PolarisGRPC_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "v1.PolarisGRPC",
-	HandlerType: (*PolarisGRPCServer)(nil),
+var _DiscoverGRPC_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "v1.DiscoverGRPC",
+	HandlerType: (*DiscoverGRPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ReportClient",
-			Handler:    _PolarisGRPC_ReportClient_Handler,
+			Handler:    _DiscoverGRPC_ReportClient_Handler,
 		},
 		{
 			MethodName: "RegisterInstance",
-			Handler:    _PolarisGRPC_RegisterInstance_Handler,
+			Handler:    _DiscoverGRPC_RegisterInstance_Handler,
 		},
 		{
 			MethodName: "DeregisterInstance",
-			Handler:    _PolarisGRPC_DeregisterInstance_Handler,
+			Handler:    _DiscoverGRPC_DeregisterInstance_Handler,
 		},
 		{
 			MethodName: "ReportServiceContract",
-			Handler:    _PolarisGRPC_ReportServiceContract_Handler,
+			Handler:    _DiscoverGRPC_ReportServiceContract_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Discover",
-			Handler:       _PolarisGRPC_Discover_Handler,
+			Handler:       _DiscoverGRPC_Discover_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
 		{
 			StreamName:    "Heartbeat",
-			Handler:       _PolarisGRPC_Heartbeat_Handler,
+			Handler:       _DiscoverGRPC_Heartbeat_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
@@ -1184,112 +1184,112 @@ var _PolarisGRPC_serviceDesc = grpc.ServiceDesc{
 	Metadata: "grpcapi.proto",
 }
 
-// PolarisHeartbeatGRPCClient is the client API for PolarisHeartbeatGRPC service.
+// PoleHeartbeatGRPCClient is the client API for PoleHeartbeatGRPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PolarisHeartbeatGRPCClient interface {
+type PoleHeartbeatGRPCClient interface {
 	// 批量获取心跳记录
 	BatchGetHeartbeat(ctx context.Context, in *GetHeartbeatsRequest, opts ...grpc.CallOption) (*GetHeartbeatsResponse, error)
 	// 批量删除心跳记录
 	BatchDelHeartbeat(ctx context.Context, in *DelHeartbeatsRequest, opts ...grpc.CallOption) (*DelHeartbeatsResponse, error)
 }
 
-type polarisHeartbeatGRPCClient struct {
+type poleHeartbeatGRPCClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPolarisHeartbeatGRPCClient(cc grpc.ClientConnInterface) PolarisHeartbeatGRPCClient {
-	return &polarisHeartbeatGRPCClient{cc}
+func NewPoleHeartbeatGRPCClient(cc grpc.ClientConnInterface) PoleHeartbeatGRPCClient {
+	return &poleHeartbeatGRPCClient{cc}
 }
 
-func (c *polarisHeartbeatGRPCClient) BatchGetHeartbeat(ctx context.Context, in *GetHeartbeatsRequest, opts ...grpc.CallOption) (*GetHeartbeatsResponse, error) {
+func (c *poleHeartbeatGRPCClient) BatchGetHeartbeat(ctx context.Context, in *GetHeartbeatsRequest, opts ...grpc.CallOption) (*GetHeartbeatsResponse, error) {
 	out := new(GetHeartbeatsResponse)
-	err := c.cc.Invoke(ctx, "/v1.PolarisHeartbeatGRPC/BatchGetHeartbeat", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.PoleHeartbeatGRPC/BatchGetHeartbeat", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisHeartbeatGRPCClient) BatchDelHeartbeat(ctx context.Context, in *DelHeartbeatsRequest, opts ...grpc.CallOption) (*DelHeartbeatsResponse, error) {
+func (c *poleHeartbeatGRPCClient) BatchDelHeartbeat(ctx context.Context, in *DelHeartbeatsRequest, opts ...grpc.CallOption) (*DelHeartbeatsResponse, error) {
 	out := new(DelHeartbeatsResponse)
-	err := c.cc.Invoke(ctx, "/v1.PolarisHeartbeatGRPC/BatchDelHeartbeat", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.PoleHeartbeatGRPC/BatchDelHeartbeat", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PolarisHeartbeatGRPCServer is the server API for PolarisHeartbeatGRPC service.
-type PolarisHeartbeatGRPCServer interface {
+// PoleHeartbeatGRPCServer is the server API for PoleHeartbeatGRPC service.
+type PoleHeartbeatGRPCServer interface {
 	// 批量获取心跳记录
 	BatchGetHeartbeat(context.Context, *GetHeartbeatsRequest) (*GetHeartbeatsResponse, error)
 	// 批量删除心跳记录
 	BatchDelHeartbeat(context.Context, *DelHeartbeatsRequest) (*DelHeartbeatsResponse, error)
 }
 
-// UnimplementedPolarisHeartbeatGRPCServer can be embedded to have forward compatible implementations.
-type UnimplementedPolarisHeartbeatGRPCServer struct {
+// UnimplementedPoleHeartbeatGRPCServer can be embedded to have forward compatible implementations.
+type UnimplementedPoleHeartbeatGRPCServer struct {
 }
 
-func (*UnimplementedPolarisHeartbeatGRPCServer) BatchGetHeartbeat(context.Context, *GetHeartbeatsRequest) (*GetHeartbeatsResponse, error) {
+func (*UnimplementedPoleHeartbeatGRPCServer) BatchGetHeartbeat(context.Context, *GetHeartbeatsRequest) (*GetHeartbeatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BatchGetHeartbeat not implemented")
 }
-func (*UnimplementedPolarisHeartbeatGRPCServer) BatchDelHeartbeat(context.Context, *DelHeartbeatsRequest) (*DelHeartbeatsResponse, error) {
+func (*UnimplementedPoleHeartbeatGRPCServer) BatchDelHeartbeat(context.Context, *DelHeartbeatsRequest) (*DelHeartbeatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BatchDelHeartbeat not implemented")
 }
 
-func RegisterPolarisHeartbeatGRPCServer(s *grpc.Server, srv PolarisHeartbeatGRPCServer) {
-	s.RegisterService(&_PolarisHeartbeatGRPC_serviceDesc, srv)
+func RegisterPoleHeartbeatGRPCServer(s *grpc.Server, srv PoleHeartbeatGRPCServer) {
+	s.RegisterService(&_PoleHeartbeatGRPC_serviceDesc, srv)
 }
 
-func _PolarisHeartbeatGRPC_BatchGetHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PoleHeartbeatGRPC_BatchGetHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetHeartbeatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisHeartbeatGRPCServer).BatchGetHeartbeat(ctx, in)
+		return srv.(PoleHeartbeatGRPCServer).BatchGetHeartbeat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisHeartbeatGRPC/BatchGetHeartbeat",
+		FullMethod: "/v1.PoleHeartbeatGRPC/BatchGetHeartbeat",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisHeartbeatGRPCServer).BatchGetHeartbeat(ctx, req.(*GetHeartbeatsRequest))
+		return srv.(PoleHeartbeatGRPCServer).BatchGetHeartbeat(ctx, req.(*GetHeartbeatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisHeartbeatGRPC_BatchDelHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PoleHeartbeatGRPC_BatchDelHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DelHeartbeatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisHeartbeatGRPCServer).BatchDelHeartbeat(ctx, in)
+		return srv.(PoleHeartbeatGRPCServer).BatchDelHeartbeat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisHeartbeatGRPC/BatchDelHeartbeat",
+		FullMethod: "/v1.PoleHeartbeatGRPC/BatchDelHeartbeat",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisHeartbeatGRPCServer).BatchDelHeartbeat(ctx, req.(*DelHeartbeatsRequest))
+		return srv.(PoleHeartbeatGRPCServer).BatchDelHeartbeat(ctx, req.(*DelHeartbeatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _PolarisHeartbeatGRPC_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "v1.PolarisHeartbeatGRPC",
-	HandlerType: (*PolarisHeartbeatGRPCServer)(nil),
+var _PoleHeartbeatGRPC_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "v1.PoleHeartbeatGRPC",
+	HandlerType: (*PoleHeartbeatGRPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "BatchGetHeartbeat",
-			Handler:    _PolarisHeartbeatGRPC_BatchGetHeartbeat_Handler,
+			Handler:    _PoleHeartbeatGRPC_BatchGetHeartbeat_Handler,
 		},
 		{
 			MethodName: "BatchDelHeartbeat",
-			Handler:    _PolarisHeartbeatGRPC_BatchDelHeartbeat_Handler,
+			Handler:    _PoleHeartbeatGRPC_BatchDelHeartbeat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

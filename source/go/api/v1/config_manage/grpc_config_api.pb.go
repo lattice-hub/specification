@@ -30,33 +30,32 @@ var file_grpc_config_api_proto_rawDesc = []byte{
 	0x0a, 0x15, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x61, 0x70,
 	0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x76, 0x31, 0x1a, 0x11, 0x63, 0x6f, 0x6e,
 	0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0e,
-	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0x80,
-	0x02, 0x0a, 0x11, 0x50, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
-	0x47, 0x52, 0x50, 0x43, 0x12, 0x32, 0x0a, 0x10, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x32, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x0e, 0x2e, 0x76,
-	0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x1a, 0x0c, 0x2e, 0x76,
-	0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x11,
-	0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
-	0x65, 0x12, 0x15, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
-	0x65, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x47, 0x0a, 0x08, 0x44, 0x69, 0x73, 0x63,
-	0x6f, 0x76, 0x65, 0x72, 0x12, 0x19, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
-	0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x1a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f,
-	0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30,
-	0x01, 0x42, 0x87, 0x01, 0x0a, 0x2a, 0x69, 0x6f, 0x2e, 0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x73, 0x70,
-	0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x76, 0x31, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
-	0x42, 0x18, 0x50, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x47,
-	0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5a, 0x3f, 0x67, 0x69, 0x74, 0x68,
-	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x65, 0x2d, 0x69, 0x6f, 0x2f, 0x73,
-	0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x63, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0xf9,
+	0x01, 0x0a, 0x0a, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x12, 0x32, 0x0a,
+	0x10, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
+	0x65, 0x12, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
+	0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x00, 0x12, 0x32, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x46, 0x69, 0x6c, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x11, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x15, 0x2e, 0x76, 0x31, 0x2e,
+	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73,
+	0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x00, 0x12, 0x47, 0x0a, 0x08, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x12, 0x19, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65,
+	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x87, 0x01, 0x0a, 0x2a, 0x69,
+	0x6f, 0x2e, 0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x63, 0x6f, 0x6e, 0x66,
+	0x69, 0x67, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x42, 0x18, 0x50, 0x6f, 0x6c, 0x61, 0x72,
+	0x69, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x5a, 0x3f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x70, 0x6f, 0x6c, 0x65, 0x2d, 0x69, 0x6f, 0x2f, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61,
+	0x6e, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_grpc_config_api_proto_goTypes = []interface{}{
@@ -67,14 +66,14 @@ var file_grpc_config_api_proto_goTypes = []interface{}{
 	(*ConfigDiscoverResponse)(nil), // 4: v1.ConfigDiscoverResponse
 }
 var file_grpc_config_api_proto_depIdxs = []int32{
-	0, // 0: v1.PolarisConfigGRPC.CreateConfigFile:input_type -> v1.ConfigFile
-	0, // 1: v1.PolarisConfigGRPC.UpdateConfigFile:input_type -> v1.ConfigFile
-	1, // 2: v1.PolarisConfigGRPC.PublishConfigFile:input_type -> v1.ConfigFileRelease
-	2, // 3: v1.PolarisConfigGRPC.Discover:input_type -> v1.ConfigDiscoverRequest
-	3, // 4: v1.PolarisConfigGRPC.CreateConfigFile:output_type -> v1.Response
-	3, // 5: v1.PolarisConfigGRPC.UpdateConfigFile:output_type -> v1.Response
-	3, // 6: v1.PolarisConfigGRPC.PublishConfigFile:output_type -> v1.Response
-	4, // 7: v1.PolarisConfigGRPC.Discover:output_type -> v1.ConfigDiscoverResponse
+	0, // 0: v1.ConfigGRPC.CreateConfigFile:input_type -> v1.ConfigFile
+	0, // 1: v1.ConfigGRPC.UpdateConfigFile:input_type -> v1.ConfigFile
+	1, // 2: v1.ConfigGRPC.PublishConfigFile:input_type -> v1.ConfigFileRelease
+	2, // 3: v1.ConfigGRPC.Discover:input_type -> v1.ConfigDiscoverRequest
+	3, // 4: v1.ConfigGRPC.CreateConfigFile:output_type -> v1.Response
+	3, // 5: v1.ConfigGRPC.UpdateConfigFile:output_type -> v1.Response
+	3, // 6: v1.ConfigGRPC.PublishConfigFile:output_type -> v1.Response
+	4, // 7: v1.ConfigGRPC.Discover:output_type -> v1.ConfigDiscoverResponse
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -115,10 +114,10 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// PolarisConfigGRPCClient is the client API for PolarisConfigGRPC service.
+// ConfigGRPCClient is the client API for ConfigGRPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PolarisConfigGRPCClient interface {
+type ConfigGRPCClient interface {
 	// 创建配置
 	CreateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error)
 	// 更新配置
@@ -126,68 +125,68 @@ type PolarisConfigGRPCClient interface {
 	// 发布配置
 	PublishConfigFile(ctx context.Context, in *ConfigFileRelease, opts ...grpc.CallOption) (*model.Response, error)
 	// 统一发现接口
-	Discover(ctx context.Context, opts ...grpc.CallOption) (PolarisConfigGRPC_DiscoverClient, error)
+	Discover(ctx context.Context, opts ...grpc.CallOption) (ConfigGRPC_DiscoverClient, error)
 }
 
-type polarisConfigGRPCClient struct {
+type configGRPCClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPolarisConfigGRPCClient(cc grpc.ClientConnInterface) PolarisConfigGRPCClient {
-	return &polarisConfigGRPCClient{cc}
+func NewConfigGRPCClient(cc grpc.ClientConnInterface) ConfigGRPCClient {
+	return &configGRPCClient{cc}
 }
 
-func (c *polarisConfigGRPCClient) CreateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *configGRPCClient) CreateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisConfigGRPC/CreateConfigFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/CreateConfigFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisConfigGRPCClient) UpdateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *configGRPCClient) UpdateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisConfigGRPC/UpdateConfigFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/UpdateConfigFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisConfigGRPCClient) PublishConfigFile(ctx context.Context, in *ConfigFileRelease, opts ...grpc.CallOption) (*model.Response, error) {
+func (c *configGRPCClient) PublishConfigFile(ctx context.Context, in *ConfigFileRelease, opts ...grpc.CallOption) (*model.Response, error) {
 	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.PolarisConfigGRPC/PublishConfigFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/PublishConfigFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *polarisConfigGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption) (PolarisConfigGRPC_DiscoverClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_PolarisConfigGRPC_serviceDesc.Streams[0], "/v1.PolarisConfigGRPC/Discover", opts...)
+func (c *configGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption) (ConfigGRPC_DiscoverClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ConfigGRPC_serviceDesc.Streams[0], "/v1.ConfigGRPC/Discover", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &polarisConfigGRPCDiscoverClient{stream}
+	x := &configGRPCDiscoverClient{stream}
 	return x, nil
 }
 
-type PolarisConfigGRPC_DiscoverClient interface {
+type ConfigGRPC_DiscoverClient interface {
 	Send(*ConfigDiscoverRequest) error
 	Recv() (*ConfigDiscoverResponse, error)
 	grpc.ClientStream
 }
 
-type polarisConfigGRPCDiscoverClient struct {
+type configGRPCDiscoverClient struct {
 	grpc.ClientStream
 }
 
-func (x *polarisConfigGRPCDiscoverClient) Send(m *ConfigDiscoverRequest) error {
+func (x *configGRPCDiscoverClient) Send(m *ConfigDiscoverRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *polarisConfigGRPCDiscoverClient) Recv() (*ConfigDiscoverResponse, error) {
+func (x *configGRPCDiscoverClient) Recv() (*ConfigDiscoverResponse, error) {
 	m := new(ConfigDiscoverResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -195,8 +194,8 @@ func (x *polarisConfigGRPCDiscoverClient) Recv() (*ConfigDiscoverResponse, error
 	return m, nil
 }
 
-// PolarisConfigGRPCServer is the server API for PolarisConfigGRPC service.
-type PolarisConfigGRPCServer interface {
+// ConfigGRPCServer is the server API for ConfigGRPC service.
+type ConfigGRPCServer interface {
 	// 创建配置
 	CreateConfigFile(context.Context, *ConfigFile) (*model.Response, error)
 	// 更新配置
@@ -204,103 +203,103 @@ type PolarisConfigGRPCServer interface {
 	// 发布配置
 	PublishConfigFile(context.Context, *ConfigFileRelease) (*model.Response, error)
 	// 统一发现接口
-	Discover(PolarisConfigGRPC_DiscoverServer) error
+	Discover(ConfigGRPC_DiscoverServer) error
 }
 
-// UnimplementedPolarisConfigGRPCServer can be embedded to have forward compatible implementations.
-type UnimplementedPolarisConfigGRPCServer struct {
+// UnimplementedConfigGRPCServer can be embedded to have forward compatible implementations.
+type UnimplementedConfigGRPCServer struct {
 }
 
-func (*UnimplementedPolarisConfigGRPCServer) CreateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
+func (*UnimplementedConfigGRPCServer) CreateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateConfigFile not implemented")
 }
-func (*UnimplementedPolarisConfigGRPCServer) UpdateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
+func (*UnimplementedConfigGRPCServer) UpdateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateConfigFile not implemented")
 }
-func (*UnimplementedPolarisConfigGRPCServer) PublishConfigFile(context.Context, *ConfigFileRelease) (*model.Response, error) {
+func (*UnimplementedConfigGRPCServer) PublishConfigFile(context.Context, *ConfigFileRelease) (*model.Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishConfigFile not implemented")
 }
-func (*UnimplementedPolarisConfigGRPCServer) Discover(PolarisConfigGRPC_DiscoverServer) error {
+func (*UnimplementedConfigGRPCServer) Discover(ConfigGRPC_DiscoverServer) error {
 	return status.Errorf(codes.Unimplemented, "method Discover not implemented")
 }
 
-func RegisterPolarisConfigGRPCServer(s *grpc.Server, srv PolarisConfigGRPCServer) {
-	s.RegisterService(&_PolarisConfigGRPC_serviceDesc, srv)
+func RegisterConfigGRPCServer(s *grpc.Server, srv ConfigGRPCServer) {
+	s.RegisterService(&_ConfigGRPC_serviceDesc, srv)
 }
 
-func _PolarisConfigGRPC_CreateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConfigGRPC_CreateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConfigFile)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisConfigGRPCServer).CreateConfigFile(ctx, in)
+		return srv.(ConfigGRPCServer).CreateConfigFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisConfigGRPC/CreateConfigFile",
+		FullMethod: "/v1.ConfigGRPC/CreateConfigFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisConfigGRPCServer).CreateConfigFile(ctx, req.(*ConfigFile))
+		return srv.(ConfigGRPCServer).CreateConfigFile(ctx, req.(*ConfigFile))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisConfigGRPC_UpdateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConfigGRPC_UpdateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConfigFile)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisConfigGRPCServer).UpdateConfigFile(ctx, in)
+		return srv.(ConfigGRPCServer).UpdateConfigFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisConfigGRPC/UpdateConfigFile",
+		FullMethod: "/v1.ConfigGRPC/UpdateConfigFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisConfigGRPCServer).UpdateConfigFile(ctx, req.(*ConfigFile))
+		return srv.(ConfigGRPCServer).UpdateConfigFile(ctx, req.(*ConfigFile))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisConfigGRPC_PublishConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConfigGRPC_PublishConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConfigFileRelease)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PolarisConfigGRPCServer).PublishConfigFile(ctx, in)
+		return srv.(ConfigGRPCServer).PublishConfigFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.PolarisConfigGRPC/PublishConfigFile",
+		FullMethod: "/v1.ConfigGRPC/PublishConfigFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PolarisConfigGRPCServer).PublishConfigFile(ctx, req.(*ConfigFileRelease))
+		return srv.(ConfigGRPCServer).PublishConfigFile(ctx, req.(*ConfigFileRelease))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PolarisConfigGRPC_Discover_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PolarisConfigGRPCServer).Discover(&polarisConfigGRPCDiscoverServer{stream})
+func _ConfigGRPC_Discover_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ConfigGRPCServer).Discover(&configGRPCDiscoverServer{stream})
 }
 
-type PolarisConfigGRPC_DiscoverServer interface {
+type ConfigGRPC_DiscoverServer interface {
 	Send(*ConfigDiscoverResponse) error
 	Recv() (*ConfigDiscoverRequest, error)
 	grpc.ServerStream
 }
 
-type polarisConfigGRPCDiscoverServer struct {
+type configGRPCDiscoverServer struct {
 	grpc.ServerStream
 }
 
-func (x *polarisConfigGRPCDiscoverServer) Send(m *ConfigDiscoverResponse) error {
+func (x *configGRPCDiscoverServer) Send(m *ConfigDiscoverResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *polarisConfigGRPCDiscoverServer) Recv() (*ConfigDiscoverRequest, error) {
+func (x *configGRPCDiscoverServer) Recv() (*ConfigDiscoverRequest, error) {
 	m := new(ConfigDiscoverRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -308,27 +307,27 @@ func (x *polarisConfigGRPCDiscoverServer) Recv() (*ConfigDiscoverRequest, error)
 	return m, nil
 }
 
-var _PolarisConfigGRPC_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "v1.PolarisConfigGRPC",
-	HandlerType: (*PolarisConfigGRPCServer)(nil),
+var _ConfigGRPC_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "v1.ConfigGRPC",
+	HandlerType: (*ConfigGRPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateConfigFile",
-			Handler:    _PolarisConfigGRPC_CreateConfigFile_Handler,
+			Handler:    _ConfigGRPC_CreateConfigFile_Handler,
 		},
 		{
 			MethodName: "UpdateConfigFile",
-			Handler:    _PolarisConfigGRPC_UpdateConfigFile_Handler,
+			Handler:    _ConfigGRPC_UpdateConfigFile_Handler,
 		},
 		{
 			MethodName: "PublishConfigFile",
-			Handler:    _PolarisConfigGRPC_PublishConfigFile_Handler,
+			Handler:    _ConfigGRPC_PublishConfigFile_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Discover",
-			Handler:       _PolarisConfigGRPC_Discover_Handler,
+			Handler:       _ConfigGRPC_Discover_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

@@ -9,7 +9,7 @@ option go_package = "github.com/pole-io/specification/source/go/api/v1/config_ma
 option java_package = "io.pole.specification.api.v1.config.manage";
 option java_outer_classname = "PolarisConfigGRPCService";
 
-service PolarisConfigGRPC {
+service ConfigGRPC {
   // 创建配置
   rpc CreateConfigFile(ConfigFile) returns (Response) {}
   // 更新配置

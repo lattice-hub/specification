@@ -155,7 +155,6 @@ enum ConfigClientType {
   Agent = 1;
 }
 
-
 message WatchConfigFileRequest {
   string client_ip = 1 [ json_name = "client_ip" ];
   string service_name = 2 [ json_name = "service_name" ];
