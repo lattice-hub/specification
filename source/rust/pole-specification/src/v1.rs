@@ -339,7 +339,7 @@ pub struct Api {
     pub path: ::core::option::Option<MatchString>,
 }
 /// 治理规则发布请求
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleRelease {
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
@@ -353,12 +353,18 @@ pub struct RuleRelease {
     pub description: ::prost::alloc::string::String,
     #[prost(string, tag = "6")]
     pub release_type: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "7")]
-    pub client_label: ::core::option::Option<ClientLabel>,
+    #[prost(message, repeated, tag = "7")]
+    pub client_labels: ::prost::alloc::vec::Vec<ClientLabel>,
     #[prost(uint64, tag = "8")]
     pub version: u64,
     #[prost(enumeration = "rule_release::RuleType", tag = "9")]
     pub resource: i32,
+    #[prost(bool, tag = "10")]
+    pub active: bool,
+    #[prost(string, tag = "20")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "21")]
+    pub mtime: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `RuleRelease`.
 pub mod rule_release {
@@ -380,9 +386,9 @@ pub mod rule_release {
         CircuitBreakerRules = 2,
         FaultDetectRules = 3,
         LaneRules = 4,
-        Lossless = 5,
-        Mirror = 6,
-        Security = 7,
+        LosslessRules = 5,
+        TrafficMirrorRules = 6,
+        TrafficSecurityRules = 7,
     }
     impl RuleType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -396,9 +402,9 @@ pub mod rule_release {
                 Self::CircuitBreakerRules => "CircuitBreakerRules",
                 Self::FaultDetectRules => "FaultDetectRules",
                 Self::LaneRules => "LaneRules",
-                Self::Lossless => "Lossless",
-                Self::Mirror => "Mirror",
-                Self::Security => "Security",
+                Self::LosslessRules => "LosslessRules",
+                Self::TrafficMirrorRules => "TrafficMirrorRules",
+                Self::TrafficSecurityRules => "TrafficSecurityRules",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -409,9 +415,9 @@ pub mod rule_release {
                 "CircuitBreakerRules" => Some(Self::CircuitBreakerRules),
                 "FaultDetectRules" => Some(Self::FaultDetectRules),
                 "LaneRules" => Some(Self::LaneRules),
-                "Lossless" => Some(Self::Lossless),
-                "Mirror" => Some(Self::Mirror),
-                "Security" => Some(Self::Security),
+                "LosslessRules" => Some(Self::LosslessRules),
+                "TrafficMirrorRules" => Some(Self::TrafficMirrorRules),
+                "TrafficSecurityRules" => Some(Self::TrafficSecurityRules),
                 _ => None,
             }
         }
@@ -1501,11 +1507,14 @@ pub struct RateLimit {
     /// 限流规则唯一标识
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
-    /// 限流规则所属服务名
+    /// 限流规则名称
     #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// 限流规则所属服务名
+    #[prost(string, tag = "3")]
     pub service: ::prost::alloc::string::String,
     /// 限流规则所属命名空间
-    #[prost(string, tag = "3")]
+    #[prost(string, tag = "4")]
     pub namespace: ::prost::alloc::string::String,
     /// 限流规则优先级，0值最高
     #[prost(uint32, tag = "5")]
@@ -2051,6 +2060,17 @@ pub mod health_check {
 pub struct HeartbeatHealthCheck {
     #[prost(uint32, tag = "1")]
     pub ttl: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InstanceLabels {
+    #[prost(string, tag = "2")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub service: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub service_id: ::prost::alloc::string::String,
+    #[prost(map = "string, message", tag = "1")]
+    pub labels: ::std::collections::HashMap<::prost::alloc::string::String, StringList>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2954,35 +2974,47 @@ pub struct DiscoverResponse {
     pub info: ::prost::alloc::string::String,
     #[prost(enumeration = "discover_response::DiscoverResponseType", tag = "3")]
     pub r#type: i32,
+    /// 服务
     #[prost(message, optional, tag = "4")]
     pub service: ::core::option::Option<Service>,
-    #[prost(message, repeated, tag = "5")]
-    pub instances: ::prost::alloc::vec::Vec<Instance>,
-    #[prost(message, optional, tag = "7")]
-    pub rate_limit: ::core::option::Option<RateLimit>,
-    #[prost(message, repeated, tag = "8")]
-    pub circuit_breaker: ::prost::alloc::vec::Vec<CircuitBreakerRule>,
-    #[prost(message, repeated, tag = "9")]
-    pub services: ::prost::alloc::vec::Vec<Service>,
-    #[prost(message, repeated, tag = "10")]
-    pub namespaces: ::prost::alloc::vec::Vec<Namespace>,
-    #[prost(message, optional, tag = "11")]
-    pub fault_detector: ::core::option::Option<FaultDetector>,
-    #[prost(message, optional, tag = "21")]
+    /// 服务真实名称
+    #[prost(message, optional, tag = "5")]
     pub alias_for: ::core::option::Option<Service>,
-    #[prost(message, repeated, tag = "22")]
+    /// 命名空间列表
+    #[prost(message, repeated, tag = "6")]
+    pub namespaces: ::prost::alloc::vec::Vec<Namespace>,
+    /// 服务列表
+    #[prost(message, repeated, tag = "7")]
+    pub services: ::prost::alloc::vec::Vec<Service>,
+    /// 服务实例列表
+    #[prost(message, repeated, tag = "8")]
+    pub instances: ::prost::alloc::vec::Vec<Instance>,
+    /// 服务契约
+    #[prost(message, repeated, tag = "9")]
+    pub service_contracts: ::prost::alloc::vec::Vec<ServiceContract>,
+    /// 限流规则
+    #[prost(message, repeated, tag = "20")]
+    pub rate_limit: ::prost::alloc::vec::Vec<RateLimit>,
+    /// 熔断规则
+    #[prost(message, repeated, tag = "21")]
+    pub circuit_breaker: ::prost::alloc::vec::Vec<CircuitBreakerRule>,
+    /// 故障检测规则
+    #[prost(message, optional, tag = "22")]
+    pub fault_detector: ::core::option::Option<FaultDetector>,
+    /// 全链路灰度泳道
+    #[prost(message, repeated, tag = "23")]
     pub lanes: ::prost::alloc::vec::Vec<LaneGroup>,
     /// 自定义路由规则内容
-    #[prost(message, repeated, tag = "23")]
+    #[prost(message, repeated, tag = "24")]
     pub custom_route_rules: ::prost::alloc::vec::Vec<RouteRule>,
     /// 就近路由规则内容
-    #[prost(message, repeated, tag = "24")]
+    #[prost(message, repeated, tag = "25")]
     pub nearby_route_rules: ::prost::alloc::vec::Vec<RouteRule>,
     /// 无损上下线规则内容
-    #[prost(message, repeated, tag = "25")]
+    #[prost(message, repeated, tag = "26")]
     pub lossless_rules: ::prost::alloc::vec::Vec<LosslessRule>,
     /// 服务黑白名单鉴权规则
-    #[prost(message, repeated, tag = "26")]
+    #[prost(message, repeated, tag = "27")]
     pub block_allow_list_rule: ::prost::alloc::vec::Vec<BlockAllowListRule>,
 }
 /// Nested message and enum types in `DiscoverResponse`.
@@ -5703,6 +5735,12 @@ pub struct StrategyResources {
     pub faultdetect_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "9")]
     pub lane_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "10")]
+    pub lossless_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "11")]
+    pub mirror_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "12")]
+    pub security_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "21")]
     pub users: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "22")]
@@ -5834,6 +5872,9 @@ pub enum ResourceType {
     CircuitBreakerRules = 5,
     FaultDetectRules = 6,
     LaneRules = 7,
+    LosslessRules = 8,
+    MirrorRules = 9,
+    SecurityRules = 10,
     Users = 20,
     UserGroups = 21,
     Roles = 22,
@@ -5854,6 +5895,9 @@ impl ResourceType {
             Self::CircuitBreakerRules => "CircuitBreakerRules",
             Self::FaultDetectRules => "FaultDetectRules",
             Self::LaneRules => "LaneRules",
+            Self::LosslessRules => "LosslessRules",
+            Self::MirrorRules => "MirrorRules",
+            Self::SecurityRules => "SecurityRules",
             Self::Users => "Users",
             Self::UserGroups => "UserGroups",
             Self::Roles => "Roles",
@@ -5871,6 +5915,9 @@ impl ResourceType {
             "CircuitBreakerRules" => Some(Self::CircuitBreakerRules),
             "FaultDetectRules" => Some(Self::FaultDetectRules),
             "LaneRules" => Some(Self::LaneRules),
+            "LosslessRules" => Some(Self::LosslessRules),
+            "MirrorRules" => Some(Self::MirrorRules),
+            "SecurityRules" => Some(Self::SecurityRules),
             "Users" => Some(Self::Users),
             "UserGroups" => Some(Self::UserGroups),
             "Roles" => Some(Self::Roles),

@@ -94,24 +94,34 @@ message DiscoverResponse {
   }
 
   DiscoverResponseType type = 3 [ json_name = "type" ];
+  // 服务
   Service service = 4 [ json_name = "service" ];
-  repeated Instance instances = 5 [ json_name = "instances" ];
-  RateLimit rateLimit = 7 [ json_name = "rate_limit" ];
-  repeated CircuitBreakerRule circuitBreaker = 8 [ json_name = "circuit_breaker" ];
-  repeated Service services = 9 [ json_name = "services" ];
-  repeated Namespace namespaces = 10 [ json_name = "namespaces" ];
-  FaultDetector faultDetector = 11 [ json_name = "fault_detector" ];
-  reserved 12 to 20;
-  Service aliasFor = 21 [ json_name = "alias_for" ];
-  repeated LaneGroup lanes = 22 [ json_name = "lanes" ];
+  // 服务真实名称
+  Service aliasFor = 5 [ json_name = "alias_for" ];
+  // 命名空间列表
+  repeated Namespace namespaces = 6 [ json_name = "namespaces" ];
+  // 服务列表
+  repeated Service services = 7 [ json_name = "services" ];
+  // 服务实例列表
+  repeated Instance instances = 8 [ json_name = "instances" ];
+  // 服务契约
+  repeated ServiceContract serviceContracts = 9 [ json_name = "service_contracts" ];
+  // 限流规则
+  repeated RateLimit rateLimit = 20 [ json_name = "rate_limit" ];
+  // 熔断规则
+  repeated CircuitBreakerRule circuitBreaker = 21 [ json_name = "circuit_breaker" ];
+  // 故障检测规则
+  FaultDetector faultDetector = 22 [ json_name = "fault_detector" ];
+  // 全链路灰度泳道
+  repeated LaneGroup lanes = 23 [ json_name = "lanes" ];
   // 自定义路由规则内容
-  repeated RouteRule customRouteRules = 23 [ json_name = "custom_route_rules" ];
+  repeated RouteRule customRouteRules = 24 [ json_name = "custom_route_rules" ];
   // 就近路由规则内容
-  repeated RouteRule nearbyRouteRules = 24 [ json_name = "nearby_route_rules" ];
+  repeated RouteRule nearbyRouteRules = 25 [ json_name = "nearby_route_rules" ];
   // 无损上下线规则内容
-  repeated LosslessRule losslessRules = 25 [ json_name = "lossless_rules" ];
+  repeated LosslessRule losslessRules = 26 [ json_name = "lossless_rules" ];
   // 服务黑白名单鉴权规则
-  repeated BlockAllowListRule blockAllowListRule = 26 [ json_name = "block_allow_list_rule" ];
+  repeated BlockAllowListRule blockAllowListRule = 27 [ json_name = "block_allow_list_rule" ];
 }
 
 

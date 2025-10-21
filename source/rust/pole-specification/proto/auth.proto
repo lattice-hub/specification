@@ -24,6 +24,9 @@ enum ResourceType {
   CircuitBreakerRules = 5;
   FaultDetectRules = 6;
   LaneRules = 7;
+  LosslessRules = 8;
+  MirrorRules = 9;
+  SecurityRules = 10;
   Users = 20;
   UserGroups = 21;
   Roles = 22;
@@ -137,13 +140,15 @@ message StrategyResources {
   string strategy_id = 1 [ json_name = "strategy_id" ];
   repeated StrategyResourceEntry namespaces = 2;
   repeated StrategyResourceEntry services = 3;
-  repeated StrategyResourceEntry config_groups = 4
-      [ json_name = "config_groups" ];
+  repeated StrategyResourceEntry config_groups = 4 [ json_name = "config_groups" ];
   repeated StrategyResourceEntry route_rules = 5 [ json_name = "route_rules" ];
   repeated StrategyResourceEntry ratelimit_rules = 6 [ json_name = "ratelimit_rules" ];
   repeated StrategyResourceEntry circuitbreaker_rules = 7 [ json_name = "circuitbreaker_rules" ];
   repeated StrategyResourceEntry faultdetect_rules = 8 [ json_name = "faultdetect_rules" ];
   repeated StrategyResourceEntry lane_rules = 9 [ json_name = "lane_rules" ];
+  repeated StrategyResourceEntry lossless_rules = 10 [ json_name = "lossless_rules" ];
+  repeated StrategyResourceEntry mirror_rules = 11 [ json_name = "mirror_rules" ];
+  repeated StrategyResourceEntry security_rules = 12 [ json_name = "security_rules" ];
 
   repeated StrategyResourceEntry users = 21 [ json_name = "users" ];
   repeated StrategyResourceEntry user_groups = 22 [ json_name = "user_groups" ];
@@ -168,13 +173,11 @@ message AuthStrategy {
   string ctime = 8;
   string mtime = 9;
   string auth_token = 10 [ json_name = "auth_token" ];
-  bool default_strategy = 11
-      [ json_name = "default_strategy" ];
+  bool default_strategy = 11 [ json_name = "default_strategy" ];
   map<string, string> metadata = 12;
   string source = 13;
   repeated string functions = 14;
-  repeated StrategyResourceLabel resource_labels = 15
-      [ json_name = "resource_labels" ];
+  repeated StrategyResourceLabel resource_labels = 15 [ json_name = "resource_labels" ];
 }
 
 message ModifyAuthStrategy {
@@ -190,6 +193,5 @@ message ModifyAuthStrategy {
   map<string, string> metadata = 12;
   string source = 13;
   repeated string functions = 14;
-  repeated StrategyResourceLabel resource_labels = 15
-      [ json_name = "resource_labels" ];
+  repeated StrategyResourceLabel resource_labels = 15 [ json_name = "resource_labels" ];
 }
