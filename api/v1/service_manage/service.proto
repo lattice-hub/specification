@@ -8,6 +8,11 @@ option go_package = "github.com/pole-io/specification/source/go/api/v1/service_m
 option java_package = "io.pole.specification.api.v1.service.manage";
 option java_outer_classname = "ServiceProto";
 
+message SimpleService {
+  string name = 2 [ json_name = "name" ];
+  string namespace = 3 [ json_name = "namespace" ];
+}
+
 message Service {
   string id = 1 [ json_name = "id" ];
   string name = 2 [ json_name = "name" ];
@@ -99,4 +104,8 @@ message InstanceLabels {
   string service = 3;
   string service_id = 4;
   map<string, StringList> labels = 1;
+}
+
+message ServiceSubscriber {
+  
 }
