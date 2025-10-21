@@ -16,10 +16,6 @@ service PolarisConfigGRPC {
   rpc UpdateConfigFile(ConfigFile) returns (Response) {}
   // 发布配置
   rpc PublishConfigFile(ConfigFileRelease) returns (Response) {}
-  // 创建/更新并发布配置
-  rpc UpsertAndPublishConfigFile(ConfigFilePublishInfo) returns (Response) {}
-  // 拉取指定配置分组下的配置文件列表
-  rpc GetConfigFileMetadataList(ConfigFileGroupRequest) returns (Response) {}
   // 统一发现接口
   rpc Discover(stream ConfigDiscoverRequest) returns (stream ConfigDiscoverResponse) {}
 }
