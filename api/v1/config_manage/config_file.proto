@@ -8,7 +8,7 @@ option java_package = "io.pole.specification.api.v1.config.manage";
 option java_outer_classname = "ConfigFileProto";
 
 message ConfigFileGroup {
-  uint64 id = 1;
+  string id = 1;
   string name = 2;
   string namespace = 3;
   string comment = 4;
@@ -37,7 +37,7 @@ message PlaceholderValue {
 }
 
 message ConfigFile {
-  uint64 id = 1;
+  string id = 1;
   string name = 2;
   string namespace = 3;
   string group = 4;
@@ -73,7 +73,7 @@ enum ConfigFileSupportedClient {
 }
 
 message ConfigFileRelease {
-  uint64 id = 1;
+  string id = 1;
   string name = 2;
   string namespace = 3;
   string group = 4;
@@ -94,8 +94,6 @@ message ConfigFileRelease {
   string release_type = 18 [ json_name = "release_type" ];
   // 配置灰度发布时需要匹配的客户端标签信息
   repeated ClientLabel beta_labels = 19 [ json_name = "beta_labels" ];
-  // 配置文件唯一ID
-  uint64 config_file_id = 20 [ json_name = "config_file_id"];
   ConfigFileSupportedClient supported_client = 21 [ json_name = "supported_client" ];
   ConfigFilePersistent persistent = 22  [ json_name = "persistent" ];
 
@@ -110,7 +108,7 @@ message ConfigFileRelease {
 }
 
 message ConfigFileReleaseHistory {
-  uint64 id = 1;
+  string id = 1;
   string name = 2;
   string namespace = 3;
   string group = 4;
@@ -207,13 +205,15 @@ message ConfigFileGroupRequest {
 message ConfigDiscoverFilter {
   // pole.io 自定义信息
   Caller caller = 1;
+  // 客户端公钥，用于加密返回的配置 encrypted_key 字段
+  string public_key = 2;
 }
 
 message ConfigDiscoverRequest {
   enum ConfigDiscoverRequestType {
     UNKNOWN = 0;
     CONFIG_FILE = 1;
-    CONFIG_FILE_Names = 2;
+    CONFIG_FILE_NAMES = 2;
     CONFIG_FILE_GROUPS = 3;
   }
   ConfigDiscoverRequestType type = 1;
@@ -228,7 +228,7 @@ message ConfigDiscoverResponse {
   enum ConfigDiscoverResponseType {
     UNKNOWN = 0;
     CONFIG_FILE = 1;
-    CONFIG_FILE_Names = 2;
+    CONFIG_FILE_NAMES = 2;
     CONFIG_FILE_GROUPS = 3;
   }
 
