@@ -96,6 +96,10 @@ message ConfigFileRelease {
   repeated ClientLabel beta_labels = 19 [ json_name = "beta_labels" ];
   ConfigFileSupportedClient supported_client = 21 [ json_name = "supported_client" ];
   ConfigFilePersistent persistent = 22  [ json_name = "persistent" ];
+    // 是否为加密配置文件
+  bool encrypted = 23;
+  // 加密算法
+  string encrypt_algo = 24;
 
   // 文件类型
   enum ConfigFileType {
