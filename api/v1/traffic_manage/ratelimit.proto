@@ -38,8 +38,6 @@ message RateLimit {
   Report report = 12;
   // 分布式限流服务集群
   RateLimitCluster cluster = 16;
-  // customResponse 限流触发后的响应
-  CustomResponse customResponse = 17 [ json_name = "custom_response" ];
   // 限流规则创建时间
   string ctime = 20;
   // 限流规则修改时间
@@ -94,6 +92,8 @@ message LimitTrigger {
     GLOBAL_TOTAL = 0;   // 总体阈值
     SHARE_EQUALLY = 1;  // 单机均摊阈值
   }
+  // 是否停用该限流规则，默认启用
+  bool disable = 12;
   AmountMode amount_mode = 14 [json_name = "amount_mode"];
 }
 
