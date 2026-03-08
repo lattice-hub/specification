@@ -874,16 +874,74 @@ func (x *InstanceLabels) GetLabels() map[string]*model.StringList {
 	return nil
 }
 
+type ServiceKey struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name      string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Namespace string `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
+}
+
+func (x *ServiceKey) Reset() {
+	*x = ServiceKey{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_service_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ServiceKey) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceKey) ProtoMessage() {}
+
+func (x *ServiceKey) ProtoReflect() protoreflect.Message {
+	mi := &file_service_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceKey.ProtoReflect.Descriptor instead.
+func (*ServiceKey) Descriptor() ([]byte, []int) {
+	return file_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ServiceKey) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ServiceKey) GetNamespace() string {
+	if x != nil {
+		return x.Namespace
+	}
+	return ""
+}
+
 type ServiceSubscriber struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Caller *ServiceKey   `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
+	Callee []*ServiceKey `protobuf:"bytes,2,rep,name=callee,proto3" json:"callee,omitempty"`
 }
 
 func (x *ServiceSubscriber) Reset() {
 	*x = ServiceSubscriber{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_service_proto_msgTypes[7]
+		mi := &file_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -896,7 +954,7 @@ func (x *ServiceSubscriber) String() string {
 func (*ServiceSubscriber) ProtoMessage() {}
 
 func (x *ServiceSubscriber) ProtoReflect() protoreflect.Message {
-	mi := &file_service_proto_msgTypes[7]
+	mi := &file_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -909,7 +967,21 @@ func (x *ServiceSubscriber) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceSubscriber.ProtoReflect.Descriptor instead.
 func (*ServiceSubscriber) Descriptor() ([]byte, []int) {
-	return file_service_proto_rawDescGZIP(), []int{7}
+	return file_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ServiceSubscriber) GetCaller() *ServiceKey {
+	if x != nil {
+		return x.Caller
+	}
+	return nil
+}
+
+func (x *ServiceSubscriber) GetCallee() []*ServiceKey {
+	if x != nil {
+		return x.Callee
+	}
+	return nil
 }
 
 var File_service_proto protoreflect.FileDescriptor
@@ -1056,8 +1128,17 @@ var file_service_proto_rawDesc = []byte{
 	0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x24, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
 	0x4c, 0x69, 0x73, 0x74, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22,
-	0x13, 0x0a, 0x11, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72,
-	0x69, 0x62, 0x65, 0x72, 0x2a, 0x24, 0x0a, 0x09, 0x41, 0x6c, 0x69, 0x61, 0x73, 0x54, 0x79, 0x70,
+	0x3e, 0x0a, 0x0a, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x22,
+	0x63, 0x0a, 0x11, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72,
+	0x69, 0x62, 0x65, 0x72, 0x12, 0x26, 0x0a, 0x06, 0x63, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x4b, 0x65, 0x79, 0x52, 0x06, 0x63, 0x61, 0x6c, 0x6c, 0x65, 0x72, 0x12, 0x26, 0x0a, 0x06,
+	0x63, 0x61, 0x6c, 0x6c, 0x65, 0x65, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x76,
+	0x31, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x4b, 0x65, 0x79, 0x52, 0x06, 0x63, 0x61,
+	0x6c, 0x6c, 0x65, 0x65, 0x2a, 0x24, 0x0a, 0x09, 0x41, 0x6c, 0x69, 0x61, 0x73, 0x54, 0x79, 0x70,
 	0x65, 0x12, 0x0b, 0x0a, 0x07, 0x44, 0x45, 0x46, 0x41, 0x55, 0x4c, 0x54, 0x10, 0x00, 0x12, 0x0a,
 	0x0a, 0x06, 0x43, 0x4c, 0x35, 0x53, 0x49, 0x44, 0x10, 0x01, 0x42, 0x7d, 0x0a, 0x2b, 0x69, 0x6f,
 	0x2e, 0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74,
@@ -1084,7 +1165,7 @@ func file_service_proto_rawDescGZIP() []byte {
 }
 
 var file_service_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_service_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_service_proto_goTypes = []interface{}{
 	(AliasType)(0),                   // 0: v1.AliasType
 	(HealthCheck_HealthCheckType)(0), // 1: v1.HealthCheck.HealthCheckType
@@ -1095,28 +1176,31 @@ var file_service_proto_goTypes = []interface{}{
 	(*HealthCheck)(nil),              // 6: v1.HealthCheck
 	(*HeartbeatHealthCheck)(nil),     // 7: v1.HeartbeatHealthCheck
 	(*InstanceLabels)(nil),           // 8: v1.InstanceLabels
-	(*ServiceSubscriber)(nil),        // 9: v1.ServiceSubscriber
-	nil,                              // 10: v1.Service.MetadataEntry
-	nil,                              // 11: v1.Instance.MetadataEntry
-	nil,                              // 12: v1.InstanceLabels.LabelsEntry
-	(*model.Location)(nil),           // 13: v1.Location
-	(*model.StringList)(nil),         // 14: v1.StringList
+	(*ServiceKey)(nil),               // 9: v1.ServiceKey
+	(*ServiceSubscriber)(nil),        // 10: v1.ServiceSubscriber
+	nil,                              // 11: v1.Service.MetadataEntry
+	nil,                              // 12: v1.Instance.MetadataEntry
+	nil,                              // 13: v1.InstanceLabels.LabelsEntry
+	(*model.Location)(nil),           // 14: v1.Location
+	(*model.StringList)(nil),         // 15: v1.StringList
 }
 var file_service_proto_depIdxs = []int32{
-	10, // 0: v1.Service.metadata:type_name -> v1.Service.MetadataEntry
+	11, // 0: v1.Service.metadata:type_name -> v1.Service.MetadataEntry
 	0,  // 1: v1.ServiceAlias.type:type_name -> v1.AliasType
 	6,  // 2: v1.Instance.health_check:type_name -> v1.HealthCheck
-	13, // 3: v1.Instance.location:type_name -> v1.Location
-	11, // 4: v1.Instance.metadata:type_name -> v1.Instance.MetadataEntry
+	14, // 3: v1.Instance.location:type_name -> v1.Location
+	12, // 4: v1.Instance.metadata:type_name -> v1.Instance.MetadataEntry
 	1,  // 5: v1.HealthCheck.type:type_name -> v1.HealthCheck.HealthCheckType
 	7,  // 6: v1.HealthCheck.heartbeat:type_name -> v1.HeartbeatHealthCheck
-	12, // 7: v1.InstanceLabels.labels:type_name -> v1.InstanceLabels.LabelsEntry
-	14, // 8: v1.InstanceLabels.LabelsEntry.value:type_name -> v1.StringList
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	13, // 7: v1.InstanceLabels.labels:type_name -> v1.InstanceLabels.LabelsEntry
+	9,  // 8: v1.ServiceSubscriber.caller:type_name -> v1.ServiceKey
+	9,  // 9: v1.ServiceSubscriber.callee:type_name -> v1.ServiceKey
+	15, // 10: v1.InstanceLabels.LabelsEntry.value:type_name -> v1.StringList
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_service_proto_init() }
@@ -1210,6 +1294,18 @@ func file_service_proto_init() {
 			}
 		}
 		file_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ServiceKey); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ServiceSubscriber); i {
 			case 0:
 				return &v.state
@@ -1228,7 +1324,7 @@ func file_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_service_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
