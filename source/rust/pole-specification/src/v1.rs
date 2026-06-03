@@ -4227,6 +4227,19 @@ pub struct McpServer {
     pub mtime: ::prost::alloc::string::String,
     #[prost(string, tag = "14")]
     pub export_to: ::prost::alloc::string::String,
+    /// backend_type indicates how this MCP server reaches its backend.
+    /// Supported values: service, address.
+    #[prost(string, tag = "15")]
+    pub backend_type: ::prost::alloc::string::String,
+    /// backend_service_namespace is set when backend_type is service.
+    #[prost(string, tag = "16")]
+    pub backend_service_namespace: ::prost::alloc::string::String,
+    /// backend_service_name is set when backend_type is service.
+    #[prost(string, tag = "17")]
+    pub backend_service_name: ::prost::alloc::string::String,
+    /// backend_address is set when backend_type is address.
+    #[prost(string, tag = "18")]
+    pub backend_address: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct McpServers {
@@ -4249,6 +4262,12 @@ pub struct McpServerQuery {
     pub offset: u32,
     #[prost(uint32, tag = "7")]
     pub limit: u32,
+    #[prost(string, tag = "8")]
+    pub backend_type: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub backend_service_namespace: ::prost::alloc::string::String,
+    #[prost(string, tag = "10")]
+    pub backend_service_name: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct McpServerDeleteRequest {

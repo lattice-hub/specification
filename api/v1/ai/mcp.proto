@@ -22,6 +22,15 @@ message MCPServer {
   string ctime = 12 [ json_name = "ctime" ];
   string mtime = 13 [ json_name = "mtime" ];
   string export_to = 14 [ json_name = "export_to" ];
+  // backend_type indicates how this MCP server reaches its backend.
+  // Supported values: service, address.
+  string backend_type = 15 [ json_name = "backend_type" ];
+  // backend_service_namespace is set when backend_type is service.
+  string backend_service_namespace = 16 [ json_name = "backend_service_namespace" ];
+  // backend_service_name is set when backend_type is service.
+  string backend_service_name = 17 [ json_name = "backend_service_name" ];
+  // backend_address is set when backend_type is address.
+  string backend_address = 18 [ json_name = "backend_address" ];
 }
 
 message MCPServers {
@@ -36,6 +45,9 @@ message MCPServerQuery {
   string protocol = 5 [ json_name = "protocol" ];
   uint32 offset = 6 [ json_name = "offset" ];
   uint32 limit = 7 [ json_name = "limit" ];
+  string backend_type = 8 [ json_name = "backend_type" ];
+  string backend_service_namespace = 9 [ json_name = "backend_service_namespace" ];
+  string backend_service_name = 10 [ json_name = "backend_service_name" ];
 }
 
 message MCPServerDeleteRequest {
