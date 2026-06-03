@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package v1;
+
+option go_package = "github.com/pole-io/specification/source/go/api/v1/ai";
+option java_package = "io.pole.specification.api.v1.ai";
+option java_outer_classname = "McpProto";
+
+// MCPServer describes an MCP server registry entry.
+message MCPServer {
+  string id = 1 [ json_name = "id" ];
+  string name = 2 [ json_name = "name" ];
+  string namespace = 3 [ json_name = "namespace" ];
+  string ports = 4 [ json_name = "ports" ];
+  string business = 5 [ json_name = "business" ];
+  string department = 6 [ json_name = "department" ];
+  string description = 7 [ json_name = "description" ];
+  string revision = 8 [ json_name = "revision" ];
+  uint32 flag = 9 [ json_name = "flag" ];
+  string reference = 10 [ json_name = "reference" ];
+  string protocol = 11 [ json_name = "protocol" ];
+  string ctime = 12 [ json_name = "ctime" ];
+  string mtime = 13 [ json_name = "mtime" ];
+  string export_to = 14 [ json_name = "export_to" ];
+}
+
+message MCPServers {
+  repeated MCPServer servers = 1 [ json_name = "servers" ];
+}
+
+message MCPServerQuery {
+  string name = 1 [ json_name = "name" ];
+  string namespace = 2 [ json_name = "namespace" ];
+  string business = 3 [ json_name = "business" ];
+  string department = 4 [ json_name = "department" ];
+  string protocol = 5 [ json_name = "protocol" ];
+  uint32 offset = 6 [ json_name = "offset" ];
+  uint32 limit = 7 [ json_name = "limit" ];
+}
+
+message MCPServerDeleteRequest {
+  repeated string server_ids = 1 [ json_name = "server_ids" ];
+}
+
+message MCPServerTool {
+  string id = 1 [ json_name = "id" ];
+  string mcp_server_id = 2 [ json_name = "mcp_server_id" ];
+  string name = 3 [ json_name = "name" ];
+  string description = 4 [ json_name = "description" ];
+  string input_schema = 5 [ json_name = "input_schema" ];
+  string output_schema = 6 [ json_name = "output_schema" ];
+  string annotations = 7 [ json_name = "annotations" ];
+  uint32 flag = 8 [ json_name = "flag" ];
+  string ctime = 9 [ json_name = "ctime" ];
+  string mtime = 10 [ json_name = "mtime" ];
+}
+
+message MCPServerTools {
+  repeated MCPServerTool tools = 1 [ json_name = "tools" ];
+}
+
+message MCPServerToolQuery {
+  string server_id = 1 [ json_name = "server_id" ];
+  string server_name = 2 [ json_name = "server_name" ];
+  string server_namespace = 3 [ json_name = "server_namespace" ];
+  uint32 offset = 4 [ json_name = "offset" ];
+  uint32 limit = 5 [ json_name = "limit" ];
+}
+
+message MCPServerToolDeleteRequest {
+  repeated string tool_ids = 1 [ json_name = "tool_ids" ];
+}

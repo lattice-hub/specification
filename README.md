@@ -37,6 +37,8 @@ README：
 | **Access Control Specification**     |
 | authentication                       | [v1](/specification/v1/access_control_spec/authentication.md)  |
 | anthorization                        |  [v1](/specification/v1/access_control_spec/authorization.md)  |
+| **AI Native Specification**          |
+| mcp server                           |          [v1](/api/v1/ai/mcp.proto)                           |
 
 ## 服务治理接口
 
@@ -56,6 +58,8 @@ README：
 | fault detector                       | [v1](/api/v1/fault_tolerance/fault_detector.proto) |
 | **Access Control Specification**     |
 | authentication                       |      [v1](/api/v1/access-control/auth.proto)       |
+| **AI Native Specification**          |
+| mcp server                           |           [v1](/api/v1/ai/mcp.proto)              |
 
 ## 如何构建
 

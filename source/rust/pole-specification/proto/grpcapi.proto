@@ -31,37 +31,38 @@ message DiscoverFilter {
 message DiscoverRequest {
   enum DiscoverRequestType {
     UNKNOWN = 0;
-    INSTANCE = 1;
-    CLUSTER = 2;
-    ROUTING = 3;
-    RATE_LIMIT = 4;
-    CIRCUIT_BREAKER = 5;
-    SERVICES = 6;
-    reserved 7 to 11;
-    NAMESPACES = 12;
-    FAULT_DETECTOR = 13;
-    reserved 14 to 99;
-    LANE = 100;
+    // 拉起命名空间列表
+    NAMESPACES = 1;
+    // 服务列表
+    SERVICES = 2;
+    // 服务实例列表
+    INSTANCE = 3;
+    // 服务契约列表
+    SERVICE_CONTRACTS = 4;
+    // 限流规则
+    RATE_LIMIT = 20;
+    // 熔断规则
+    CIRCUIT_BREAKER = 21;
+    // 故障检测规则
+    FAULT_DETECTOR = 22;
     // 自定义路由规则
-    CUSTOM_ROUTE_RULE = 101;
+    CUSTOM_ROUTE_RULE = 23;
     // 就近路由规则
-    NEARBY_ROUTE_RULE = 102;
+    NEARBY_ROUTE_RULE = 24;
+    // 泳道规则
+    LANE = 25;
     // 无损上下线规则
-    LOSSLESS = 103;
+    LOSSLESS = 26;
     // 服务黑白名单规则
-    BLOCK_ALLOW_RULE = 104;
-
-    // pole.io 自定义资源信息
-    SERVICE_SUBSCRIBERS = 500;
+    BLOCK_ALLOW_RULE = 27;
+    // 服务订阅视图
+    SERVICE_SUBSCRIBERS = 50;
   }
 
   DiscoverRequestType type = 1 [ json_name = "type" ];
   Service service = 2 [ json_name = "service" ];
-  reserved 3 to 4;
   DiscoverFilter Filter = 30 [ json_name = "filter" ];
 }
-
-
 
 message DiscoverResponse {
   uint32 code = 1;
@@ -69,28 +70,32 @@ message DiscoverResponse {
 
   enum DiscoverResponseType {
     UNKNOWN = 0;
-    INSTANCE = 1;
-    CLUSTER = 2;
-    ROUTING = 3;
-    RATE_LIMIT = 4;
-    CIRCUIT_BREAKER = 5;
-    SERVICES = 6;
-    reserved 7 to 11;
-    reserved "MESH", "MESH_CONFIG", "FLUX_DBREFRESH", "FLUX_SDK", "FLUX_SERVER";
-    NAMESPACES = 12;
-    FAULT_DETECTOR = 13;
-    reserved 14 to 99;
-    LANE = 100;
+    // 拉起命名空间列表
+    NAMESPACES = 1;
+    // 服务列表
+    SERVICES = 2;
+    // 服务实例列表
+    INSTANCE = 3;
+    // 服务契约列表
+    SERVICE_CONTRACTS = 4;
+    // 限流规则
+    RATE_LIMIT = 20;
+    // 熔断规则
+    CIRCUIT_BREAKER = 21;
+    // 故障检测规则
+    FAULT_DETECTOR = 22;
     // 自定义路由规则
-    CUSTOM_ROUTE_RULE = 101;
+    CUSTOM_ROUTE_RULE = 23;
     // 就近路由规则
-    NEARBY_ROUTE_RULE = 102;
+    NEARBY_ROUTE_RULE = 24;
+    // 泳道规则
+    LANE = 25;
     // 无损上下线规则
-    LOSSLESS = 103;
+    LOSSLESS = 26;
     // 服务黑白名单规则
-    BLOCK_ALLOW_RULE = 104;
-    // pole.io 自定义资源信息
-    SERVICE_SUBSCRIBERS = 500;
+    BLOCK_ALLOW_RULE = 27;
+    // 服务订阅视图
+    SERVICE_SUBSCRIBERS = 50;
   }
 
   DiscoverResponseType type = 3 [ json_name = "type" ];
@@ -125,7 +130,7 @@ message DiscoverResponse {
 }
 
 
-service PolarisGRPC {
+service DiscoverGRPC {
   // 客户端上报
   rpc ReportClient(Client) returns (Response) {}
   // 被调方注册服务实例
@@ -140,7 +145,7 @@ service PolarisGRPC {
   rpc ReportServiceContract(ServiceContract) returns (Response) {}
 }
 
-service PolarisHeartbeatGRPC {
+service PoleHeartbeatGRPC {
   // 批量获取心跳记录
   rpc BatchGetHeartbeat(GetHeartbeatsRequest) returns (GetHeartbeatsResponse) {}
   // 批量删除心跳记录

@@ -180,7 +180,9 @@ message DestinationGroup {
 // TrafficMatchRule 流量匹配规则
 message TrafficMatchRule {
   // 流量匹配规则，判断哪些流量需要进入泳道
-  repeated SourceMatch arguments = 4;
+  repeated SourceMatch arguments = 1;
+  // 随机百分比流量匹配, 1-100, 表示百分之几的流量会被匹配到, 默认值为 100
+  uint32 random_percent = 3;
   // 多个 SourceMatch 之间的判断关系
   enum TrafficMatchMode {
     // 与模式
@@ -188,7 +190,7 @@ message TrafficMatchRule {
     // 或模式
     OR = 1;
   }
-  TrafficMatchMode matchMode = 14;
+  TrafficMatchMode matchMode = 4;
 }
 
 // SourceMatch
