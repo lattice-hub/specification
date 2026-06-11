@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/duration.proto";
+import "types.proto";
+import "router.proto";
+
+option go_package = "github.com/pole-io/specification/source/go/api/v1/traffic_manage";
+option java_package = "io.pole.specification.api.v1.traffic.manage";
+option java_outer_classname = "TrafficMockProto";
+
+// 流量 Mock 规则，用于在命中请求时直接返回模拟响应。
+message TrafficMock {
+  string id = 1;
+  // 流量 Mock 规则名称
+  string name = 2;
+  // 流量 Mock 规则描述
+  string description = 3;
+  // 流量 Mock 子规则集合
+  repeated MockRule rules = 4;
+  // 规则所属服务命名空间
+  string namespace = 5;
+  // 规则所属服务名称
+  string service = 6;
+  // 是否启用
+  bool enable = 7;
+  // 流量 Mock 规则 revision 信息
+  string revision = 8;
+  // 规则优先级
+  uint32 priority = 9;
+  // 创建时间
+  string ctime = 20;
+  // 修改时间
+  string mtime = 21;
+  // 规则资源元数据
+  map<string, string> metadata = 30;
+  // 操作标志位
+  bool editable = 40 [ json_name = "editable" ];
+  bool deleteable = 41 [ json_name = "deleteable" ];
+}
+
+message MockRule {
+  // 源服务和请求匹配条件
+  MockSource source = 1;
+  // 命中后返回的模拟响应
+  MockResponse response = 2;
+  // Mock 命中百分比，0-100
+  uint32 mock_percent = 3 [ json_name = "mock_percent" ];
+  // 响应延迟，默认无延迟
+  google.protobuf.Duration delay = 4;
+  // 子规则是否禁用，默认启用
+  bool disable = 5;
+}
+
+message MockSource {
+  // 源服务所在的命名空间
+  string namespace = 1;
+  // 源服务名称
+  string service = 2;
+  // 目标 API 范围
+  API api = 3 [ json_name = "api" ];
+  // 流量匹配规则
+  TrafficMatchRule traffic_match_rule = 4 [ json_name = "traffic_match_rule" ];
+}
+
+message MockResponse {
+  // HTTP 场景下返回的状态码
+  uint32 status_code = 1 [ json_name = "status_code" ];
+  // 响应头
+  map<string, string> headers = 2;
+  // 响应体
+  string body = 3;
+  // gRPC 或业务协议错误码
+  string code = 4;
+  // gRPC 或业务协议错误信息
+  string message = 5;
+}

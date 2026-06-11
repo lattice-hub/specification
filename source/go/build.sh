@@ -34,10 +34,10 @@ out_dir=${workdir}/source/go
 
 proto_files_model="types.proto response.proto namespace.proto code.proto"
 proto_files_service_manage="client.proto service.proto grpcapi.proto heartbeat.proto contract.proto"
-proto_files_traffic_manage="router.proto ratelimit.proto lane.proto lossless.proto"
+proto_files_traffic_manage="router.proto ratelimit.proto lane.proto lossless.proto mirror.proto mock.proto"
 proto_files_fault_tolerance="circuitbreaker.proto fault_detector.proto"
 proto_files_config_manage="config_file.proto grpc_config_api.proto"
-proto_files_security="auth.proto block_allow_list.proto"
+proto_files_security="auth.proto traffic_security.proto"
 proto_files_ai="mcp.proto"
 proto_files_ratelimiter="ratelimiter.proto grpcapi_ratelimiter.proto"
 

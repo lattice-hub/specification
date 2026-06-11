@@ -389,6 +389,7 @@ pub mod rule_release {
         LosslessRules = 5,
         TrafficMirrorRules = 6,
         TrafficSecurityRules = 7,
+        TrafficMockRules = 8,
     }
     impl RuleType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -405,6 +406,7 @@ pub mod rule_release {
                 Self::LosslessRules => "LosslessRules",
                 Self::TrafficMirrorRules => "TrafficMirrorRules",
                 Self::TrafficSecurityRules => "TrafficSecurityRules",
+                Self::TrafficMockRules => "TrafficMockRules",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -418,6 +420,7 @@ pub mod rule_release {
                 "LosslessRules" => Some(Self::LosslessRules),
                 "TrafficMirrorRules" => Some(Self::TrafficMirrorRules),
                 "TrafficSecurityRules" => Some(Self::TrafficSecurityRules),
+                "TrafficMockRules" => Some(Self::TrafficMockRules),
                 _ => None,
             }
         }
@@ -1441,9 +1444,21 @@ pub struct TrafficMirror {
     /// 流量镜像规则集合
     #[prost(message, repeated, tag = "4")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
+    /// 规则所属服务命名空间
+    #[prost(string, tag = "5")]
+    pub namespace: ::prost::alloc::string::String,
+    /// 规则所属服务名称
+    #[prost(string, tag = "6")]
+    pub service: ::prost::alloc::string::String,
+    /// 是否启用
+    #[prost(bool, tag = "7")]
+    pub enable: bool,
     /// 流量镜像规则revision信息
     #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
+    /// 规则优先级
+    #[prost(uint32, tag = "9")]
+    pub priority: u32,
     /// 创建时间
     #[prost(string, tag = "20")]
     pub ctime: ::prost::alloc::string::String,
@@ -2794,42 +2809,149 @@ pub struct LosslessOffline {
     #[prost(bool, tag = "1")]
     pub enable: bool,
 }
+/// 流量 Mock 规则，用于在命中请求时直接返回模拟响应。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BlockAllowListRule {
-    /// unique rule id
+pub struct TrafficMock {
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
-    /// unique rule name
+    /// 流量 Mock 规则名称
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// service namespace
-    #[prost(string, tag = "4")]
-    pub namespace: ::prost::alloc::string::String,
-    /// service name
-    #[prost(string, tag = "5")]
-    pub service: ::prost::alloc::string::String,
-    /// rule description
-    #[prost(string, tag = "6")]
+    /// 流量 Mock 规则描述
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// rule priority
-    #[prost(uint32, tag = "7")]
+    /// 流量 Mock 子规则集合
+    #[prost(message, repeated, tag = "4")]
+    pub rules: ::prost::alloc::vec::Vec<MockRule>,
+    /// 规则所属服务命名空间
+    #[prost(string, tag = "5")]
+    pub namespace: ::prost::alloc::string::String,
+    /// 规则所属服务名称
+    #[prost(string, tag = "6")]
+    pub service: ::prost::alloc::string::String,
+    /// 是否启用
+    #[prost(bool, tag = "7")]
+    pub enable: bool,
+    /// 流量 Mock 规则 revision 信息
+    #[prost(string, tag = "8")]
+    pub revision: ::prost::alloc::string::String,
+    /// 规则优先级
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
-    /// block or allow configuration
-    #[prost(message, repeated, tag = "12")]
-    pub block_allow_config: ::prost::alloc::vec::Vec<BlockAllowConfig>,
-    /// ctime create time of the rules
+    /// 创建时间
     #[prost(string, tag = "20")]
     pub ctime: ::prost::alloc::string::String,
-    /// mtime modify time of the rules
+    /// 修改时间
     #[prost(string, tag = "21")]
     pub mtime: ::prost::alloc::string::String,
-    /// metadata for block allow list rules
+    /// 规则资源元数据
     #[prost(map = "string, string", tag = "30")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
-    /// rule revision
+    /// 操作标志位
+    #[prost(bool, tag = "40")]
+    pub editable: bool,
+    #[prost(bool, tag = "41")]
+    pub deleteable: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MockRule {
+    /// 源服务和请求匹配条件
+    #[prost(message, optional, tag = "1")]
+    pub source: ::core::option::Option<MockSource>,
+    /// 命中后返回的模拟响应
+    #[prost(message, optional, tag = "2")]
+    pub response: ::core::option::Option<MockResponse>,
+    /// Mock 命中百分比，0-100
+    #[prost(uint32, tag = "3")]
+    pub mock_percent: u32,
+    /// 响应延迟，默认无延迟
+    #[prost(message, optional, tag = "4")]
+    pub delay: ::core::option::Option<::prost_types::Duration>,
+    /// 子规则是否禁用，默认启用
+    #[prost(bool, tag = "5")]
+    pub disable: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MockSource {
+    /// 源服务所在的命名空间
+    #[prost(string, tag = "1")]
+    pub namespace: ::prost::alloc::string::String,
+    /// 源服务名称
+    #[prost(string, tag = "2")]
+    pub service: ::prost::alloc::string::String,
+    /// 目标 API 范围
+    #[prost(message, optional, tag = "3")]
+    pub api: ::core::option::Option<Api>,
+    /// 流量匹配规则
+    #[prost(message, optional, tag = "4")]
+    pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MockResponse {
+    /// HTTP 场景下返回的状态码
+    #[prost(uint32, tag = "1")]
+    pub status_code: u32,
+    /// 响应头
+    #[prost(map = "string, string", tag = "2")]
+    pub headers: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// 响应体
+    #[prost(string, tag = "3")]
+    pub body: ::prost::alloc::string::String,
+    /// gRPC 或业务协议错误码
+    #[prost(string, tag = "4")]
+    pub code: ::prost::alloc::string::String,
+    /// gRPC 或业务协议错误信息
+    #[prost(string, tag = "5")]
+    pub message: ::prost::alloc::string::String,
+}
+/// 流量安全规则，用于描述服务调用运行时鉴权策略。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficSecurityRule {
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// 规则名称
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// 被调服务所在命名空间
+    #[prost(string, tag = "3")]
+    pub namespace: ::prost::alloc::string::String,
+    /// 被调服务名称
+    #[prost(string, tag = "4")]
+    pub service: ::prost::alloc::string::String,
+    /// 规则描述
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// 规则优先级
+    #[prost(uint32, tag = "6")]
+    pub priority: u32,
+    /// 是否启用
+    #[prost(bool, tag = "7")]
+    pub enable: bool,
+    /// 命中策略列表
+    #[prost(message, repeated, tag = "8")]
+    pub policies: ::prost::alloc::vec::Vec<TrafficSecurityPolicy>,
+    /// 所有策略均未命中时的默认动作
+    #[prost(enumeration = "TrafficSecurityAction", tag = "9")]
+    pub default_action: i32,
+    /// 创建时间
+    #[prost(string, tag = "20")]
+    pub ctime: ::prost::alloc::string::String,
+    /// 修改时间
+    #[prost(string, tag = "21")]
+    pub mtime: ::prost::alloc::string::String,
+    /// 规则资源元数据
+    #[prost(map = "string, string", tag = "30")]
+    pub metadata: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// 规则 revision
     #[prost(string, tag = "31")]
     pub revision: ::prost::alloc::string::String,
     /// 规则的权限操作状态
@@ -2838,55 +2960,57 @@ pub struct BlockAllowListRule {
     #[prost(bool, tag = "41")]
     pub deleteable: bool,
 }
+/// 单条调用鉴权策略。
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BlockAllowConfig {
-    /// blocking target api
+pub struct TrafficSecurityPolicy {
+    /// 被调 API 范围
     #[prost(message, optional, tag = "1")]
     pub api: ::core::option::Option<Api>,
-    /// traffic match rule
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
-    /// block or allow as policy
-    #[prost(enumeration = "block_allow_config::BlockAllowPolicy", tag = "3")]
-    pub block_allow_policy: i32,
+    /// 命中该策略后的动作
+    #[prost(enumeration = "TrafficSecurityAction", tag = "3")]
+    pub action: i32,
+    /// 拒绝调用时的响应效果，仅 action=DENY 时生效
+    #[prost(message, optional, tag = "4")]
+    pub reject_effect: ::core::option::Option<TrafficSecurityRejectEffect>,
 }
-/// Nested message and enum types in `BlockAllowConfig`.
-pub mod block_allow_config {
-    /// block or allow as policy
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum BlockAllowPolicy {
-        AllowList = 0,
-        BlockList = 1,
-    }
-    impl BlockAllowPolicy {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Self::AllowList => "ALLOW_LIST",
-                Self::BlockList => "BLOCK_LIST",
-            }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TrafficSecurityRejectEffect {
+    /// HTTP 场景下返回的状态码，默认由数据面决定
+    #[prost(uint32, tag = "1")]
+    pub status_code: u32,
+    /// 业务错误码
+    #[prost(string, tag = "2")]
+    pub code: ::prost::alloc::string::String,
+    /// 拒绝原因
+    #[prost(string, tag = "3")]
+    pub message: ::prost::alloc::string::String,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrafficSecurityAction {
+    TrafficSecurityAllow = 0,
+    TrafficSecurityDeny = 1,
+}
+impl TrafficSecurityAction {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::TrafficSecurityAllow => "TRAFFIC_SECURITY_ALLOW",
+            Self::TrafficSecurityDeny => "TRAFFIC_SECURITY_DENY",
         }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ALLOW_LIST" => Some(Self::AllowList),
-                "BLOCK_LIST" => Some(Self::BlockList),
-                _ => None,
-            }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRAFFIC_SECURITY_ALLOW" => Some(Self::TrafficSecurityAllow),
+            "TRAFFIC_SECURITY_DENY" => Some(Self::TrafficSecurityDeny),
+            _ => None,
         }
     }
 }
@@ -2945,8 +3069,12 @@ pub mod discover_request {
         Lane = 25,
         /// 无损上下线规则
         Lossless = 26,
-        /// 服务黑白名单规则
-        BlockAllowRule = 27,
+        /// 流量安全规则
+        TrafficSecurityRule = 27,
+        /// 流量镜像规则
+        TrafficMirrorRule = 28,
+        /// 流量 Mock 规则
+        TrafficMockRule = 29,
         /// 服务订阅视图
         ServiceSubscribers = 50,
     }
@@ -2969,7 +3097,9 @@ pub mod discover_request {
                 Self::NearbyRouteRule => "NEARBY_ROUTE_RULE",
                 Self::Lane => "LANE",
                 Self::Lossless => "LOSSLESS",
-                Self::BlockAllowRule => "BLOCK_ALLOW_RULE",
+                Self::TrafficSecurityRule => "TRAFFIC_SECURITY_RULE",
+                Self::TrafficMirrorRule => "TRAFFIC_MIRROR_RULE",
+                Self::TrafficMockRule => "TRAFFIC_MOCK_RULE",
                 Self::ServiceSubscribers => "SERVICE_SUBSCRIBERS",
             }
         }
@@ -2988,7 +3118,9 @@ pub mod discover_request {
                 "NEARBY_ROUTE_RULE" => Some(Self::NearbyRouteRule),
                 "LANE" => Some(Self::Lane),
                 "LOSSLESS" => Some(Self::Lossless),
-                "BLOCK_ALLOW_RULE" => Some(Self::BlockAllowRule),
+                "TRAFFIC_SECURITY_RULE" => Some(Self::TrafficSecurityRule),
+                "TRAFFIC_MIRROR_RULE" => Some(Self::TrafficMirrorRule),
+                "TRAFFIC_MOCK_RULE" => Some(Self::TrafficMockRule),
                 "SERVICE_SUBSCRIBERS" => Some(Self::ServiceSubscribers),
                 _ => None,
             }
@@ -3042,9 +3174,15 @@ pub struct DiscoverResponse {
     /// 无损上下线规则内容
     #[prost(message, repeated, tag = "26")]
     pub lossless_rules: ::prost::alloc::vec::Vec<LosslessRule>,
-    /// 服务黑白名单鉴权规则
+    /// 流量安全规则
     #[prost(message, repeated, tag = "27")]
-    pub block_allow_list_rule: ::prost::alloc::vec::Vec<BlockAllowListRule>,
+    pub traffic_security_rules: ::prost::alloc::vec::Vec<TrafficSecurityRule>,
+    /// 流量镜像规则
+    #[prost(message, repeated, tag = "28")]
+    pub traffic_mirror_rules: ::prost::alloc::vec::Vec<TrafficMirror>,
+    /// 流量 Mock 规则
+    #[prost(message, repeated, tag = "29")]
+    pub traffic_mock_rules: ::prost::alloc::vec::Vec<TrafficMock>,
 }
 /// Nested message and enum types in `DiscoverResponse`.
 pub mod discover_response {
@@ -3084,8 +3222,12 @@ pub mod discover_response {
         Lane = 25,
         /// 无损上下线规则
         Lossless = 26,
-        /// 服务黑白名单规则
-        BlockAllowRule = 27,
+        /// 流量安全规则
+        TrafficSecurityRule = 27,
+        /// 流量镜像规则
+        TrafficMirrorRule = 28,
+        /// 流量 Mock 规则
+        TrafficMockRule = 29,
         /// 服务订阅视图
         ServiceSubscribers = 50,
     }
@@ -3108,7 +3250,9 @@ pub mod discover_response {
                 Self::NearbyRouteRule => "NEARBY_ROUTE_RULE",
                 Self::Lane => "LANE",
                 Self::Lossless => "LOSSLESS",
-                Self::BlockAllowRule => "BLOCK_ALLOW_RULE",
+                Self::TrafficSecurityRule => "TRAFFIC_SECURITY_RULE",
+                Self::TrafficMirrorRule => "TRAFFIC_MIRROR_RULE",
+                Self::TrafficMockRule => "TRAFFIC_MOCK_RULE",
                 Self::ServiceSubscribers => "SERVICE_SUBSCRIBERS",
             }
         }
@@ -3127,7 +3271,9 @@ pub mod discover_response {
                 "NEARBY_ROUTE_RULE" => Some(Self::NearbyRouteRule),
                 "LANE" => Some(Self::Lane),
                 "LOSSLESS" => Some(Self::Lossless),
-                "BLOCK_ALLOW_RULE" => Some(Self::BlockAllowRule),
+                "TRAFFIC_SECURITY_RULE" => Some(Self::TrafficSecurityRule),
+                "TRAFFIC_MIRROR_RULE" => Some(Self::TrafficMirrorRule),
+                "TRAFFIC_MOCK_RULE" => Some(Self::TrafficMockRule),
                 "SERVICE_SUBSCRIBERS" => Some(Self::ServiceSubscribers),
                 _ => None,
             }
@@ -5724,6 +5870,8 @@ pub struct StrategyResources {
     pub mirror_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "12")]
     pub security_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "13")]
+    pub mock_rules: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "21")]
     pub users: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "22")]
@@ -5858,6 +6006,7 @@ pub enum ResourceType {
     LosslessRules = 8,
     MirrorRules = 9,
     SecurityRules = 10,
+    MockRules = 11,
     Users = 20,
     UserGroups = 21,
     Roles = 22,
@@ -5881,6 +6030,7 @@ impl ResourceType {
             Self::LosslessRules => "LosslessRules",
             Self::MirrorRules => "MirrorRules",
             Self::SecurityRules => "SecurityRules",
+            Self::MockRules => "MockRules",
             Self::Users => "Users",
             Self::UserGroups => "UserGroups",
             Self::Roles => "Roles",
@@ -5901,6 +6051,7 @@ impl ResourceType {
             "LosslessRules" => Some(Self::LosslessRules),
             "MirrorRules" => Some(Self::MirrorRules),
             "SecurityRules" => Some(Self::SecurityRules),
+            "MockRules" => Some(Self::MockRules),
             "Users" => Some(Self::Users),
             "UserGroups" => Some(Self::UserGroups),
             "Roles" => Some(Self::Roles),

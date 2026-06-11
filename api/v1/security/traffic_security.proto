@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package v1;
+
+import "types.proto";
+import "router.proto";
+
+option go_package = "github.com/pole-io/specification/source/go/api/v1/security";
+option java_package = "io.pole.specification.api.v1.security";
+option java_outer_classname = "TrafficSecurityProto";
+
+// 流量安全规则，用于描述服务调用运行时鉴权策略。
+message TrafficSecurityRule {
+  string id = 1 [ json_name = "id" ];
+  // 规则名称
+  string name = 2 [ json_name = "name" ];
+  // 被调服务所在命名空间
+  string namespace = 3 [ json_name = "namespace" ];
+  // 被调服务名称
+  string service = 4 [ json_name = "service" ];
+  // 规则描述
+  string description = 5 [ json_name = "description" ];
+  // 规则优先级
+  uint32 priority = 6 [ json_name = "priority" ];
+  // 是否启用
+  bool enable = 7 [ json_name = "enable" ];
+  // 命中策略列表
+  repeated TrafficSecurityPolicy policies = 8 [ json_name = "policies" ];
+  // 所有策略均未命中时的默认动作
+  TrafficSecurityAction default_action = 9 [ json_name = "default_action" ];
+  // 创建时间
+  string ctime = 20 [ json_name = "ctime" ];
+  // 修改时间
+  string mtime = 21 [ json_name = "mtime" ];
+  // 规则资源元数据
+  map<string, string> metadata = 30 [ json_name = "metadata" ];
+  // 规则 revision
+  string revision = 31 [ json_name = "revision" ];
+  // 规则的权限操作状态
+  bool editable = 40 [ json_name = "editable" ];
+  bool deleteable = 41 [ json_name = "deleteable" ];
+}
+
+// 单条调用鉴权策略。
+message TrafficSecurityPolicy {
+  // 被调 API 范围
+  API api = 1 [ json_name = "api" ];
+  // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+  TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
+  // 命中该策略后的动作
+  TrafficSecurityAction action = 3 [ json_name = "action" ];
+  // 拒绝调用时的响应效果，仅 action=DENY 时生效
+  TrafficSecurityRejectEffect reject_effect = 4 [ json_name = "reject_effect" ];
+}
+
+enum TrafficSecurityAction {
+  TRAFFIC_SECURITY_ALLOW = 0;
+  TRAFFIC_SECURITY_DENY = 1;
+}
+
+message TrafficSecurityRejectEffect {
+  // HTTP 场景下返回的状态码，默认由数据面决定
+  uint32 status_code = 1 [ json_name = "status_code" ];
+  // 业务错误码
+  string code = 2 [ json_name = "code" ];
+  // 拒绝原因
+  string message = 3 [ json_name = "message" ];
+}

@@ -14,7 +14,9 @@ import "fault_detector.proto";
 import "lane.proto";
 import "router.proto";
 import "lossless.proto";
-import "block_allow_list.proto";
+import "mirror.proto";
+import "mock.proto";
+import "traffic_security.proto";
 import "response.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/service_manage";
@@ -53,8 +55,12 @@ message DiscoverRequest {
     LANE = 25;
     // 无损上下线规则
     LOSSLESS = 26;
-    // 服务黑白名单规则
-    BLOCK_ALLOW_RULE = 27;
+    // 流量安全规则
+    TRAFFIC_SECURITY_RULE = 27;
+    // 流量镜像规则
+    TRAFFIC_MIRROR_RULE = 28;
+    // 流量 Mock 规则
+    TRAFFIC_MOCK_RULE = 29;
     // 服务订阅视图
     SERVICE_SUBSCRIBERS = 50;
   }
@@ -92,8 +98,12 @@ message DiscoverResponse {
     LANE = 25;
     // 无损上下线规则
     LOSSLESS = 26;
-    // 服务黑白名单规则
-    BLOCK_ALLOW_RULE = 27;
+    // 流量安全规则
+    TRAFFIC_SECURITY_RULE = 27;
+    // 流量镜像规则
+    TRAFFIC_MIRROR_RULE = 28;
+    // 流量 Mock 规则
+    TRAFFIC_MOCK_RULE = 29;
     // 服务订阅视图
     SERVICE_SUBSCRIBERS = 50;
   }
@@ -125,8 +135,12 @@ message DiscoverResponse {
   repeated RouteRule nearbyRouteRules = 25 [ json_name = "nearby_route_rules" ];
   // 无损上下线规则内容
   repeated LosslessRule losslessRules = 26 [ json_name = "lossless_rules" ];
-  // 服务黑白名单鉴权规则
-  repeated BlockAllowListRule blockAllowListRule = 27 [ json_name = "block_allow_list_rule" ];
+  // 流量安全规则
+  repeated TrafficSecurityRule trafficSecurityRules = 27 [ json_name = "traffic_security_rules" ];
+  // 流量镜像规则
+  repeated TrafficMirror trafficMirrorRules = 28 [ json_name = "traffic_mirror_rules" ];
+  // 流量 Mock 规则
+  repeated TrafficMock trafficMockRules = 29 [ json_name = "traffic_mock_rules" ];
 }
 
 
