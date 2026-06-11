@@ -27,6 +27,7 @@ enum ResourceType {
   LosslessRules = 8;
   MirrorRules = 9;
   SecurityRules = 10;
+  MockRules = 11;
   Users = 20;
   UserGroups = 21;
   Roles = 22;
@@ -149,6 +150,7 @@ message StrategyResources {
   repeated StrategyResourceEntry lossless_rules = 10 [ json_name = "lossless_rules" ];
   repeated StrategyResourceEntry mirror_rules = 11 [ json_name = "mirror_rules" ];
   repeated StrategyResourceEntry security_rules = 12 [ json_name = "security_rules" ];
+  repeated StrategyResourceEntry mock_rules = 13 [ json_name = "mock_rules" ];
 
   repeated StrategyResourceEntry users = 21 [ json_name = "users" ];
   repeated StrategyResourceEntry user_groups = 22 [ json_name = "user_groups" ];

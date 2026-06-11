@@ -19,8 +19,16 @@ message TrafficMirror {
     string description = 3;
     // 流量镜像规则集合
     repeated MirrorRule rules = 4;
+    // 规则所属服务命名空间
+    string namespace = 5;
+    // 规则所属服务名称
+    string service = 6;
+    // 是否启用
+    bool enable = 7;
     // 流量镜像规则revision信息
     string revision = 8;
+    // 规则优先级
+    uint32 priority = 9;
     // 创建时间
     string ctime = 20;
     // 修改时间
