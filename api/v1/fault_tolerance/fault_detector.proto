@@ -19,19 +19,14 @@ message FaultDetectRule {
   string id = 1;
   // rule name
   string name = 2;
-  // namespace of rule
-  string namespace = 3;
   // revision routing version
-  string revision = 4;
+  string revision = 3;
   // ctime create time of the rules
-  string ctime = 5;
+  string ctime = 4;
   // mtime modify time of the rules
-  string mtime = 6;
+  string mtime = 5;
   // description simple description rules
-  string description = 7;
-
-  // reserve for metadata
-  reserved 8 to 20;
+  string description = 6;
 
   message DestinationService {
     string service = 1;
@@ -41,13 +36,13 @@ message FaultDetectRule {
     API api = 4;
   }
   // detect target
-  DestinationService target_service = 21;
+  DestinationService target_service = 7;
   // detect interval
-  uint32 interval = 22;
+  uint32 interval = 8;
   // detect timeout
-  uint32 timeout = 23;
+  uint32 timeout = 9;
   // detect port
-  uint32 port = 24;
+  uint32 port = 10;
   // detect protocol
   enum Protocol {
     UNKNOWN = 0;
@@ -55,22 +50,20 @@ message FaultDetectRule {
     TCP = 2;
     UDP = 3;
   }
-  Protocol protocol = 25;
+  Protocol protocol = 11;
   // http detect config
-  HttpProtocolConfig http_config = 26;
+  HttpProtocolConfig http_config = 12;
   // tcp detect config
-  TcpProtocolConfig tcp_config = 27;
+  TcpProtocolConfig tcp_config = 13;
   // udp detect config
-  UdpProtocolConfig udp_config = 28;
+  UdpProtocolConfig udp_config = 14;
   // priority rules priority
-  uint32 priority = 29 [ json_name = "priority" ];
-  // 探测规则标签数据
-  map<string, string> metadata = 30 [ json_name = "metadata" ];
-  // extend info, put some custom info to display in console
-  map<string, string> extendInfo = 31 [ json_name = "extend_info" ];
+  uint32 priority = 15 [ json_name = "priority" ];
+  // 规则标签
+  map<string, string> metadata = 16 [ json_name = "metadata" ];
   // 操作标志位
-  bool editable = 40 [ json_name = "editable" ];
-  bool deleteable = 41 [ json_name = "deleteable" ];
+  bool editable = 17 [ json_name = "editable" ];
+  bool deleteable = 18 [ json_name = "deleteable" ];
 }
 
 message HttpProtocolConfig {

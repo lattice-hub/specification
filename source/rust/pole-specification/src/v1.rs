@@ -434,46 +434,43 @@ pub struct RouteRule {
     /// route rule name
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// namespace namingspace of routing rules
-    #[prost(string, tag = "3")]
-    pub namespace: ::prost::alloc::string::String,
     /// Enable this router
-    #[prost(bool, tag = "4")]
+    #[prost(bool, tag = "3")]
     pub enable: bool,
     /// Router type
-    #[prost(enumeration = "RoutePolicy", tag = "5")]
+    #[prost(enumeration = "RoutePolicy", tag = "4")]
     pub route_policy: i32,
     /// Routing configuration for router
-    #[prost(message, optional, tag = "6")]
+    #[prost(message, optional, tag = "5")]
     pub routing_config: ::core::option::Option<::prost_types::Any>,
     /// revision routing version
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "6")]
     pub revision: ::prost::alloc::string::String,
     /// ctime create time of the rules
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "7")]
     pub ctime: ::prost::alloc::string::String,
     /// mtime modify time of the rules
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "8")]
     pub mtime: ::prost::alloc::string::String,
     /// etime enable time of the rules
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "9")]
     pub etime: ::prost::alloc::string::String,
     /// priority rules priority
-    #[prost(uint32, tag = "11")]
+    #[prost(uint32, tag = "10")]
     pub priority: u32,
     /// description simple description rules
-    #[prost(string, tag = "12")]
+    #[prost(string, tag = "11")]
     pub description: ::prost::alloc::string::String,
-    /// 路由规则标签数据
-    #[prost(map = "string, string", tag = "21")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "30")]
+    #[prost(bool, tag = "13")]
     pub editable: bool,
-    #[prost(bool, tag = "31")]
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -930,30 +927,30 @@ pub struct LaneGroup {
     #[prost(message, repeated, tag = "4")]
     pub destinations: ::prost::alloc::vec::Vec<DestinationGroup>,
     /// 泳道组描述信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "5")]
     pub revision: ::prost::alloc::string::String,
     /// 泳道组描述信息
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
     /// 泳道组的创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "7")]
     pub ctime: ::prost::alloc::string::String,
     /// 泳道组的更新时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "8")]
     pub mtime: ::prost::alloc::string::String,
     /// 泳道组内的流量入口信息
-    #[prost(message, repeated, tag = "11")]
+    #[prost(message, repeated, tag = "9")]
     pub rules: ::prost::alloc::vec::Vec<LaneRule>,
-    /// 泳道组标签信息
-    #[prost(map = "string, string", tag = "12")]
+    /// 泳道组标签
+    #[prost(map = "string, string", tag = "10")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "20")]
+    #[prost(bool, tag = "11")]
     pub editable: bool,
-    #[prost(bool, tag = "21")]
+    #[prost(bool, tag = "12")]
     pub deleteable: bool,
 }
 /// 泳道规则
@@ -1444,37 +1441,31 @@ pub struct TrafficMirror {
     /// 流量镜像规则集合
     #[prost(message, repeated, tag = "4")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
-    /// 规则所属服务命名空间
-    #[prost(string, tag = "5")]
-    pub namespace: ::prost::alloc::string::String,
-    /// 规则所属服务名称
-    #[prost(string, tag = "6")]
-    pub service: ::prost::alloc::string::String,
     /// 是否启用
-    #[prost(bool, tag = "7")]
+    #[prost(bool, tag = "5")]
     pub enable: bool,
     /// 流量镜像规则revision信息
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "6")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "9")]
+    #[prost(uint32, tag = "7")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "20")]
+    #[prost(string, tag = "8")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "21")]
+    #[prost(string, tag = "9")]
     pub mtime: ::prost::alloc::string::String,
-    /// 规则资源元数据
-    #[prost(map = "string, string", tag = "30")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "10")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "40")]
+    #[prost(bool, tag = "11")]
     pub editable: bool,
-    #[prost(bool, tag = "41")]
+    #[prost(bool, tag = "12")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1506,6 +1497,9 @@ pub struct MirrorSource {
     /// 流量匹配规则
     #[prost(message, optional, tag = "3")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
+    /// 镜像接口范围
+    #[prost(message, optional, tag = "4")]
+    pub api: ::core::option::Option<Api>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorDestination {
@@ -1528,48 +1522,42 @@ pub struct RateLimit {
     /// 限流规则名称
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// 限流规则所属服务名
-    #[prost(string, tag = "3")]
-    pub service: ::prost::alloc::string::String,
-    /// 限流规则所属命名空间
-    #[prost(string, tag = "4")]
-    pub namespace: ::prost::alloc::string::String,
     /// 限流规则优先级，0值最高
-    #[prost(uint32, tag = "5")]
+    #[prost(uint32, tag = "3")]
     pub priority: u32,
-    #[prost(enumeration = "rate_limit::Type", tag = "7")]
+    #[prost(enumeration = "rate_limit::Type", tag = "4")]
     pub r#type: i32,
     /// 限流规则集合
-    #[prost(message, repeated, tag = "8")]
+    #[prost(message, repeated, tag = "5")]
     pub rules: ::prost::alloc::vec::Vec<LimitTrigger>,
     /// 限流规则汇总的revision信息
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "6")]
     pub revision: ::prost::alloc::string::String,
     /// 是否停用该限流规则，默认启用
-    #[prost(bool, tag = "11")]
+    #[prost(bool, tag = "7")]
     pub disable: bool,
     /// 限流上报方式，同时支持按固定周期上报，以及达到配额百分比后上报
-    #[prost(message, optional, tag = "12")]
+    #[prost(message, optional, tag = "8")]
     pub report: ::core::option::Option<Report>,
     /// 分布式限流服务集群
-    #[prost(message, optional, tag = "16")]
+    #[prost(message, optional, tag = "9")]
     pub cluster: ::core::option::Option<RateLimitCluster>,
     /// 限流规则创建时间
-    #[prost(string, tag = "20")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 限流规则修改时间
-    #[prost(string, tag = "21")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
-    /// 限流规则标签数据
-    #[prost(map = "string, string", tag = "22")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "30")]
+    #[prost(bool, tag = "13")]
     pub editable: bool,
-    #[prost(bool, tag = "31")]
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 /// Nested message and enum types in `RateLimit`.
@@ -2224,69 +2212,66 @@ pub struct CircuitBreakerRule {
     /// rule name
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// namespace of rule
-    #[prost(string, tag = "3")]
-    pub namespace: ::prost::alloc::string::String,
     /// enable this router
-    #[prost(bool, tag = "4")]
+    #[prost(bool, tag = "3")]
     pub enable: bool,
     /// revision routing version
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "4")]
     pub revision: ::prost::alloc::string::String,
     /// ctime create time of the rules
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "5")]
     pub ctime: ::prost::alloc::string::String,
     /// mtime modify time of the rules
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "6")]
     pub mtime: ::prost::alloc::string::String,
     /// etime enable time of the rules
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "7")]
     pub etime: ::prost::alloc::string::String,
     /// description simple description rules
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "8")]
     pub description: ::prost::alloc::string::String,
     /// the circuitbreaking level
-    #[prost(enumeration = "Level", tag = "21")]
+    #[prost(enumeration = "Level", tag = "9")]
     pub level: i32,
     /// match condition for this rule
-    #[prost(message, optional, tag = "22")]
+    #[prost(message, optional, tag = "10")]
     pub rule_matcher: ::core::option::Option<RuleMatcher>,
     /// deprecated_filed error conditions to judge an invocation as an error
     #[deprecated]
-    #[prost(message, repeated, tag = "23")]
+    #[prost(message, repeated, tag = "11")]
     pub error_conditions: ::prost::alloc::vec::Vec<ErrorCondition>,
     /// deprecated_filed trigger condition to trigger circuitbreaking
     #[deprecated]
-    #[prost(message, repeated, tag = "24")]
+    #[prost(message, repeated, tag = "12")]
     pub trigger_condition: ::prost::alloc::vec::Vec<TriggerCondition>,
     /// the maximum % of an upstream cluster that can be ejected
-    #[prost(uint32, tag = "25")]
+    #[prost(uint32, tag = "13")]
     pub max_ejection_percent: u32,
     /// recover condition to make resource open to close
-    #[prost(message, optional, tag = "26")]
+    #[prost(message, optional, tag = "14")]
     pub recover_condition: ::core::option::Option<RecoverCondition>,
     /// fault detection enable config
-    #[prost(message, optional, tag = "27")]
+    #[prost(message, optional, tag = "15")]
     pub fault_detect_config: ::core::option::Option<FaultDetectConfig>,
     /// fall back configuration
-    #[prost(message, optional, tag = "28")]
+    #[prost(message, optional, tag = "16")]
     pub fallback_config: ::core::option::Option<FallbackConfig>,
     /// list for block configuration
-    #[prost(message, repeated, tag = "29")]
+    #[prost(message, repeated, tag = "17")]
     pub block_configs: ::prost::alloc::vec::Vec<BlockConfig>,
     /// priority rules priority
-    #[prost(uint32, tag = "30")]
+    #[prost(uint32, tag = "18")]
     pub priority: u32,
-    /// 熔断规则标签数据
-    #[prost(map = "string, string", tag = "31")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "19")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "40")]
+    #[prost(bool, tag = "20")]
     pub editable: bool,
-    #[prost(bool, tag = "41")]
+    #[prost(bool, tag = "21")]
     pub deleteable: bool,
 }
 /// the condition to judge an input invocation as an error
@@ -2510,63 +2495,54 @@ pub struct FaultDetectRule {
     /// rule name
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// namespace of rule
-    #[prost(string, tag = "3")]
-    pub namespace: ::prost::alloc::string::String,
     /// revision routing version
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "3")]
     pub revision: ::prost::alloc::string::String,
     /// ctime create time of the rules
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "4")]
     pub ctime: ::prost::alloc::string::String,
     /// mtime modify time of the rules
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "5")]
     pub mtime: ::prost::alloc::string::String,
     /// description simple description rules
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "6")]
     pub description: ::prost::alloc::string::String,
     /// detect target
-    #[prost(message, optional, tag = "21")]
+    #[prost(message, optional, tag = "7")]
     pub target_service: ::core::option::Option<fault_detect_rule::DestinationService>,
     /// detect interval
-    #[prost(uint32, tag = "22")]
+    #[prost(uint32, tag = "8")]
     pub interval: u32,
     /// detect timeout
-    #[prost(uint32, tag = "23")]
+    #[prost(uint32, tag = "9")]
     pub timeout: u32,
     /// detect port
-    #[prost(uint32, tag = "24")]
+    #[prost(uint32, tag = "10")]
     pub port: u32,
-    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "25")]
+    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "11")]
     pub protocol: i32,
     /// http detect config
-    #[prost(message, optional, tag = "26")]
+    #[prost(message, optional, tag = "12")]
     pub http_config: ::core::option::Option<HttpProtocolConfig>,
     /// tcp detect config
-    #[prost(message, optional, tag = "27")]
+    #[prost(message, optional, tag = "13")]
     pub tcp_config: ::core::option::Option<TcpProtocolConfig>,
     /// udp detect config
-    #[prost(message, optional, tag = "28")]
+    #[prost(message, optional, tag = "14")]
     pub udp_config: ::core::option::Option<UdpProtocolConfig>,
     /// priority rules priority
-    #[prost(uint32, tag = "29")]
+    #[prost(uint32, tag = "15")]
     pub priority: u32,
-    /// 探测规则标签数据
-    #[prost(map = "string, string", tag = "30")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "16")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
-    /// extend info, put some custom info to display in console
-    #[prost(map = "string, string", tag = "31")]
-    pub extend_info: ::std::collections::HashMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
     /// 操作标志位
-    #[prost(bool, tag = "40")]
+    #[prost(bool, tag = "17")]
     pub editable: bool,
-    #[prost(bool, tag = "41")]
+    #[prost(bool, tag = "18")]
     pub deleteable: bool,
 }
 /// Nested message and enum types in `FaultDetectRule`.
@@ -2669,37 +2645,31 @@ pub struct LosslessRule {
     /// rule id
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
-    /// service for rule belongs to
-    #[prost(string, tag = "2")]
-    pub service: ::prost::alloc::string::String,
-    /// namespace for rule belongs to
-    #[prost(string, tag = "3")]
-    pub namespace: ::prost::alloc::string::String,
     /// revision routing version
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "2")]
     pub revision: ::prost::alloc::string::String,
     /// ctime create time of the rules
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "3")]
     pub ctime: ::prost::alloc::string::String,
     /// mtime modify time of the rules
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "4")]
     pub mtime: ::prost::alloc::string::String,
     /// configuration for lossless online
-    #[prost(message, optional, tag = "7")]
+    #[prost(message, optional, tag = "5")]
     pub lossless_online: ::core::option::Option<LosslessOnline>,
     /// configuration for lossless offline
-    #[prost(message, optional, tag = "8")]
+    #[prost(message, optional, tag = "6")]
     pub lossless_offline: ::core::option::Option<LosslessOffline>,
-    /// rule labels
-    #[prost(map = "string, string", tag = "9")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "7")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "30")]
+    #[prost(bool, tag = "8")]
     pub editable: bool,
-    #[prost(bool, tag = "31")]
+    #[prost(bool, tag = "9")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -2823,37 +2793,31 @@ pub struct TrafficMock {
     /// 流量 Mock 子规则集合
     #[prost(message, repeated, tag = "4")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
-    /// 规则所属服务命名空间
-    #[prost(string, tag = "5")]
-    pub namespace: ::prost::alloc::string::String,
-    /// 规则所属服务名称
-    #[prost(string, tag = "6")]
-    pub service: ::prost::alloc::string::String,
     /// 是否启用
-    #[prost(bool, tag = "7")]
+    #[prost(bool, tag = "5")]
     pub enable: bool,
     /// 流量 Mock 规则 revision 信息
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "6")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "9")]
+    #[prost(uint32, tag = "7")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "20")]
+    #[prost(string, tag = "8")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "21")]
+    #[prost(string, tag = "9")]
     pub mtime: ::prost::alloc::string::String,
-    /// 规则资源元数据
-    #[prost(map = "string, string", tag = "30")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "10")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "40")]
+    #[prost(bool, tag = "11")]
     pub editable: bool,
-    #[prost(bool, tag = "41")]
+    #[prost(bool, tag = "12")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2918,46 +2882,40 @@ pub struct TrafficSecurityRule {
     /// 规则名称
     #[prost(string, tag = "2")]
     pub name: ::prost::alloc::string::String,
-    /// 被调服务所在命名空间
-    #[prost(string, tag = "3")]
-    pub namespace: ::prost::alloc::string::String,
-    /// 被调服务名称
-    #[prost(string, tag = "4")]
-    pub service: ::prost::alloc::string::String,
     /// 规则描述
-    #[prost(string, tag = "5")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "6")]
+    #[prost(uint32, tag = "4")]
     pub priority: u32,
     /// 是否启用
-    #[prost(bool, tag = "7")]
+    #[prost(bool, tag = "5")]
     pub enable: bool,
     /// 命中策略列表
-    #[prost(message, repeated, tag = "8")]
+    #[prost(message, repeated, tag = "6")]
     pub policies: ::prost::alloc::vec::Vec<TrafficSecurityPolicy>,
     /// 所有策略均未命中时的默认动作
-    #[prost(enumeration = "TrafficSecurityAction", tag = "9")]
+    #[prost(enumeration = "TrafficSecurityAction", tag = "7")]
     pub default_action: i32,
     /// 创建时间
-    #[prost(string, tag = "20")]
+    #[prost(string, tag = "8")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "21")]
+    #[prost(string, tag = "9")]
     pub mtime: ::prost::alloc::string::String,
-    /// 规则资源元数据
-    #[prost(map = "string, string", tag = "30")]
+    /// 规则标签
+    #[prost(map = "string, string", tag = "10")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 规则 revision
-    #[prost(string, tag = "31")]
+    #[prost(string, tag = "11")]
     pub revision: ::prost::alloc::string::String,
     /// 规则的权限操作状态
-    #[prost(bool, tag = "40")]
+    #[prost(bool, tag = "12")]
     pub editable: bool,
-    #[prost(bool, tag = "41")]
+    #[prost(bool, tag = "13")]
     pub deleteable: bool,
 }
 /// 单条调用鉴权策略。

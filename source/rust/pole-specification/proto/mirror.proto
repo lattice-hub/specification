@@ -19,25 +19,21 @@ message TrafficMirror {
     string description = 3;
     // 流量镜像规则集合
     repeated MirrorRule rules = 4;
-    // 规则所属服务命名空间
-    string namespace = 5;
-    // 规则所属服务名称
-    string service = 6;
     // 是否启用
-    bool enable = 7;
+    bool enable = 5;
     // 流量镜像规则revision信息
-    string revision = 8;
+    string revision = 6;
     // 规则优先级
-    uint32 priority = 9;
+    uint32 priority = 7;
     // 创建时间
-    string ctime = 20;
+    string ctime = 8;
     // 修改时间
-    string mtime = 21;
-    // 规则资源元数据
-    map<string, string> metadata = 30;
+    string mtime = 9;
+    // 规则标签
+    map<string, string> metadata = 10 [ json_name = "metadata" ];
     // 操作标志位
-    bool editable = 40 [ json_name = "editable" ];
-    bool deleteable = 41 [ json_name = "deleteable" ];
+    bool editable = 11 [ json_name = "editable" ];
+    bool deleteable = 12 [ json_name = "deleteable" ];
 }
 
 message MirrorRule {
@@ -60,6 +56,8 @@ message MirrorSource {
     string service = 2;
     // 流量匹配规则
     TrafficMatchRule traffic_match_rule = 3 [ json_name = "traffic_match_rule" ];
+    // 镜像接口范围
+    API api = 4 [ json_name = "api" ];
 }
 
 message MirrorDestination {

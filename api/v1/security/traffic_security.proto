@@ -14,31 +14,27 @@ message TrafficSecurityRule {
   string id = 1 [ json_name = "id" ];
   // 规则名称
   string name = 2 [ json_name = "name" ];
-  // 被调服务所在命名空间
-  string namespace = 3 [ json_name = "namespace" ];
-  // 被调服务名称
-  string service = 4 [ json_name = "service" ];
   // 规则描述
-  string description = 5 [ json_name = "description" ];
+  string description = 3 [ json_name = "description" ];
   // 规则优先级
-  uint32 priority = 6 [ json_name = "priority" ];
+  uint32 priority = 4 [ json_name = "priority" ];
   // 是否启用
-  bool enable = 7 [ json_name = "enable" ];
+  bool enable = 5 [ json_name = "enable" ];
   // 命中策略列表
-  repeated TrafficSecurityPolicy policies = 8 [ json_name = "policies" ];
+  repeated TrafficSecurityPolicy policies = 6 [ json_name = "policies" ];
   // 所有策略均未命中时的默认动作
-  TrafficSecurityAction default_action = 9 [ json_name = "default_action" ];
+  TrafficSecurityAction default_action = 7 [ json_name = "default_action" ];
   // 创建时间
-  string ctime = 20 [ json_name = "ctime" ];
+  string ctime = 8 [ json_name = "ctime" ];
   // 修改时间
-  string mtime = 21 [ json_name = "mtime" ];
-  // 规则资源元数据
-  map<string, string> metadata = 30 [ json_name = "metadata" ];
+  string mtime = 9 [ json_name = "mtime" ];
+  // 规则标签
+  map<string, string> metadata = 10 [ json_name = "metadata" ];
   // 规则 revision
-  string revision = 31 [ json_name = "revision" ];
+  string revision = 11 [ json_name = "revision" ];
   // 规则的权限操作状态
-  bool editable = 40 [ json_name = "editable" ];
-  bool deleteable = 41 [ json_name = "deleteable" ];
+  bool editable = 12 [ json_name = "editable" ];
+  bool deleteable = 13 [ json_name = "deleteable" ];
 }
 
 // 单条调用鉴权策略。

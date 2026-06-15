@@ -10,25 +10,21 @@ option java_outer_classname = "LosslessProto";
 message LosslessRule {
   // rule id
   string id = 1 [ json_name = "id" ];
-  // service for rule belongs to
-  string service = 2 [ json_name = "service" ];
-  // namespace for rule belongs to
-  string namespace = 3 [ json_name = "namespace" ];
   // revision routing version
-  string revision = 4 [ json_name = "revision" ];
+  string revision = 2 [ json_name = "revision" ];
   // ctime create time of the rules
-  string ctime = 5 [ json_name = "ctime" ];
+  string ctime = 3 [ json_name = "ctime" ];
   // mtime modify time of the rules
-  string mtime = 6 [ json_name = "mtime" ];
+  string mtime = 4 [ json_name = "mtime" ];
   // configuration for lossless online
-  LosslessOnline losslessOnline = 7 [ json_name = "lossless_online" ];
+  LosslessOnline losslessOnline = 5 [ json_name = "lossless_online" ];
   // configuration for lossless offline
-  LosslessOffline losslessOffline = 8 [ json_name = "lossless_offline" ];
-  // rule labels
-  map<string, string> metadata = 9 [ json_name = "metadata" ];
+  LosslessOffline losslessOffline = 6 [ json_name = "lossless_offline" ];
+  // 规则标签
+  map<string, string> metadata = 7 [ json_name = "metadata" ];
   // 操作标志位
-  bool editable = 30 [ json_name = "editable" ];
-  bool deleteable = 31 [ json_name = "deleteable" ];
+  bool editable = 8 [ json_name = "editable" ];
+  bool deleteable = 9 [ json_name = "deleteable" ];
 }
 
 message LosslessOnline {
