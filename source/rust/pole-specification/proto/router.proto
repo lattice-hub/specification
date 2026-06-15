@@ -23,31 +23,29 @@ message RouteRule {
   string id = 1;
   // route rule name
   string name = 2;
-  // namespace namingspace of routing rules
-  string namespace = 3;
   // Enable this router
-  bool enable = 4;
+  bool enable = 3;
   // Router type
-  RoutePolicy route_policy = 5 [ json_name = "route_policy" ];
+  RoutePolicy route_policy = 4 [ json_name = "route_policy" ];
   // Routing configuration for router
-  google.protobuf.Any routing_config = 6 [ json_name = "routing_config" ];
+  google.protobuf.Any routing_config = 5 [ json_name = "routing_config" ];
   // revision routing version
-  string revision = 7;
+  string revision = 6;
   // ctime create time of the rules
-  string ctime = 8;
+  string ctime = 7;
   // mtime modify time of the rules
-  string mtime = 9;
+  string mtime = 8;
   // etime enable time of the rules
-  string etime = 10;
+  string etime = 9;
   // priority rules priority
-  uint32 priority = 11;
+  uint32 priority = 10;
   // description simple description rules
-  string description = 12;
-  // 路由规则标签数据
-  map<string, string> metadata = 21;
+  string description = 11;
+  // 规则标签
+  map<string, string> metadata = 12;
   // 操作标志位
-  bool editable = 30 [ json_name = "editable" ];
-  bool deleteable = 31 [ json_name = "deleteable" ];
+  bool editable = 13 [ json_name = "editable" ];
+  bool deleteable = 14 [ json_name = "deleteable" ];
 }
 
 message MetadataFailover {
@@ -220,4 +218,3 @@ message SourceMatch {
   // header value or query value
   MatchString value = 3;
 }
-

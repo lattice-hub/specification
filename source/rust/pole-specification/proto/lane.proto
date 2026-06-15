@@ -47,20 +47,20 @@ message LaneGroup {
   // 在泳道组内的服务列表信息
   repeated DestinationGroup destinations = 4;
   // 泳道组描述信息
-  string revision = 7;
+  string revision = 5;
   // 泳道组描述信息
-  string description = 8;
+  string description = 6;
   // 泳道组的创建时间
-  string ctime = 9;
+  string ctime = 7;
   // 泳道组的更新时间
-  string mtime = 10;
+  string mtime = 8;
   // 泳道组内的流量入口信息
-  repeated LaneRule rules = 11;
-  // 泳道组标签信息
-  map<string, string> metadata = 12;
+  repeated LaneRule rules = 9;
+  // 泳道组标签
+  map<string, string> metadata = 10;
   // 操作标志位
-  bool editable = 20 [ json_name = "editable" ];
-  bool deleteable = 21 [ json_name = "deleteable" ];
+  bool editable = 11 [ json_name = "editable" ];
+  bool deleteable = 12 [ json_name = "deleteable" ];
 }
 
 // 泳道规则

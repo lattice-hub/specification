@@ -15,38 +15,34 @@ message RateLimit {
   string id = 1;
   // 限流规则名称
   string name = 2;
-  // 限流规则所属服务名
-  string service = 3;
-  // 限流规则所属命名空间
-  string namespace = 4;
   // 限流规则优先级，0值最高
-  uint32 priority = 5;
+  uint32 priority = 3;
   // 限流类型
   // global全局限流(默认)或者local单机限流
   enum Type {
     GLOBAL = 0;
     LOCAL = 1;
   }
-  Type type = 7;
+  Type type = 4;
   // 限流规则集合
-  repeated LimitTrigger rules = 8;
+  repeated LimitTrigger rules = 5;
   // 限流规则汇总的revision信息
-  string revision = 9;
+  string revision = 6;
   // 是否停用该限流规则，默认启用
-  bool disable = 11;
+  bool disable = 7;
   // 限流上报方式，同时支持按固定周期上报，以及达到配额百分比后上报
-  Report report = 12;
+  Report report = 8;
   // 分布式限流服务集群
-  RateLimitCluster cluster = 16;
+  RateLimitCluster cluster = 9;
   // 限流规则创建时间
-  string ctime = 20;
+  string ctime = 10;
   // 限流规则修改时间
-  string mtime = 21;
-  // 限流规则标签数据
-  map<string, string> metadata = 22 [ json_name = "metadata" ];
+  string mtime = 11;
+  // 规则标签
+  map<string, string> metadata = 12 [ json_name = "metadata" ];
   // 操作标志位
-  bool editable = 30 [ json_name = "editable" ];
-  bool deleteable = 31 [ json_name = "deleteable" ];
+  bool editable = 13 [ json_name = "editable" ];
+  bool deleteable = 14 [ json_name = "deleteable" ];
 }
 
 // 单个限流规则信息
