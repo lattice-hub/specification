@@ -811,6 +811,8 @@ pub mod source_match {
         Cookie = 6,
         /// indicate the caller instance metadata
         CallerMetadata = 7,
+        /// caller service name or namespace/service pair
+        CallerService = 8,
     }
     impl Type {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -827,6 +829,7 @@ pub mod source_match {
                 Self::Path => "PATH",
                 Self::Cookie => "COOKIE",
                 Self::CallerMetadata => "CALLER_METADATA",
+                Self::CallerService => "CALLER_SERVICE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -840,6 +843,7 @@ pub mod source_match {
                 "PATH" => Some(Self::Path),
                 "COOKIE" => Some(Self::Cookie),
                 "CALLER_METADATA" => Some(Self::CallerMetadata),
+                "CALLER_SERVICE" => Some(Self::CallerService),
                 _ => None,
             }
         }
@@ -1438,68 +1442,59 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
+    /// 被调服务，规则只绑定到该服务
+    #[prost(message, optional, tag = "4")]
+    pub target_service: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
-    #[prost(message, repeated, tag = "4")]
+    #[prost(message, repeated, tag = "5")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
     /// 是否启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub enable: bool,
     /// 流量镜像规则revision信息
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "7")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "7")]
+    #[prost(uint32, tag = "8")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "9")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "10")]
+    #[prost(map = "string, string", tag = "11")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "11")]
-    pub editable: bool,
     #[prost(bool, tag = "12")]
+    pub editable: bool,
+    #[prost(bool, tag = "13")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
-    /// 源服务
+    /// 镜像接口范围
     #[prost(message, optional, tag = "1")]
-    pub source: ::core::option::Option<MirrorSource>,
-    /// 目标服务
+    pub api: ::core::option::Option<Api>,
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
+    pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
+    /// 目标服务
+    #[prost(message, optional, tag = "3")]
     pub destination: ::core::option::Option<MirrorDestination>,
     /// 流量镜像百分比，0-100
-    #[prost(uint32, tag = "3")]
+    #[prost(uint32, tag = "4")]
     pub mirror_percent: u32,
     /// 流量镜像持续时间，默认无限制
-    #[prost(message, optional, tag = "4")]
+    #[prost(message, optional, tag = "5")]
     pub duration: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub disable: bool,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MirrorSource {
-    /// 源服务所在的命名空间
-    #[prost(string, tag = "1")]
-    pub namespace: ::prost::alloc::string::String,
-    /// 源服务名称
-    #[prost(string, tag = "2")]
-    pub service: ::prost::alloc::string::String,
-    /// 流量匹配规则
-    #[prost(message, optional, tag = "3")]
-    pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
-    /// 镜像接口范围
-    #[prost(message, optional, tag = "4")]
-    pub api: ::core::option::Option<Api>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorDestination {
@@ -2544,6 +2539,9 @@ pub struct FaultDetectRule {
     pub editable: bool,
     #[prost(bool, tag = "18")]
     pub deleteable: bool,
+    /// detect sub rules
+    #[prost(message, repeated, tag = "19")]
+    pub rules: ::prost::alloc::vec::Vec<FaultDetectSubRule>,
 }
 /// Nested message and enum types in `FaultDetectRule`.
 pub mod fault_detect_rule {
@@ -2603,6 +2601,36 @@ pub mod fault_detect_rule {
             }
         }
     }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FaultDetectSubRule {
+    /// detect target
+    #[prost(message, optional, tag = "1")]
+    pub target_service: ::core::option::Option<fault_detect_rule::DestinationService>,
+    /// detect interval
+    #[prost(uint32, tag = "2")]
+    pub interval: u32,
+    /// detect timeout
+    #[prost(uint32, tag = "3")]
+    pub timeout: u32,
+    /// detect port
+    #[prost(uint32, tag = "4")]
+    pub port: u32,
+    /// detect protocol
+    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "5")]
+    pub protocol: i32,
+    /// http detect config
+    #[prost(message, optional, tag = "6")]
+    pub http_config: ::core::option::Option<HttpProtocolConfig>,
+    /// tcp detect config
+    #[prost(message, optional, tag = "7")]
+    pub tcp_config: ::core::option::Option<TcpProtocolConfig>,
+    /// udp detect config
+    #[prost(message, optional, tag = "8")]
+    pub udp_config: ::core::option::Option<UdpProtocolConfig>,
+    /// sub rule disabled
+    #[prost(bool, tag = "9")]
+    pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpProtocolConfig {
@@ -2790,68 +2818,59 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
+    /// 被调服务，规则只绑定到该服务
+    #[prost(message, optional, tag = "4")]
+    pub target_service: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
-    #[prost(message, repeated, tag = "4")]
+    #[prost(message, repeated, tag = "5")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
     /// 是否启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub enable: bool,
     /// 流量 Mock 规则 revision 信息
-    #[prost(string, tag = "6")]
+    #[prost(string, tag = "7")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "7")]
+    #[prost(uint32, tag = "8")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "8")]
+    #[prost(string, tag = "9")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "10")]
+    #[prost(map = "string, string", tag = "11")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "11")]
-    pub editable: bool,
     #[prost(bool, tag = "12")]
+    pub editable: bool,
+    #[prost(bool, tag = "13")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
-    /// 源服务和请求匹配条件
+    /// Mock 接口范围
     #[prost(message, optional, tag = "1")]
-    pub source: ::core::option::Option<MockSource>,
-    /// 命中后返回的模拟响应
+    pub api: ::core::option::Option<Api>,
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
+    pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
+    /// 命中后返回的模拟响应
+    #[prost(message, optional, tag = "3")]
     pub response: ::core::option::Option<MockResponse>,
     /// Mock 命中百分比，0-100
-    #[prost(uint32, tag = "3")]
+    #[prost(uint32, tag = "4")]
     pub mock_percent: u32,
     /// 响应延迟，默认无延迟
-    #[prost(message, optional, tag = "4")]
+    #[prost(message, optional, tag = "5")]
     pub delay: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub disable: bool,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MockSource {
-    /// 源服务所在的命名空间
-    #[prost(string, tag = "1")]
-    pub namespace: ::prost::alloc::string::String,
-    /// 源服务名称
-    #[prost(string, tag = "2")]
-    pub service: ::prost::alloc::string::String,
-    /// 目标 API 范围
-    #[prost(message, optional, tag = "3")]
-    pub api: ::core::option::Option<Api>,
-    /// 流量匹配规则
-    #[prost(message, optional, tag = "4")]
-    pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockResponse {
@@ -2891,12 +2910,12 @@ pub struct TrafficSecurityRule {
     /// 是否启用
     #[prost(bool, tag = "5")]
     pub enable: bool,
+    /// 被调服务，规则只绑定到该服务
+    #[prost(message, optional, tag = "6")]
+    pub target_service: ::core::option::Option<DestinationService>,
     /// 命中策略列表
-    #[prost(message, repeated, tag = "6")]
+    #[prost(message, repeated, tag = "7")]
     pub policies: ::prost::alloc::vec::Vec<TrafficSecurityPolicy>,
-    /// 所有策略均未命中时的默认动作
-    #[prost(enumeration = "TrafficSecurityAction", tag = "7")]
-    pub default_action: i32,
     /// 创建时间
     #[prost(string, tag = "8")]
     pub ctime: ::prost::alloc::string::String,

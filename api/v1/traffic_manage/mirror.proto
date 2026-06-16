@@ -17,47 +17,40 @@ message TrafficMirror {
     string name = 2;
     // 流量镜像规则描述
     string description = 3;
+    // 被调服务，规则只绑定到该服务
+    DestinationService target_service = 4 [ json_name = "target_service" ];
     // 流量镜像规则集合
-    repeated MirrorRule rules = 4;
+    repeated MirrorRule rules = 5;
     // 是否启用
-    bool enable = 5;
+    bool enable = 6;
     // 流量镜像规则revision信息
-    string revision = 6;
+    string revision = 7;
     // 规则优先级
-    uint32 priority = 7;
+    uint32 priority = 8;
     // 创建时间
-    string ctime = 8;
+    string ctime = 9;
     // 修改时间
-    string mtime = 9;
+    string mtime = 10;
     // 规则标签
-    map<string, string> metadata = 10 [ json_name = "metadata" ];
+    map<string, string> metadata = 11 [ json_name = "metadata" ];
     // 操作标志位
-    bool editable = 11 [ json_name = "editable" ];
-    bool deleteable = 12 [ json_name = "deleteable" ];
+    bool editable = 12 [ json_name = "editable" ];
+    bool deleteable = 13 [ json_name = "deleteable" ];
 }
 
 message MirrorRule {
-    // 源服务
-    MirrorSource source = 1;
-    // 目标服务
-    MirrorDestination destination = 2;
-    // 流量镜像百分比，0-100
-    uint32 mirror_percent = 3 [json_name = "mirror_percent"];
-    // 流量镜像持续时间，默认无限制
-    google.protobuf.Duration duration = 4;
-    // 子规则是否禁用，默认启用
-    bool disable = 5;
-}
-
-message MirrorSource {
-    // 源服务所在的命名空间
-    string namespace = 1;
-    // 源服务名称
-    string service = 2;
-    // 流量匹配规则
-    TrafficMatchRule traffic_match_rule = 3 [ json_name = "traffic_match_rule" ];
     // 镜像接口范围
-    API api = 4 [ json_name = "api" ];
+    API api = 1 [ json_name = "api" ];
+    // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
+    // 目标服务
+    MirrorDestination destination = 3;
+    // 流量镜像百分比，0-100
+    uint32 mirror_percent = 4 [json_name = "mirror_percent"];
+    // 流量镜像持续时间，默认无限制
+    google.protobuf.Duration duration = 5;
+    // 子规则是否禁用，默认启用
+    bool disable = 6;
 }
 
 message MirrorDestination {

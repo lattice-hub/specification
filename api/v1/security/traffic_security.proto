@@ -20,10 +20,10 @@ message TrafficSecurityRule {
   uint32 priority = 4 [ json_name = "priority" ];
   // 是否启用
   bool enable = 5 [ json_name = "enable" ];
+  // 被调服务，规则只绑定到该服务
+  DestinationService target_service = 6 [ json_name = "target_service" ];
   // 命中策略列表
-  repeated TrafficSecurityPolicy policies = 6 [ json_name = "policies" ];
-  // 所有策略均未命中时的默认动作
-  TrafficSecurityAction default_action = 7 [ json_name = "default_action" ];
+  repeated TrafficSecurityPolicy policies = 7 [ json_name = "policies" ];
   // 创建时间
   string ctime = 8 [ json_name = "ctime" ];
   // 修改时间
