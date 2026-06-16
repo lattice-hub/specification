@@ -64,6 +64,29 @@ message FaultDetectRule {
   // 操作标志位
   bool editable = 17 [ json_name = "editable" ];
   bool deleteable = 18 [ json_name = "deleteable" ];
+  // detect sub rules
+  repeated FaultDetectSubRule rules = 19;
+}
+
+message FaultDetectSubRule {
+  // detect target
+  FaultDetectRule.DestinationService target_service = 1 [ json_name = "target_service" ];
+  // detect interval
+  uint32 interval = 2;
+  // detect timeout
+  uint32 timeout = 3;
+  // detect port
+  uint32 port = 4;
+  // detect protocol
+  FaultDetectRule.Protocol protocol = 5;
+  // http detect config
+  HttpProtocolConfig http_config = 6 [ json_name = "http_config" ];
+  // tcp detect config
+  TcpProtocolConfig tcp_config = 7 [ json_name = "tcp_config" ];
+  // udp detect config
+  UdpProtocolConfig udp_config = 8 [ json_name = "udp_config" ];
+  // sub rule disabled
+  bool disable = 9;
 }
 
 message HttpProtocolConfig {
