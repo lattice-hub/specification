@@ -2231,42 +2231,22 @@ pub struct CircuitBreakerRule {
     /// match condition for this rule
     #[prost(message, optional, tag = "10")]
     pub rule_matcher: ::core::option::Option<RuleMatcher>,
-    /// deprecated_filed error conditions to judge an invocation as an error
-    #[deprecated]
-    #[prost(message, repeated, tag = "11")]
-    pub error_conditions: ::prost::alloc::vec::Vec<ErrorCondition>,
-    /// deprecated_filed trigger condition to trigger circuitbreaking
-    #[deprecated]
-    #[prost(message, repeated, tag = "12")]
-    pub trigger_condition: ::prost::alloc::vec::Vec<TriggerCondition>,
-    /// the maximum % of an upstream cluster that can be ejected
-    #[prost(uint32, tag = "13")]
-    pub max_ejection_percent: u32,
-    /// recover condition to make resource open to close
-    #[prost(message, optional, tag = "14")]
-    pub recover_condition: ::core::option::Option<RecoverCondition>,
-    /// fault detection enable config
-    #[prost(message, optional, tag = "15")]
-    pub fault_detect_config: ::core::option::Option<FaultDetectConfig>,
-    /// fall back configuration
-    #[prost(message, optional, tag = "16")]
-    pub fallback_config: ::core::option::Option<FallbackConfig>,
     /// list for block configuration
-    #[prost(message, repeated, tag = "17")]
-    pub block_configs: ::prost::alloc::vec::Vec<BlockConfig>,
+    #[prost(message, repeated, tag = "11")]
+    pub block_configs: ::prost::alloc::vec::Vec<CircuitBreakerPolicy>,
     /// priority rules priority
-    #[prost(uint32, tag = "18")]
+    #[prost(uint32, tag = "12")]
     pub priority: u32,
     /// 规则标签
-    #[prost(map = "string, string", tag = "19")]
+    #[prost(map = "string, string", tag = "13")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "20")]
+    #[prost(bool, tag = "14")]
     pub editable: bool,
-    #[prost(bool, tag = "21")]
+    #[prost(bool, tag = "15")]
     pub deleteable: bool,
 }
 /// the condition to judge an input invocation as an error
@@ -2390,6 +2370,25 @@ pub struct RecoverCondition {
 pub struct FaultDetectConfig {
     #[prost(bool, tag = "1")]
     pub enable: bool,
+}
+/// circuitbreaking policy config
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CircuitBreakerPolicy {
+    /// blocking strategy
+    #[prost(message, optional, tag = "1")]
+    pub block_config: ::core::option::Option<BlockConfig>,
+    /// the maximum % of an upstream cluster that can be ejected
+    #[prost(uint32, tag = "5")]
+    pub max_ejection_percent: u32,
+    /// recover condition to make resource open to close
+    #[prost(message, optional, tag = "6")]
+    pub recover_condition: ::core::option::Option<RecoverCondition>,
+    /// fault detection enable config
+    #[prost(message, optional, tag = "7")]
+    pub fault_detect_config: ::core::option::Option<FaultDetectConfig>,
+    /// fall back configuration
+    #[prost(message, optional, tag = "8")]
+    pub fallback_config: ::core::option::Option<FallbackConfig>,
 }
 /// blocking strategy
 #[derive(Clone, PartialEq, ::prost::Message)]
