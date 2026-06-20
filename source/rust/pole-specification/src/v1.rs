@@ -2474,15 +2474,6 @@ impl Level {
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FaultDetector {
-    /// fault detect rules for current service
-    #[prost(message, repeated, tag = "1")]
-    pub rules: ::prost::alloc::vec::Vec<FaultDetectRule>,
-    /// total revision for the fault detect rules
-    #[prost(string, tag = "2")]
-    pub revision: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FaultDetectRule {
     #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
@@ -2504,42 +2495,22 @@ pub struct FaultDetectRule {
     /// detect target
     #[prost(message, optional, tag = "7")]
     pub target_service: ::core::option::Option<fault_detect_rule::DestinationService>,
-    /// detect interval
-    #[prost(uint32, tag = "8")]
-    pub interval: u32,
-    /// detect timeout
-    #[prost(uint32, tag = "9")]
-    pub timeout: u32,
-    /// detect port
-    #[prost(uint32, tag = "10")]
-    pub port: u32,
-    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "11")]
-    pub protocol: i32,
-    /// http detect config
-    #[prost(message, optional, tag = "12")]
-    pub http_config: ::core::option::Option<HttpProtocolConfig>,
-    /// tcp detect config
-    #[prost(message, optional, tag = "13")]
-    pub tcp_config: ::core::option::Option<TcpProtocolConfig>,
-    /// udp detect config
-    #[prost(message, optional, tag = "14")]
-    pub udp_config: ::core::option::Option<UdpProtocolConfig>,
     /// priority rules priority
-    #[prost(uint32, tag = "15")]
+    #[prost(uint32, tag = "8")]
     pub priority: u32,
     /// 规则标签
-    #[prost(map = "string, string", tag = "16")]
+    #[prost(map = "string, string", tag = "9")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "17")]
+    #[prost(bool, tag = "10")]
     pub editable: bool,
-    #[prost(bool, tag = "18")]
+    #[prost(bool, tag = "11")]
     pub deleteable: bool,
     /// detect sub rules
-    #[prost(message, repeated, tag = "19")]
+    #[prost(message, repeated, tag = "12")]
     pub rules: ::prost::alloc::vec::Vec<FaultDetectSubRule>,
 }
 /// Nested message and enum types in `FaultDetectRule`.
@@ -2603,32 +2574,29 @@ pub mod fault_detect_rule {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FaultDetectSubRule {
-    /// detect target
-    #[prost(message, optional, tag = "1")]
-    pub target_service: ::core::option::Option<fault_detect_rule::DestinationService>,
     /// detect interval
-    #[prost(uint32, tag = "2")]
+    #[prost(uint32, tag = "1")]
     pub interval: u32,
     /// detect timeout
-    #[prost(uint32, tag = "3")]
+    #[prost(uint32, tag = "2")]
     pub timeout: u32,
     /// detect port
-    #[prost(uint32, tag = "4")]
+    #[prost(uint32, tag = "3")]
     pub port: u32,
     /// detect protocol
-    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "5")]
+    #[prost(enumeration = "fault_detect_rule::Protocol", tag = "4")]
     pub protocol: i32,
     /// http detect config
-    #[prost(message, optional, tag = "6")]
+    #[prost(message, optional, tag = "5")]
     pub http_config: ::core::option::Option<HttpProtocolConfig>,
     /// tcp detect config
-    #[prost(message, optional, tag = "7")]
+    #[prost(message, optional, tag = "6")]
     pub tcp_config: ::core::option::Option<TcpProtocolConfig>,
     /// udp detect config
-    #[prost(message, optional, tag = "8")]
+    #[prost(message, optional, tag = "7")]
     pub udp_config: ::core::option::Option<UdpProtocolConfig>,
     /// sub rule disabled
-    #[prost(bool, tag = "9")]
+    #[prost(bool, tag = "8")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3136,8 +3104,8 @@ pub struct DiscoverResponse {
     #[prost(message, repeated, tag = "21")]
     pub circuit_breaker: ::prost::alloc::vec::Vec<CircuitBreakerRule>,
     /// 故障检测规则
-    #[prost(message, optional, tag = "22")]
-    pub fault_detector: ::core::option::Option<FaultDetector>,
+    #[prost(message, repeated, tag = "22")]
+    pub fault_detect_rules: ::prost::alloc::vec::Vec<FaultDetectRule>,
     /// 全链路灰度泳道
     #[prost(message, repeated, tag = "23")]
     pub lanes: ::prost::alloc::vec::Vec<LaneGroup>,
