@@ -8,13 +8,6 @@ option go_package = "github.com/pole-io/specification/source/go/api/v1/fault_tol
 option java_package = "io.pole.specification.api.v1.fault.tolerance";
 option java_outer_classname = "FaultDetectorProto";
 
-message FaultDetector {
-  // fault detect rules for current service
-  repeated FaultDetectRule rules = 1;
-  // total revision for the fault detect rules
-  string revision = 2;
-}
-
 message FaultDetectRule {
   string id = 1;
   // rule name
@@ -35,14 +28,6 @@ message FaultDetectRule {
     MatchString method = 3 [deprecated = true];
     API api = 4;
   }
-  // detect target
-  DestinationService target_service = 7;
-  // detect interval
-  uint32 interval = 8;
-  // detect timeout
-  uint32 timeout = 9;
-  // detect port
-  uint32 port = 10;
   // detect protocol
   enum Protocol {
     UNKNOWN = 0;
@@ -50,43 +35,36 @@ message FaultDetectRule {
     TCP = 2;
     UDP = 3;
   }
-  Protocol protocol = 11;
-  // http detect config
-  HttpProtocolConfig http_config = 12;
-  // tcp detect config
-  TcpProtocolConfig tcp_config = 13;
-  // udp detect config
-  UdpProtocolConfig udp_config = 14;
+  // detect target
+  DestinationService target_service = 7 [ json_name = "target_service" ];
   // priority rules priority
-  uint32 priority = 15 [ json_name = "priority" ];
+  uint32 priority = 8 [ json_name = "priority" ];
   // 规则标签
-  map<string, string> metadata = 16 [ json_name = "metadata" ];
+  map<string, string> metadata = 9 [ json_name = "metadata" ];
   // 操作标志位
-  bool editable = 17 [ json_name = "editable" ];
-  bool deleteable = 18 [ json_name = "deleteable" ];
+  bool editable = 10 [ json_name = "editable" ];
+  bool deleteable = 11 [ json_name = "deleteable" ];
   // detect sub rules
-  repeated FaultDetectSubRule rules = 19;
+  repeated FaultDetectSubRule rules = 12;
 }
 
 message FaultDetectSubRule {
-  // detect target
-  FaultDetectRule.DestinationService target_service = 1 [ json_name = "target_service" ];
   // detect interval
-  uint32 interval = 2;
+  uint32 interval = 1;
   // detect timeout
-  uint32 timeout = 3;
+  uint32 timeout = 2;
   // detect port
-  uint32 port = 4;
+  uint32 port = 3;
   // detect protocol
-  FaultDetectRule.Protocol protocol = 5;
+  FaultDetectRule.Protocol protocol = 4;
   // http detect config
-  HttpProtocolConfig http_config = 6 [ json_name = "http_config" ];
+  HttpProtocolConfig http_config = 5 [ json_name = "http_config" ];
   // tcp detect config
-  TcpProtocolConfig tcp_config = 7 [ json_name = "tcp_config" ];
+  TcpProtocolConfig tcp_config = 6 [ json_name = "tcp_config" ];
   // udp detect config
-  UdpProtocolConfig udp_config = 8 [ json_name = "udp_config" ];
+  UdpProtocolConfig udp_config = 7 [ json_name = "udp_config" ];
   // sub rule disabled
-  bool disable = 9;
+  bool disable = 8;
 }
 
 message HttpProtocolConfig {

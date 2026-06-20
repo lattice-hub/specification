@@ -126,7 +126,7 @@ message DiscoverResponse {
   // 熔断规则
   repeated CircuitBreakerRule circuitBreaker = 21 [ json_name = "circuit_breaker" ];
   // 故障检测规则
-  FaultDetector faultDetector = 22 [ json_name = "fault_detector" ];
+  repeated FaultDetectRule faultDetectRules = 22 [ json_name = "fault_detect_rules" ];
   // 全链路灰度泳道
   repeated LaneGroup lanes = 23 [ json_name = "lanes" ];
   // 自定义路由规则内容
