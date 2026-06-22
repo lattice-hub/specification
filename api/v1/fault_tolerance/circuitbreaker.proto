@@ -141,7 +141,7 @@ message FallbackConfig {
 
 // fallback response
 message FallbackResponse {
-  int32 code = 1;
+  string code = 1;
   message MessageHeader {
     string key = 1;
     string value = 2;

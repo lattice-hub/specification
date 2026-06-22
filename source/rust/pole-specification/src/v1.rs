@@ -2416,8 +2416,8 @@ pub struct FallbackConfig {
 /// fallback response
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FallbackResponse {
-    #[prost(int32, tag = "1")]
-    pub code: i32,
+    #[prost(string, tag = "1")]
+    pub code: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "2")]
     pub headers: ::prost::alloc::vec::Vec<fallback_response::MessageHeader>,
     #[prost(string, tag = "3")]
@@ -2841,9 +2841,9 @@ pub struct MockRule {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockResponse {
-    /// HTTP 场景下返回的状态码
-    #[prost(uint32, tag = "1")]
-    pub status_code: u32,
+    /// 业务错误码
+    #[prost(string, tag = "1")]
+    pub code: ::prost::alloc::string::String,
     /// 响应头
     #[prost(map = "string, string", tag = "2")]
     pub headers: ::std::collections::HashMap<
@@ -2853,12 +2853,6 @@ pub struct MockResponse {
     /// 响应体
     #[prost(string, tag = "3")]
     pub body: ::prost::alloc::string::String,
-    /// gRPC 或业务协议错误码
-    #[prost(string, tag = "4")]
-    pub code: ::prost::alloc::string::String,
-    /// gRPC 或业务协议错误信息
-    #[prost(string, tag = "5")]
-    pub message: ::prost::alloc::string::String,
 }
 /// 流量安全规则，用于描述服务调用运行时鉴权策略。
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2922,14 +2916,11 @@ pub struct TrafficSecurityPolicy {
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TrafficSecurityRejectEffect {
-    /// HTTP 场景下返回的状态码，默认由数据面决定
-    #[prost(uint32, tag = "1")]
-    pub status_code: u32,
     /// 业务错误码
-    #[prost(string, tag = "2")]
+    #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
     /// 拒绝原因
-    #[prost(string, tag = "3")]
+    #[prost(string, tag = "2")]
     pub message: ::prost::alloc::string::String,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
