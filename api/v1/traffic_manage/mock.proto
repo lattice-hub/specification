@@ -17,7 +17,7 @@ message TrafficMock {
   string name = 2;
   // 流量 Mock 规则描述
   string description = 3;
-  // 被调服务，规则只绑定到该服务
+  // Deprecated: use callee instead. 被调服务，规则只绑定到该服务
   DestinationService target_service = 4 [ json_name = "target_service" ];
   // 流量 Mock 子规则集合
   repeated MockRule rules = 5;
@@ -36,12 +36,16 @@ message TrafficMock {
   // 操作标志位
   bool editable = 12 [ json_name = "editable" ];
   bool deleteable = 13 [ json_name = "deleteable" ];
+  // 主调服务，namespace/service 均为 "*" 表示全部服务。
+  ServiceScope caller = 14 [ json_name = "caller" ];
+  // 被调服务，规则归属和下发绑定到该服务。
+  ServiceScope callee = 15 [ json_name = "callee" ];
 }
 
 message MockRule {
   // Mock 接口范围
   API api = 1 [ json_name = "api" ];
-  // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+  // 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMock.caller 统一表达。
   TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
   // 命中后返回的模拟响应
   MockResponse response = 3;

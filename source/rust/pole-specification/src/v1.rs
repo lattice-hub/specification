@@ -677,6 +677,15 @@ pub struct DestinationService {
     #[prost(string, tag = "2")]
     pub namespace: ::prost::alloc::string::String,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ServiceScope {
+    /// Service namespace. Caller may use "\*" to match all caller services.
+    #[prost(string, tag = "1")]
+    pub namespace: ::prost::alloc::string::String,
+    /// Service name. Caller may use "\*" to match all caller services.
+    #[prost(string, tag = "2")]
+    pub service: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DestinationGroup {
     /// Templated service and namespace
@@ -1442,7 +1451,7 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// Deprecated: use callee instead. 被调服务，规则只绑定到该服务
     #[prost(message, optional, tag = "4")]
     pub target_service: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
@@ -1474,13 +1483,19 @@ pub struct TrafficMirror {
     pub editable: bool,
     #[prost(bool, tag = "13")]
     pub deleteable: bool,
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
+    #[prost(message, optional, tag = "14")]
+    pub caller: ::core::option::Option<ServiceScope>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "15")]
+    pub callee: ::core::option::Option<ServiceScope>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
     /// 镜像接口范围
     #[prost(message, optional, tag = "1")]
     pub api: ::core::option::Option<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMirror.caller 统一表达。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 目标服务
@@ -2785,7 +2800,7 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// Deprecated: use callee instead. 被调服务，规则只绑定到该服务
     #[prost(message, optional, tag = "4")]
     pub target_service: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
@@ -2817,13 +2832,19 @@ pub struct TrafficMock {
     pub editable: bool,
     #[prost(bool, tag = "13")]
     pub deleteable: bool,
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
+    #[prost(message, optional, tag = "14")]
+    pub caller: ::core::option::Option<ServiceScope>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "15")]
+    pub callee: ::core::option::Option<ServiceScope>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
     /// Mock 接口范围
     #[prost(message, optional, tag = "1")]
     pub api: ::core::option::Option<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMock.caller 统一表达。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 命中后返回的模拟响应
