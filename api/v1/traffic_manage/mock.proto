@@ -17,9 +17,9 @@ message TrafficMock {
   // 流量 Mock 规则描述
   string description = 3;
   // 主调服务，namespace/service 均为 "*" 表示全部服务。
-  ServiceScope caller = 4 [ json_name = "caller" ];
+  SourceService caller = 4 [ json_name = "caller" ];
   // 被调服务，规则归属和下发绑定到该服务。
-  ServiceScope callee = 5 [ json_name = "callee" ];
+  DestinationService callee = 5 [ json_name = "callee" ];
   // 流量 Mock 子规则集合
   repeated MockRule rules = 6;
   // 是否启用

@@ -142,13 +142,6 @@ message DestinationService {
   string namespace = 2;
 }
 
-message ServiceScope {
-  // Service namespace. Caller may use "*" to match all caller services.
-  string namespace = 1;
-  // Service name. Caller may use "*" to match all caller services.
-  string service = 2;
-}
-
 message DestinationGroup {
   // Templated service and namespace
   string service = 1;

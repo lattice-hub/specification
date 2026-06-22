@@ -677,15 +677,6 @@ pub struct DestinationService {
     #[prost(string, tag = "2")]
     pub namespace: ::prost::alloc::string::String,
 }
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct ServiceScope {
-    /// Service namespace. Caller may use "\*" to match all caller services.
-    #[prost(string, tag = "1")]
-    pub namespace: ::prost::alloc::string::String,
-    /// Service name. Caller may use "\*" to match all caller services.
-    #[prost(string, tag = "2")]
-    pub service: ::prost::alloc::string::String,
-}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DestinationGroup {
     /// Templated service and namespace
@@ -1453,10 +1444,10 @@ pub struct TrafficMirror {
     pub description: ::prost::alloc::string::String,
     /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub caller: ::core::option::Option<ServiceScope>,
+    pub caller: ::core::option::Option<SourceService>,
     /// 被调服务，规则归属和下发绑定到该服务。
     #[prost(message, optional, tag = "5")]
-    pub callee: ::core::option::Option<ServiceScope>,
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
     #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
@@ -2796,10 +2787,10 @@ pub struct TrafficMock {
     pub description: ::prost::alloc::string::String,
     /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub caller: ::core::option::Option<ServiceScope>,
+    pub caller: ::core::option::Option<SourceService>,
     /// 被调服务，规则归属和下发绑定到该服务。
     #[prost(message, optional, tag = "5")]
-    pub callee: ::core::option::Option<ServiceScope>,
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
     #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
