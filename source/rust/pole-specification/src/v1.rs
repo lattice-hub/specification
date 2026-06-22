@@ -1442,37 +1442,40 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<SourceService>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量镜像规则revision信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1480,7 +1483,7 @@ pub struct MirrorRule {
     /// 镜像接口范围
     #[prost(message, optional, tag = "1")]
     pub api: ::core::option::Option<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMirror.caller 统一表达。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 目标服务
@@ -1489,11 +1492,8 @@ pub struct MirrorRule {
     /// 流量镜像百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mirror_percent: u32,
-    /// 流量镜像持续时间，默认无限制
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "5")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2785,37 +2785,40 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<SourceService>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量 Mock 规则 revision 信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2823,7 +2826,7 @@ pub struct MockRule {
     /// Mock 接口范围
     #[prost(message, optional, tag = "1")]
     pub api: ::core::option::Option<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMock.caller 统一表达。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 命中后返回的模拟响应
@@ -2832,11 +2835,8 @@ pub struct MockRule {
     /// Mock 命中百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mock_percent: u32,
-    /// 响应延迟，默认无延迟
-    #[prost(message, optional, tag = "5")]
-    pub delay: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "5")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
