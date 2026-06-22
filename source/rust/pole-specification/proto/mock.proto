@@ -56,10 +56,8 @@ message MockRule {
 message MockResponse {
   // 业务错误码
   string code = 1;
-  // 业务错误信息
-  string message = 2;
   // 响应头
-  map<string, string> headers = 3;
+  map<string, string> headers = 2;
   // 响应体
-  string body = 4;
+  string body = 3;
 }

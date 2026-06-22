@@ -2844,17 +2844,14 @@ pub struct MockResponse {
     /// 业务错误码
     #[prost(string, tag = "1")]
     pub code: ::prost::alloc::string::String,
-    /// 业务错误信息
-    #[prost(string, tag = "2")]
-    pub message: ::prost::alloc::string::String,
     /// 响应头
-    #[prost(map = "string, string", tag = "3")]
+    #[prost(map = "string, string", tag = "2")]
     pub headers: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 响应体
-    #[prost(string, tag = "4")]
+    #[prost(string, tag = "3")]
     pub body: ::prost::alloc::string::String,
 }
 /// 流量安全规则，用于描述服务调用运行时鉴权策略。
