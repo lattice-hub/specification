@@ -1451,44 +1451,41 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// Deprecated: use callee instead. 被调服务，规则只绑定到该服务
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<ServiceScope>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<ServiceScope>,
     /// 流量镜像规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量镜像规则revision信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
-    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
-    #[prost(message, optional, tag = "14")]
-    pub caller: ::core::option::Option<ServiceScope>,
-    /// 被调服务，规则归属和下发绑定到该服务。
-    #[prost(message, optional, tag = "15")]
-    pub callee: ::core::option::Option<ServiceScope>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
@@ -2800,44 +2797,41 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// Deprecated: use callee instead. 被调服务，规则只绑定到该服务
+    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<ServiceScope>,
+    /// 被调服务，规则归属和下发绑定到该服务。
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<ServiceScope>,
     /// 流量 Mock 子规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量 Mock 规则 revision 信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
-    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
-    #[prost(message, optional, tag = "14")]
-    pub caller: ::core::option::Option<ServiceScope>,
-    /// 被调服务，规则归属和下发绑定到该服务。
-    #[prost(message, optional, tag = "15")]
-    pub callee: ::core::option::Option<ServiceScope>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
