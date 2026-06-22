@@ -2416,8 +2416,8 @@ pub struct FallbackConfig {
 /// fallback response
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FallbackResponse {
-    #[prost(int32, tag = "1")]
-    pub code: i32,
+    #[prost(string, tag = "1")]
+    pub code: ::prost::alloc::string::String,
     #[prost(message, repeated, tag = "2")]
     pub headers: ::prost::alloc::vec::Vec<fallback_response::MessageHeader>,
     #[prost(string, tag = "3")]
