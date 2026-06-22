@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package v1;
 
-import "google/protobuf/duration.proto";
 import "types.proto";
 import "router.proto";
 
@@ -49,10 +48,8 @@ message MirrorRule {
     MirrorDestination destination = 3;
     // 流量镜像百分比，0-100
     uint32 mirror_percent = 4 [json_name = "mirror_percent"];
-    // 流量镜像持续时间，默认无限制
-    google.protobuf.Duration duration = 5;
     // 子规则是否禁用，默认启用
-    bool disable = 6;
+    bool disable = 5;
 }
 
 message MirrorDestination {

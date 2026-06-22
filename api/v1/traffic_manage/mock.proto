@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package v1;
 
-import "google/protobuf/duration.proto";
 import "types.proto";
 import "router.proto";
 
@@ -49,10 +48,8 @@ message MockRule {
   MockResponse response = 3;
   // Mock 命中百分比，0-100
   uint32 mock_percent = 4 [ json_name = "mock_percent" ];
-  // 响应延迟，默认无延迟
-  google.protobuf.Duration delay = 5;
   // 子规则是否禁用，默认启用
-  bool disable = 6;
+  bool disable = 5;
 }
 
 message MockResponse {

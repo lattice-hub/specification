@@ -1501,11 +1501,8 @@ pub struct MirrorRule {
     /// 流量镜像百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mirror_percent: u32,
-    /// 流量镜像持续时间，默认无限制
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "5")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2847,11 +2844,8 @@ pub struct MockRule {
     /// Mock 命中百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mock_percent: u32,
-    /// 响应延迟，默认无延迟
-    #[prost(message, optional, tag = "5")]
-    pub delay: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "5")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
