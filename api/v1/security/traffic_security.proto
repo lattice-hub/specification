@@ -39,8 +39,8 @@ message TrafficSecurityRule {
 
 // 单条调用鉴权策略。
 message TrafficSecurityPolicy {
-  // 被调 API 范围
-  API api = 1 [ json_name = "api" ];
+  // 被调 API 范围，命中任一 API 即进入该策略
+  repeated API apis = 1 [ json_name = "apis" ];
   // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
   TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
   // 命中该策略后的动作

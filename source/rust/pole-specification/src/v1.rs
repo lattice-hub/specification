@@ -1442,44 +1442,47 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// 主调服务范围，空表示任意主调
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<SourceService>,
+    /// 被调服务，规则只绑定到该服务
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MirrorRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量镜像规则revision信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
-    /// 镜像接口范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
+    /// 镜像接口范围，命中任一 API 即执行镜像
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
@@ -1602,9 +1605,9 @@ pub struct LimitTrigger {
     /// 限流规则名
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// 被调接口名
-    #[prost(message, optional, tag = "2")]
-    pub method: ::core::option::Option<MatchString>,
+    /// 被调 API 范围，命中任一 API 即进入该子限流规则
+    #[prost(message, repeated, tag = "2")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     #[prost(enumeration = "limit_trigger::Resource", tag = "3")]
     pub resource: i32,
     /// 被调的参数过滤条件，满足过滤条件才进入限流规则
@@ -2395,15 +2398,18 @@ pub struct CircuitBreakerPolicy {
 pub struct BlockConfig {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// blocking target api
-    #[prost(message, optional, tag = "2")]
-    pub api: ::core::option::Option<Api>,
+    /// blocking target APIs, any matched API enters this block strategy
+    #[prost(message, repeated, tag = "2")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// conditions to judge an invocation as an error
     #[prost(message, repeated, tag = "3")]
     pub error_conditions: ::prost::alloc::vec::Vec<ErrorCondition>,
     /// trigger condition to trigger circuitbreaking
     #[prost(message, repeated, tag = "4")]
     pub trigger_conditions: ::prost::alloc::vec::Vec<TriggerCondition>,
+    /// whether regex API matches are counted separately
+    #[prost(bool, tag = "5")]
+    pub regex_separate: bool,
 }
 /// fallback config
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2785,44 +2791,47 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 被调服务，规则只绑定到该服务
+    /// 主调服务范围，空表示任意主调
     #[prost(message, optional, tag = "4")]
-    pub target_service: ::core::option::Option<DestinationService>,
+    pub caller: ::core::option::Option<SourceService>,
+    /// 被调服务，规则只绑定到该服务
+    #[prost(message, optional, tag = "5")]
+    pub callee: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
-    #[prost(message, repeated, tag = "5")]
+    #[prost(message, repeated, tag = "6")]
     pub rules: ::prost::alloc::vec::Vec<MockRule>,
     /// 是否启用
-    #[prost(bool, tag = "6")]
+    #[prost(bool, tag = "7")]
     pub enable: bool,
     /// 流量 Mock 规则 revision 信息
-    #[prost(string, tag = "7")]
+    #[prost(string, tag = "8")]
     pub revision: ::prost::alloc::string::String,
     /// 规则优先级
-    #[prost(uint32, tag = "8")]
+    #[prost(uint32, tag = "9")]
     pub priority: u32,
     /// 创建时间
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "10")]
     pub ctime: ::prost::alloc::string::String,
     /// 修改时间
-    #[prost(string, tag = "10")]
+    #[prost(string, tag = "11")]
     pub mtime: ::prost::alloc::string::String,
     /// 规则标签
-    #[prost(map = "string, string", tag = "11")]
+    #[prost(map = "string, string", tag = "12")]
     pub metadata: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
     /// 操作标志位
-    #[prost(bool, tag = "12")]
-    pub editable: bool,
     #[prost(bool, tag = "13")]
+    pub editable: bool,
+    #[prost(bool, tag = "14")]
     pub deleteable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
-    /// Mock 接口范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
+    /// Mock 接口范围，命中任一 API 即执行 Mock
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
@@ -2901,9 +2910,9 @@ pub struct TrafficSecurityRule {
 /// 单条调用鉴权策略。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrafficSecurityPolicy {
-    /// 被调 API 范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
+    /// 被调 API 范围，命中任一 API 即进入该策略
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,

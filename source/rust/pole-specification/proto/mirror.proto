@@ -17,30 +17,32 @@ message TrafficMirror {
     string name = 2;
     // 流量镜像规则描述
     string description = 3;
+    // 主调服务范围，空表示任意主调
+    SourceService caller = 4 [ json_name = "caller" ];
     // 被调服务，规则只绑定到该服务
-    DestinationService target_service = 4 [ json_name = "target_service" ];
+    DestinationService callee = 5 [ json_name = "callee" ];
     // 流量镜像规则集合
-    repeated MirrorRule rules = 5;
+    repeated MirrorRule rules = 6;
     // 是否启用
-    bool enable = 6;
+    bool enable = 7;
     // 流量镜像规则revision信息
-    string revision = 7;
+    string revision = 8;
     // 规则优先级
-    uint32 priority = 8;
+    uint32 priority = 9;
     // 创建时间
-    string ctime = 9;
+    string ctime = 10;
     // 修改时间
-    string mtime = 10;
+    string mtime = 11;
     // 规则标签
-    map<string, string> metadata = 11 [ json_name = "metadata" ];
+    map<string, string> metadata = 12 [ json_name = "metadata" ];
     // 操作标志位
-    bool editable = 12 [ json_name = "editable" ];
-    bool deleteable = 13 [ json_name = "deleteable" ];
+    bool editable = 13 [ json_name = "editable" ];
+    bool deleteable = 14 [ json_name = "deleteable" ];
 }
 
 message MirrorRule {
-    // 镜像接口范围
-    API api = 1 [ json_name = "api" ];
+    // 镜像接口范围，命中任一 API 即执行镜像
+    repeated API apis = 1 [ json_name = "apis" ];
     // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
     // 目标服务

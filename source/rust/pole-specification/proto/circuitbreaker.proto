@@ -125,12 +125,14 @@ message CircuitBreakerPolicy {
 // blocking strategy
 message BlockConfig {
   string name = 1 [ json_name = "name" ];
-  // blocking target api
-  API api = 2 [ json_name = "api" ];
+  // blocking target APIs, any matched API enters this block strategy
+  repeated API apis = 2 [ json_name = "apis" ];
   // conditions to judge an invocation as an error
   repeated ErrorCondition error_conditions = 3 [ json_name = "error_conditions" ];
   // trigger condition to trigger circuitbreaking
   repeated TriggerCondition trigger_conditions = 4 [ json_name = "trigger_conditions" ];
+  // whether regex API matches are counted separately
+  bool regex_separate = 5 [ json_name = "regex_separate" ];
 }
 
 // fallback config

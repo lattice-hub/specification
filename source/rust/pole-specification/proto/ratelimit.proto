@@ -49,8 +49,8 @@ message RateLimit {
 message LimitTrigger {
   // 限流规则名
   string name = 1;
-  // 被调接口名
-  MatchString method = 2;
+  // 被调 API 范围，命中任一 API 即进入该子限流规则
+  repeated API apis = 2 [ json_name = "apis" ];
   // 限流资源
   enum Resource {
     // 针对QPS进行限流
