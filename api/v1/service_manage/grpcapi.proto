@@ -17,6 +17,7 @@ import "lossless.proto";
 import "mirror.proto";
 import "mock.proto";
 import "traffic_security.proto";
+import "workload_identity.proto";
 import "response.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/service_manage";
@@ -61,6 +62,10 @@ message DiscoverRequest {
     TRAFFIC_MIRROR_RULE = 28;
     // 流量 Mock 规则
     TRAFFIC_MOCK_RULE = 29;
+    // 当前已认证服务的数据面身份描述
+    SERVICE_IDENTITY = 30;
+    // 当前已认证服务所属 trust domain 的公共验证材料
+    SERVICE_IDENTITY_BUNDLE = 31;
     // 服务订阅视图
     SERVICE_SUBSCRIBERS = 50;
   }
@@ -68,6 +73,9 @@ message DiscoverRequest {
   DiscoverRequestType type = 1 [ json_name = "type" ];
   Service service = 2 [ json_name = "service" ];
   DiscoverFilter Filter = 30 [ json_name = "filter" ];
+  // 仅 SERVICE_IDENTITY_BUNDLE 使用；trust domain 由认证 principal 推导。
+  TrustBundleQuery trustBundleQuery = 31
+      [ json_name = "trust_bundle_query" ];
 }
 
 message DiscoverResponse {
@@ -104,6 +112,10 @@ message DiscoverResponse {
     TRAFFIC_MIRROR_RULE = 28;
     // 流量 Mock 规则
     TRAFFIC_MOCK_RULE = 29;
+    // 当前已认证服务的数据面身份描述
+    SERVICE_IDENTITY = 30;
+    // 当前已认证服务所属 trust domain 的公共验证材料
+    SERVICE_IDENTITY_BUNDLE = 31;
     // 服务订阅视图
     SERVICE_SUBSCRIBERS = 50;
   }
@@ -141,6 +153,34 @@ message DiscoverResponse {
   repeated TrafficMirror trafficMirrorRules = 28 [ json_name = "traffic_mirror_rules" ];
   // 流量 Mock 规则
   repeated TrafficMock trafficMockRules = 29 [ json_name = "traffic_mock_rules" ];
+  // 当前已认证服务的数据面身份描述，不包含 Service.token 或 workload 凭证
+  ServiceIdentityDescriptor serviceIdentity = 30
+      [ json_name = "service_identity" ];
+  // 公共验证材料，不包含 workload credential 或任何私钥。
+  WorkloadTrustBundle serviceIdentityBundle = 31
+      [ json_name = "service_identity_bundle" ];
+}
+
+// 服务稳定的数据面身份描述。本对象不是凭证，也不包含任何 secret。
+// control-plane 必须根据 gRPC metadata 中已验证的 service token 推导该对象，
+// DiscoverRequest.service 只能用于 namespace/service 一致性校验。
+message ServiceIdentityDescriptor {
+  // SDK 内部使用的稳定主体标识，不作为用户可编辑配置暴露。
+  string subject = 1 [ json_name = "subject" ];
+  string namespace = 2 [ json_name = "namespace" ];
+  string service = 3 [ json_name = "service" ];
+  string revision = 4 [ json_name = "revision" ];
+  string credential_mode = 5 [ json_name = "credential_mode" ];
+  string trust_bundle_version = 6 [ json_name = "trust_bundle_version" ];
+  string trust_domain = 7 [ json_name = "trust_domain" ];
+  string audience = 8 [ json_name = "audience" ];
+  // 独立 workload credential RPC 的服务端点；凭证本身不得进入 Discover。
+  string credential_endpoint = 9 [ json_name = "credential_endpoint" ];
+  // typed 协议版本和格式能力；旧 string 字段继续保留用于兼容旧 SDK。
+  uint32 identity_protocol_version = 10
+      [ json_name = "identity_protocol_version" ];
+  repeated WorkloadCredentialFormat credential_formats = 11
+      [ json_name = "credential_formats" ];
 }
 
 

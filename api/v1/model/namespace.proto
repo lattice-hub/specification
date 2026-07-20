@@ -21,6 +21,7 @@ message Namespace {
   uint32 total_service_count = 20 [json_name = "total_service_count"];
   uint32 total_health_instance_count = 21 [json_name = "total_health_instance_count"];
   uint32 total_instance_count = 22 [json_name = "total_instance_count"];
+  uint32 total_config_file_count = 23 [json_name = "total_config_file_count"];
 
   bool editable = 30;
   bool deleteable = 31;

@@ -37,7 +37,7 @@ proto_files_service_manage="client.proto service.proto grpcapi.proto heartbeat.p
 proto_files_traffic_manage="router.proto ratelimit.proto lane.proto lossless.proto mirror.proto mock.proto"
 proto_files_fault_tolerance="circuitbreaker.proto fault_detector.proto"
 proto_files_config_manage="config_file.proto grpc_config_api.proto"
-proto_files_security="auth.proto traffic_security.proto"
+proto_files_security="auth.proto traffic_security.proto workload_identity.proto"
 proto_files_ai="mcp.proto"
 proto_files_ratelimiter="ratelimiter.proto grpcapi_ratelimiter.proto"
 

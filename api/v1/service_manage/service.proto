@@ -90,13 +90,26 @@ message HealthCheck {
   enum HealthCheckType {
     UNKNOWN = 0;
     HEARTBEAT = 1;
+    TCP = 2;
+    HTTP = 3;
   }
   HealthCheckType type = 1 [ json_name = "type" ];
   HeartbeatHealthCheck heartbeat = 2 [ json_name = "heartbeat" ];
+  TcpHealthCheck tcp = 3 [ json_name = "tcp" ];
+  HttpHealthCheck http = 4 [ json_name = "http" ];
 }
 
 message HeartbeatHealthCheck {
   uint32 ttl = 1;
+}
+
+message TcpHealthCheck {
+  uint32 interval = 1;
+}
+
+message HttpHealthCheck {
+  uint32 interval = 1;
+  string path = 2;
 }
 
 message InstanceLabels {
