@@ -38,9 +38,11 @@ message MatchString {
   }
 
   enum ValueType {
+    reserved 2;
+    reserved "VARIABLE";
+
     TEXT = 0;
     PARAMETER = 1;
-    VARIABLE = 2;
   }
 
   MatchStringType type = 1;

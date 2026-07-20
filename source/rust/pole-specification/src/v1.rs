@@ -275,7 +275,6 @@ pub mod match_string {
     pub enum ValueType {
         Text = 0,
         Parameter = 1,
-        Variable = 2,
     }
     impl ValueType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -286,7 +285,6 @@ pub mod match_string {
             match self {
                 Self::Text => "TEXT",
                 Self::Parameter => "PARAMETER",
-                Self::Variable => "VARIABLE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -294,7 +292,6 @@ pub mod match_string {
             match value {
                 "TEXT" => Some(Self::Text),
                 "PARAMETER" => Some(Self::Parameter),
-                "VARIABLE" => Some(Self::Variable),
                 _ => None,
             }
         }
