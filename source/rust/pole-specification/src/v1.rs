@@ -1899,6 +1899,7 @@ pub enum Code {
     ServiceSubscribedByMeshes = 400213,
     ServiceExistedFluxRateLimits = 400214,
     NamespaceExistedConfigGroups = 400219,
+    NamespaceExistedGovernanceRules = 400220,
     ClientApiNotOpen = 400401,
     NotFoundResource = 404202,
     Unauthorized = 401000,
@@ -1995,6 +1996,7 @@ impl Code {
             Self::ServiceSubscribedByMeshes => "ServiceSubscribedByMeshes",
             Self::ServiceExistedFluxRateLimits => "ServiceExistedFluxRateLimits",
             Self::NamespaceExistedConfigGroups => "NamespaceExistedConfigGroups",
+            Self::NamespaceExistedGovernanceRules => "NamespaceExistedGovernanceRules",
             Self::ClientApiNotOpen => "ClientAPINotOpen",
             Self::NotFoundResource => "NotFoundResource",
             Self::Unauthorized => "Unauthorized",
@@ -2096,6 +2098,9 @@ impl Code {
             "ServiceSubscribedByMeshes" => Some(Self::ServiceSubscribedByMeshes),
             "ServiceExistedFluxRateLimits" => Some(Self::ServiceExistedFluxRateLimits),
             "NamespaceExistedConfigGroups" => Some(Self::NamespaceExistedConfigGroups),
+            "NamespaceExistedGovernanceRules" => {
+                Some(Self::NamespaceExistedGovernanceRules)
+            }
             "ClientAPINotOpen" => Some(Self::ClientApiNotOpen),
             "NotFoundResource" => Some(Self::NotFoundResource),
             "Unauthorized" => Some(Self::Unauthorized),

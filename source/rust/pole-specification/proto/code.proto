@@ -51,6 +51,7 @@ enum Code {
     ServiceSubscribedByMeshes        = 400213;
     ServiceExistedFluxRateLimits     = 400214;
     NamespaceExistedConfigGroups     = 400219;
+    NamespaceExistedGovernanceRules  = 400220;
     ClientAPINotOpen                    = 400401;
 
     NotFoundResource                 = 404202;
