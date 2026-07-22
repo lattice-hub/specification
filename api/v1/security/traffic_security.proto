@@ -38,6 +38,8 @@ message TrafficSecurityRule {
   // 规则级认证配置。历史规则缺少该字段时继续按旧请求匹配语义执行。
   TrafficSecurityAuthentication authentication = 14
       [ json_name = "authentication" ];
+  // namespace identifies the environment that owns this rule.
+  string namespace = 15 [ json_name = "namespace" ];
 }
 
 // 调用鉴权认证模式。

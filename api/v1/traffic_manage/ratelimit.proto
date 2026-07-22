@@ -43,6 +43,8 @@ message RateLimit {
   // 操作标志位
   bool editable = 13 [ json_name = "editable" ];
   bool deleteable = 14 [ json_name = "deleteable" ];
+  // namespace identifies the environment that owns this rule.
+  string namespace = 15 [ json_name = "namespace" ];
 }
 
 // 单个限流规则信息

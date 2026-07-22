@@ -469,6 +469,9 @@ pub struct RouteRule {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MetadataFailover {
@@ -953,6 +956,9 @@ pub struct LaneGroup {
     pub editable: bool,
     #[prost(bool, tag = "12")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this lane group.
+    #[prost(string, tag = "13")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// 泳道规则
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2195,6 +2201,9 @@ pub struct TrafficMirror {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
@@ -2275,6 +2284,9 @@ pub struct RateLimit {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `RateLimit`.
 pub mod rate_limit {
@@ -2991,6 +3003,9 @@ pub struct CircuitBreakerRule {
     pub editable: bool,
     #[prost(bool, tag = "15")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "16")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// the condition to judge an input invocation as an error
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -3258,6 +3273,9 @@ pub struct FaultDetectRule {
     /// detect sub rules
     #[prost(message, repeated, tag = "12")]
     pub rules: ::prost::alloc::vec::Vec<FaultDetectSubRule>,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "13")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `FaultDetectRule`.
 pub mod fault_detect_rule {
@@ -3412,6 +3430,9 @@ pub struct LosslessRule {
     pub editable: bool,
     #[prost(bool, tag = "9")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "10")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LosslessOnline {
@@ -3566,6 +3587,9 @@ pub struct TrafficMock {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
@@ -3649,6 +3673,9 @@ pub struct TrafficSecurityRule {
     /// 规则级认证配置。历史规则缺少该字段时继续按旧请求匹配语义执行。
     #[prost(message, optional, tag = "14")]
     pub authentication: ::core::option::Option<TrafficSecurityAuthentication>,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// 规则级认证配置。新建规则必须显式设置 mode。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

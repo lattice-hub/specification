@@ -68,6 +68,8 @@ message CircuitBreakerRule {
   // 操作标志位
   bool editable = 14 [ json_name = "editable" ];
   bool deleteable = 15 [ json_name = "deleteable" ];
+  // namespace identifies the environment that owns this rule.
+  string namespace = 16 [ json_name = "namespace" ];
 }
 
 // the condition to judge an input invocation as an error
