@@ -1,0 +1,174 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/pole-io/specification/source/go/api/v1/security";
+option java_package = "io.pole.specification.api.v1.security";
+option java_outer_classname = "WorkloadIdentityProto";
+
+// WorkloadCredentialFormat 表示数据面凭证的编码与签名格式。
+// 未知格式必须 fail-closed，不能降级为未签名身份或自定义 Header。
+enum WorkloadCredentialFormat {
+  WORKLOAD_CREDENTIAL_FORMAT_UNSPECIFIED = 0;
+  // Ed25519 签名的 compact JWT bearer credential。
+  // protected header 必须包含 alg=EdDSA、typ=pole-workload+jwt 和 kid。
+  WORKLOAD_CREDENTIAL_FORMAT_JWT_ED25519 = 1;
+}
+
+// WorkloadBindingType 表示签发时实际验证到的 bootstrap 保证强度。
+// binding type 是已验证结果，不能由调用方声明。
+enum WorkloadBindingType {
+  WORKLOAD_BINDING_UNSPECIFIED = 0;
+  // 仅证明 SDK 有权代表该服务，不代表具体 Pod、节点或实例。
+  WORKLOAD_BINDING_SERVICE_TOKEN = 1;
+  WORKLOAD_BINDING_KUBERNETES_SA = 2;
+  WORKLOAD_BINDING_MTLS_CLIENT_CERT = 3;
+  WORKLOAD_BINDING_CLOUD_WORKLOAD_IDENTITY = 4;
+}
+
+// WorkloadEvidence 是可选的实例级 bootstrap 证据。
+// 所有字段均为敏感数据，不得记录日志、持久化或进入普通缓存。
+message WorkloadEvidence {
+  oneof evidence {
+    string kubernetes_service_account_token = 1
+        [ json_name = "kubernetes_service_account_token" ];
+    string cloud_identity_token = 2 [ json_name = "cloud_identity_token" ];
+  }
+}
+
+// WorkloadCredentialIssueRequest 不携带 namespace、service 或 subject。
+// control-plane 必须从 gRPC metadata authorization 中已验证的 service token
+// 推导服务 principal；请求体不能选择或覆盖目标身份。
+message WorkloadCredentialIssueRequest {
+  // 当前协议版本固定为 1；未知版本必须 fail-closed。
+  uint32 protocol_version = 1 [ json_name = "protocol_version" ];
+  // 客户端生成的请求关联 ID，仅用于观测与问题定位；不能作为安全主体、
+  // 授权依据、凭证绑定依据或敏感响应缓存键。
+  string request_id = 2 [ json_name = "request_id" ];
+  // 用于防止在身份配置更新后按旧 descriptor 签发。
+  string expected_identity_revision = 3
+      [ json_name = "expected_identity_revision" ];
+  // 调用方可接受的格式；为空时由服务端选择当前默认格式。
+  repeated WorkloadCredentialFormat accepted_formats = 4
+      [ json_name = "accepted_formats" ];
+  // 为空时只使用 service token bootstrap，并返回 SERVICE_TOKEN binding。
+  WorkloadEvidence evidence = 5 [ json_name = "evidence" ];
+}
+
+// Renew 除 metadata service token 外还必须验证 current_credential：它必须未过期、
+// 未吊销，并与 metadata principal 解析到同一个 ServiceIdentity subject。
+// 已过期凭证不能 Renew，调用方必须重新执行 Issue/bootstrap。
+message WorkloadCredentialRenewRequest {
+  uint32 protocol_version = 1 [ json_name = "protocol_version" ];
+  // 客户端生成的请求关联 ID，仅用于观测与问题定位；不能作为安全主体、
+  // 授权依据、凭证绑定依据或敏感响应缓存键。
+  string request_id = 2 [ json_name = "request_id" ];
+  // 敏感字段，不得记录日志或进入普通缓存。
+  string current_credential = 3 [ json_name = "current_credential" ];
+  repeated WorkloadCredentialFormat accepted_formats = 4
+      [ json_name = "accepted_formats" ];
+  // 签发策略要求重新证明 workload 时提供。
+  WorkloadEvidence evidence = 5 [ json_name = "evidence" ];
+}
+
+// WorkloadCredential 是单个已认证 SDK/workload 的敏感数据面凭证。
+// serialized JWT 的必选 claims 为 iss/sub/aud/iat/nbf/exp/jti，以及
+// pole_ver、pole_trust_domain、pole_namespace、pole_service、
+// pole_identity_revision、pole_binding_type。只有验证过实例级 evidence 后
+// 才允许包含 pole_workload_id。数据面使用保留 Header/metadata
+// x-pole-workload-credential 携带，不能与 control-plane authorization 混用。
+message WorkloadCredential {
+  WorkloadCredentialFormat format = 1 [ json_name = "format" ];
+  // compact JWT；任何读取本字段的路径都必须按 secret 处理。
+  string serialized = 2 [ json_name = "serialized" ];
+  string credential_id = 3 [ json_name = "credential_id" ];
+  string key_id = 4 [ json_name = "key_id" ];
+  string trust_bundle_version = 5 [ json_name = "trust_bundle_version" ];
+  google.protobuf.Timestamp issued_at = 6 [ json_name = "issued_at" ];
+  google.protobuf.Timestamp not_before = 7 [ json_name = "not_before" ];
+  google.protobuf.Timestamp expires_at = 8 [ json_name = "expires_at" ];
+  google.protobuf.Timestamp renew_after = 9 [ json_name = "renew_after" ];
+  WorkloadBindingType binding_type = 10 [ json_name = "binding_type" ];
+}
+
+message WorkloadCredentialResponse {
+  uint32 code = 1 [ json_name = "code" ];
+  // 只能返回稳定、非敏感的错误信息，不得包含 credential、subject 或 evidence。
+  string info = 2 [ json_name = "info" ];
+  // 仅 code=ExecuteSuccess 时存在。
+  WorkloadCredential credential = 3 [ json_name = "credential" ];
+}
+
+service WorkloadCredentialService {
+  rpc Issue(WorkloadCredentialIssueRequest)
+      returns (WorkloadCredentialResponse) {}
+  rpc Renew(WorkloadCredentialRenewRequest)
+      returns (WorkloadCredentialResponse) {}
+}
+
+enum WorkloadSigningAlgorithm {
+  WORKLOAD_SIGNING_ALGORITHM_UNSPECIFIED = 0;
+  WORKLOAD_SIGNING_ALGORITHM_ED25519 = 1;
+}
+
+enum VerificationKeyState {
+  VERIFICATION_KEY_STATE_UNSPECIFIED = 0;
+  // ACTIVE key 可用于签发和验证。
+  VERIFICATION_KEY_STATE_ACTIVE = 1;
+  // RETIRING key 只用于验证，不得继续签发。
+  VERIFICATION_KEY_STATE_RETIRING = 2;
+  // REVOKED key 立即停止信任，即使 credential 尚未过期。
+  VERIFICATION_KEY_STATE_REVOKED = 3;
+}
+
+message WorkloadVerificationKey {
+  string key_id = 1 [ json_name = "key_id" ];
+  WorkloadSigningAlgorithm algorithm = 2 [ json_name = "algorithm" ];
+  // Ed25519 使用 32-byte raw public key。
+  bytes public_key = 3 [ json_name = "public_key" ];
+  VerificationKeyState state = 4 [ json_name = "state" ];
+  google.protobuf.Timestamp not_before = 5 [ json_name = "not_before" ];
+  google.protobuf.Timestamp not_after = 6 [ json_name = "not_after" ];
+}
+
+// SubjectRevocation 使某主体在指定时间之前签发的全部凭证失效。
+message SubjectRevocation {
+  string subject = 1 [ json_name = "subject" ];
+  google.protobuf.Timestamp credentials_issued_before = 2
+      [ json_name = "credentials_issued_before" ];
+  string reason = 3 [ json_name = "reason" ];
+}
+
+message CredentialRevocation {
+  string credential_id = 1 [ json_name = "credential_id" ];
+  google.protobuf.Timestamp revoked_at = 2 [ json_name = "revoked_at" ];
+  string reason = 3 [ json_name = "reason" ];
+}
+
+// WorkloadTrustBundle 只包含公共验证材料，可以独立缓存。
+// sequence 在每个 trust_domain 内单调递增，SDK 必须拒绝回滚；bundle 过期后
+// 不得继续无限信任其中的 key。
+message WorkloadTrustBundle {
+  uint32 schema_version = 1 [ json_name = "schema_version" ];
+  string trust_domain = 2 [ json_name = "trust_domain" ];
+  // 不透明且不可变的 bundle revision/hash。
+  string version = 3 [ json_name = "version" ];
+  uint64 sequence = 4 [ json_name = "sequence" ];
+  google.protobuf.Timestamp issued_at = 5 [ json_name = "issued_at" ];
+  google.protobuf.Timestamp expires_at = 6 [ json_name = "expires_at" ];
+  // JWT iss claim 必须与该值精确一致，不能仅根据 trust_domain 自行拼接。
+  string issuer = 7 [ json_name = "issuer" ];
+  repeated WorkloadVerificationKey keys = 10 [ json_name = "keys" ];
+  repeated SubjectRevocation subject_revocations = 11
+      [ json_name = "subject_revocations" ];
+  repeated CredentialRevocation credential_revocations = 12
+      [ json_name = "credential_revocations" ];
+}
+
+// trust_domain 不由请求体指定，control-plane 必须从已认证 principal 推导。
+message TrustBundleQuery {
+  string known_version = 1 [ json_name = "known_version" ];
+  uint64 known_sequence = 2 [ json_name = "known_sequence" ];
+}

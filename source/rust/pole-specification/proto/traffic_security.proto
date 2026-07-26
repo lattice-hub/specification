@@ -35,18 +35,64 @@ message TrafficSecurityRule {
   // 规则的权限操作状态
   bool editable = 12 [ json_name = "editable" ];
   bool deleteable = 13 [ json_name = "deleteable" ];
+  // 规则级认证配置。历史规则缺少该字段时继续按旧请求匹配语义执行。
+  TrafficSecurityAuthentication authentication = 14
+      [ json_name = "authentication" ];
+  // namespace identifies the environment that owns this rule.
+  string namespace = 15 [ json_name = "namespace" ];
+}
+
+// 调用鉴权认证模式。
+// 零值必须保留旧语义，避免历史规则在反序列化后静默切换到托管身份。
+enum TrafficSecurityAuthMode {
+  LEGACY_REQUEST_MATCH = 0;
+  MANAGED_IDENTITY = 1;
+  CUSTOM_HEADER = 2;
+}
+
+// 规则级认证配置。新建规则必须显式设置 mode。
+message TrafficSecurityAuthentication {
+  TrafficSecurityAuthMode mode = 1 [ json_name = "mode" ];
+  ManagedIdentityAuthentication managed_identity = 2
+      [ json_name = "managed_identity" ];
+  CustomHeaderAuthentication custom_header = 3
+      [ json_name = "custom_header" ];
+}
+
+// Pole 托管身份认证不包含用户可编辑的身份 ID 或凭证。
+message ManagedIdentityAuthentication {}
+
+// 自定义 Header 兼容认证。
+// value 是敏感写入字段，管理查询与规则发现不得返回明文。
+message CustomHeaderAuthentication {
+  string header_name = 1 [ json_name = "header_name" ];
+  // 仅由管理面创建/更新请求写入；control-plane 持久化前必须清空。
+  string value = 2 [ json_name = "value" ];
+  // control-plane 生成的数据面精确验证摘要；管理面不得接受调用方写入。
+  string value_sha256 = 3 [ json_name = "value_sha256" ];
 }
 
 // 单条调用鉴权策略。
 message TrafficSecurityPolicy {
-  // 被调 API 范围
-  API api = 1 [ json_name = "api" ];
+  reserved "api";
+  // 被调 API 范围，命中任一 API 即进入该策略
+  repeated API apis = 1 [ json_name = "apis" ];
   // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
   TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
   // 命中该策略后的动作
   TrafficSecurityAction action = 3 [ json_name = "action" ];
   // 拒绝调用时的响应效果，仅 action=DENY 时生效
   TrafficSecurityRejectEffect reject_effect = 4 [ json_name = "reject_effect" ];
+  // 托管身份模式下，从已认证主体中匹配可信来源服务。
+  // 不得从调用方自行填写的普通 Header 或 metadata 中取值。
+  ManagedCallerSelector managed_caller = 5 [ json_name = "managed_caller" ];
+}
+
+message ManagedCallerSelector {
+  // 接受任意已通过托管身份认证的服务。
+  bool any_authenticated = 1 [ json_name = "any_authenticated" ];
+  // 明确允许或拒绝的来源服务集合，按 namespace/service 匹配已认证主体。
+  repeated SourceService callers = 2 [ json_name = "callers" ];
 }
 
 enum TrafficSecurityAction {
@@ -55,6 +101,8 @@ enum TrafficSecurityAction {
 }
 
 message TrafficSecurityRejectEffect {
+  reserved 3;
+  reserved "status_code";
   // 业务错误码
   string code = 1 [ json_name = "code" ];
   // 拒绝原因

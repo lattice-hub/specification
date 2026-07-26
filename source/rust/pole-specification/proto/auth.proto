@@ -32,6 +32,8 @@ enum ResourceType {
   UserGroups = 21;
   Roles = 22;
   PolicyRules = 23;
+  MCPServerResources = 30;
+  A2AAgentResources = 31;
 }
 
 message LoginRequest {
@@ -156,6 +158,9 @@ message StrategyResources {
   repeated StrategyResourceEntry user_groups = 22 [ json_name = "user_groups" ];
   repeated StrategyResourceEntry roles = 23 [ json_name = "roles" ];
   repeated StrategyResourceEntry auth_policies = 24 [ json_name = "auth_policies" ];
+
+  repeated StrategyResourceEntry mcp_servers = 30 [ json_name = "mcp_servers" ];
+  repeated StrategyResourceEntry a2a_agents = 31 [ json_name = "a2a_agents" ];
 }
 
 message StrategyResourceLabel {

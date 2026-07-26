@@ -30,6 +30,7 @@ enum Code {
     HeartbeatTypeNotFound            = 400143;
     InvalidMetadata                  = 400150;
     InvalidMatchRule                 = 400904;
+    InvalidWorkloadCredentialRequest = 400910;
 
     // network relative codes
     ServicesExistedMesh   = 400170;
@@ -50,6 +51,7 @@ enum Code {
     ServiceSubscribedByMeshes        = 400213;
     ServiceExistedFluxRateLimits     = 400214;
     NamespaceExistedConfigGroups     = 400219;
+    NamespaceExistedGovernanceRules  = 400220;
     ClientAPINotOpen                    = 400401;
 
     NotFoundResource                 = 404202;
@@ -96,7 +98,13 @@ enum Code {
     EmptyAutToken    = 401002;
     TokenDisabled    = 401003;
     TokenNotExisted  = 401004;
+    InvalidWorkloadCredential = 401010;
+    ExpiredWorkloadCredential = 401011;
 
     AuthTokenForbidden        = 403001;
     OperationRoleForbidden    = 403002;
+    WorkloadCredentialIssueForbidden = 403010;
+    StaleServiceIdentityRevision = 409010;
+    WorkloadCredentialRateLimited = 429010;
+    WorkloadCredentialIssuerUnavailable = 500010;
 }

@@ -275,7 +275,6 @@ pub mod match_string {
     pub enum ValueType {
         Text = 0,
         Parameter = 1,
-        Variable = 2,
     }
     impl ValueType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -286,7 +285,6 @@ pub mod match_string {
             match self {
                 Self::Text => "TEXT",
                 Self::Parameter => "PARAMETER",
-                Self::Variable => "VARIABLE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -294,7 +292,6 @@ pub mod match_string {
             match value {
                 "TEXT" => Some(Self::Text),
                 "PARAMETER" => Some(Self::Parameter),
-                "VARIABLE" => Some(Self::Variable),
                 _ => None,
             }
         }
@@ -472,6 +469,9 @@ pub struct RouteRule {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MetadataFailover {
@@ -956,6 +956,9 @@ pub struct LaneGroup {
     pub editable: bool,
     #[prost(bool, tag = "12")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this lane group.
+    #[prost(string, tag = "13")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// 泳道规则
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1126,6 +1129,696 @@ pub struct StatInfo {
     #[prost(string, tag = "4")]
     pub protocol: ::prost::alloc::string::String,
 }
+/// WorkloadEvidence 是可选的实例级 bootstrap 证据。
+/// 所有字段均为敏感数据，不得记录日志、持久化或进入普通缓存。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadEvidence {
+    #[prost(oneof = "workload_evidence::Evidence", tags = "1, 2")]
+    pub evidence: ::core::option::Option<workload_evidence::Evidence>,
+}
+/// Nested message and enum types in `WorkloadEvidence`.
+pub mod workload_evidence {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Evidence {
+        #[prost(string, tag = "1")]
+        KubernetesServiceAccountToken(::prost::alloc::string::String),
+        #[prost(string, tag = "2")]
+        CloudIdentityToken(::prost::alloc::string::String),
+    }
+}
+/// WorkloadCredentialIssueRequest 不携带 namespace、service 或 subject。
+/// control-plane 必须从 gRPC metadata authorization 中已验证的 service token
+/// 推导服务 principal；请求体不能选择或覆盖目标身份。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadCredentialIssueRequest {
+    /// 当前协议版本固定为 1；未知版本必须 fail-closed。
+    #[prost(uint32, tag = "1")]
+    pub protocol_version: u32,
+    /// 客户端生成的请求关联 ID，仅用于观测与问题定位；不能作为安全主体、
+    /// 授权依据、凭证绑定依据或敏感响应缓存键。
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+    /// 用于防止在身份配置更新后按旧 descriptor 签发。
+    #[prost(string, tag = "3")]
+    pub expected_identity_revision: ::prost::alloc::string::String,
+    /// 调用方可接受的格式；为空时由服务端选择当前默认格式。
+    #[prost(enumeration = "WorkloadCredentialFormat", repeated, tag = "4")]
+    pub accepted_formats: ::prost::alloc::vec::Vec<i32>,
+    /// 为空时只使用 service token bootstrap，并返回 SERVICE_TOKEN binding。
+    #[prost(message, optional, tag = "5")]
+    pub evidence: ::core::option::Option<WorkloadEvidence>,
+}
+/// Renew 除 metadata service token 外还必须验证 current_credential：它必须未过期、
+/// 未吊销，并与 metadata principal 解析到同一个 ServiceIdentity subject。
+/// 已过期凭证不能 Renew，调用方必须重新执行 Issue/bootstrap。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadCredentialRenewRequest {
+    #[prost(uint32, tag = "1")]
+    pub protocol_version: u32,
+    /// 客户端生成的请求关联 ID，仅用于观测与问题定位；不能作为安全主体、
+    /// 授权依据、凭证绑定依据或敏感响应缓存键。
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+    /// 敏感字段，不得记录日志或进入普通缓存。
+    #[prost(string, tag = "3")]
+    pub current_credential: ::prost::alloc::string::String,
+    #[prost(enumeration = "WorkloadCredentialFormat", repeated, tag = "4")]
+    pub accepted_formats: ::prost::alloc::vec::Vec<i32>,
+    /// 签发策略要求重新证明 workload 时提供。
+    #[prost(message, optional, tag = "5")]
+    pub evidence: ::core::option::Option<WorkloadEvidence>,
+}
+/// WorkloadCredential 是单个已认证 SDK/workload 的敏感数据面凭证。
+/// serialized JWT 的必选 claims 为 iss/sub/aud/iat/nbf/exp/jti，以及
+/// pole_ver、pole_trust_domain、pole_namespace、pole_service、
+/// pole_identity_revision、pole_binding_type。只有验证过实例级 evidence 后
+/// 才允许包含 pole_workload_id。数据面使用保留 Header/metadata
+/// x-pole-workload-credential 携带，不能与 control-plane authorization 混用。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadCredential {
+    #[prost(enumeration = "WorkloadCredentialFormat", tag = "1")]
+    pub format: i32,
+    /// compact JWT；任何读取本字段的路径都必须按 secret 处理。
+    #[prost(string, tag = "2")]
+    pub serialized: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub credential_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub key_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub trust_bundle_version: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "6")]
+    pub issued_at: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(message, optional, tag = "7")]
+    pub not_before: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(message, optional, tag = "8")]
+    pub expires_at: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(message, optional, tag = "9")]
+    pub renew_after: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(enumeration = "WorkloadBindingType", tag = "10")]
+    pub binding_type: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadCredentialResponse {
+    #[prost(uint32, tag = "1")]
+    pub code: u32,
+    /// 只能返回稳定、非敏感的错误信息，不得包含 credential、subject 或 evidence。
+    #[prost(string, tag = "2")]
+    pub info: ::prost::alloc::string::String,
+    /// 仅 code=ExecuteSuccess 时存在。
+    #[prost(message, optional, tag = "3")]
+    pub credential: ::core::option::Option<WorkloadCredential>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct WorkloadVerificationKey {
+    #[prost(string, tag = "1")]
+    pub key_id: ::prost::alloc::string::String,
+    #[prost(enumeration = "WorkloadSigningAlgorithm", tag = "2")]
+    pub algorithm: i32,
+    /// Ed25519 使用 32-byte raw public key。
+    #[prost(bytes = "vec", tag = "3")]
+    pub public_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(enumeration = "VerificationKeyState", tag = "4")]
+    pub state: i32,
+    #[prost(message, optional, tag = "5")]
+    pub not_before: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(message, optional, tag = "6")]
+    pub not_after: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// SubjectRevocation 使某主体在指定时间之前签发的全部凭证失效。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SubjectRevocation {
+    #[prost(string, tag = "1")]
+    pub subject: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub credentials_issued_before: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(string, tag = "3")]
+    pub reason: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CredentialRevocation {
+    #[prost(string, tag = "1")]
+    pub credential_id: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub revoked_at: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(string, tag = "3")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// WorkloadTrustBundle 只包含公共验证材料，可以独立缓存。
+/// sequence 在每个 trust_domain 内单调递增，SDK 必须拒绝回滚；bundle 过期后
+/// 不得继续无限信任其中的 key。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WorkloadTrustBundle {
+    #[prost(uint32, tag = "1")]
+    pub schema_version: u32,
+    #[prost(string, tag = "2")]
+    pub trust_domain: ::prost::alloc::string::String,
+    /// 不透明且不可变的 bundle revision/hash。
+    #[prost(string, tag = "3")]
+    pub version: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "4")]
+    pub sequence: u64,
+    #[prost(message, optional, tag = "5")]
+    pub issued_at: ::core::option::Option<::prost_types::Timestamp>,
+    #[prost(message, optional, tag = "6")]
+    pub expires_at: ::core::option::Option<::prost_types::Timestamp>,
+    /// JWT iss claim 必须与该值精确一致，不能仅根据 trust_domain 自行拼接。
+    #[prost(string, tag = "7")]
+    pub issuer: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "10")]
+    pub keys: ::prost::alloc::vec::Vec<WorkloadVerificationKey>,
+    #[prost(message, repeated, tag = "11")]
+    pub subject_revocations: ::prost::alloc::vec::Vec<SubjectRevocation>,
+    #[prost(message, repeated, tag = "12")]
+    pub credential_revocations: ::prost::alloc::vec::Vec<CredentialRevocation>,
+}
+/// trust_domain 不由请求体指定，control-plane 必须从已认证 principal 推导。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TrustBundleQuery {
+    #[prost(string, tag = "1")]
+    pub known_version: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "2")]
+    pub known_sequence: u64,
+}
+/// WorkloadCredentialFormat 表示数据面凭证的编码与签名格式。
+/// 未知格式必须 fail-closed，不能降级为未签名身份或自定义 Header。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkloadCredentialFormat {
+    Unspecified = 0,
+    /// Ed25519 签名的 compact JWT bearer credential。
+    /// protected header 必须包含 alg=EdDSA、typ=pole-workload+jwt 和 kid。
+    JwtEd25519 = 1,
+}
+impl WorkloadCredentialFormat {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKLOAD_CREDENTIAL_FORMAT_UNSPECIFIED",
+            Self::JwtEd25519 => "WORKLOAD_CREDENTIAL_FORMAT_JWT_ED25519",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKLOAD_CREDENTIAL_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKLOAD_CREDENTIAL_FORMAT_JWT_ED25519" => Some(Self::JwtEd25519),
+            _ => None,
+        }
+    }
+}
+/// WorkloadBindingType 表示签发时实际验证到的 bootstrap 保证强度。
+/// binding type 是已验证结果，不能由调用方声明。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkloadBindingType {
+    WorkloadBindingUnspecified = 0,
+    /// 仅证明 SDK 有权代表该服务，不代表具体 Pod、节点或实例。
+    WorkloadBindingServiceToken = 1,
+    WorkloadBindingKubernetesSa = 2,
+    WorkloadBindingMtlsClientCert = 3,
+    WorkloadBindingCloudWorkloadIdentity = 4,
+}
+impl WorkloadBindingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::WorkloadBindingUnspecified => "WORKLOAD_BINDING_UNSPECIFIED",
+            Self::WorkloadBindingServiceToken => "WORKLOAD_BINDING_SERVICE_TOKEN",
+            Self::WorkloadBindingKubernetesSa => "WORKLOAD_BINDING_KUBERNETES_SA",
+            Self::WorkloadBindingMtlsClientCert => "WORKLOAD_BINDING_MTLS_CLIENT_CERT",
+            Self::WorkloadBindingCloudWorkloadIdentity => {
+                "WORKLOAD_BINDING_CLOUD_WORKLOAD_IDENTITY"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKLOAD_BINDING_UNSPECIFIED" => Some(Self::WorkloadBindingUnspecified),
+            "WORKLOAD_BINDING_SERVICE_TOKEN" => Some(Self::WorkloadBindingServiceToken),
+            "WORKLOAD_BINDING_KUBERNETES_SA" => Some(Self::WorkloadBindingKubernetesSa),
+            "WORKLOAD_BINDING_MTLS_CLIENT_CERT" => {
+                Some(Self::WorkloadBindingMtlsClientCert)
+            }
+            "WORKLOAD_BINDING_CLOUD_WORKLOAD_IDENTITY" => {
+                Some(Self::WorkloadBindingCloudWorkloadIdentity)
+            }
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum WorkloadSigningAlgorithm {
+    Unspecified = 0,
+    Ed25519 = 1,
+}
+impl WorkloadSigningAlgorithm {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "WORKLOAD_SIGNING_ALGORITHM_UNSPECIFIED",
+            Self::Ed25519 => "WORKLOAD_SIGNING_ALGORITHM_ED25519",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "WORKLOAD_SIGNING_ALGORITHM_UNSPECIFIED" => Some(Self::Unspecified),
+            "WORKLOAD_SIGNING_ALGORITHM_ED25519" => Some(Self::Ed25519),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VerificationKeyState {
+    Unspecified = 0,
+    /// ACTIVE key 可用于签发和验证。
+    Active = 1,
+    /// RETIRING key 只用于验证，不得继续签发。
+    Retiring = 2,
+    /// REVOKED key 立即停止信任，即使 credential 尚未过期。
+    Revoked = 3,
+}
+impl VerificationKeyState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "VERIFICATION_KEY_STATE_UNSPECIFIED",
+            Self::Active => "VERIFICATION_KEY_STATE_ACTIVE",
+            Self::Retiring => "VERIFICATION_KEY_STATE_RETIRING",
+            Self::Revoked => "VERIFICATION_KEY_STATE_REVOKED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "VERIFICATION_KEY_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "VERIFICATION_KEY_STATE_ACTIVE" => Some(Self::Active),
+            "VERIFICATION_KEY_STATE_RETIRING" => Some(Self::Retiring),
+            "VERIFICATION_KEY_STATE_REVOKED" => Some(Self::Revoked),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod workload_credential_service_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct WorkloadCredentialServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl WorkloadCredentialServiceClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> WorkloadCredentialServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::Body>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> WorkloadCredentialServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::Body>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            WorkloadCredentialServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        pub async fn issue(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WorkloadCredentialIssueRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::WorkloadCredentialResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/v1.WorkloadCredentialService/Issue",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("v1.WorkloadCredentialService", "Issue"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn renew(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WorkloadCredentialRenewRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::WorkloadCredentialResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/v1.WorkloadCredentialService/Renew",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("v1.WorkloadCredentialService", "Renew"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated server implementations.
+pub mod workload_credential_service_server {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    /// Generated trait containing gRPC methods that should be implemented for use with WorkloadCredentialServiceServer.
+    #[async_trait]
+    pub trait WorkloadCredentialService: std::marker::Send + std::marker::Sync + 'static {
+        async fn issue(
+            &self,
+            request: tonic::Request<super::WorkloadCredentialIssueRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::WorkloadCredentialResponse>,
+            tonic::Status,
+        >;
+        async fn renew(
+            &self,
+            request: tonic::Request<super::WorkloadCredentialRenewRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::WorkloadCredentialResponse>,
+            tonic::Status,
+        >;
+    }
+    #[derive(Debug)]
+    pub struct WorkloadCredentialServiceServer<T> {
+        inner: Arc<T>,
+        accept_compression_encodings: EnabledCompressionEncodings,
+        send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
+    }
+    impl<T> WorkloadCredentialServiceServer<T> {
+        pub fn new(inner: T) -> Self {
+            Self::from_arc(Arc::new(inner))
+        }
+        pub fn from_arc(inner: Arc<T>) -> Self {
+            Self {
+                inner,
+                accept_compression_encodings: Default::default(),
+                send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
+            }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> InterceptedService<Self, F>
+        where
+            F: tonic::service::Interceptor,
+        {
+            InterceptedService::new(Self::new(inner), interceptor)
+        }
+        /// Enable decompressing requests with the given encoding.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.accept_compression_encodings.enable(encoding);
+            self
+        }
+        /// Compress responses with the given encoding, if the client supports it.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.send_compression_encodings.enable(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.max_decoding_message_size = Some(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.max_encoding_message_size = Some(limit);
+            self
+        }
+    }
+    impl<T, B> tonic::codegen::Service<http::Request<B>>
+    for WorkloadCredentialServiceServer<T>
+    where
+        T: WorkloadCredentialService,
+        B: Body + std::marker::Send + 'static,
+        B::Error: Into<StdError> + std::marker::Send + 'static,
+    {
+        type Response = http::Response<tonic::body::Body>;
+        type Error = std::convert::Infallible;
+        type Future = BoxFuture<Self::Response, Self::Error>;
+        fn poll_ready(
+            &mut self,
+            _cx: &mut Context<'_>,
+        ) -> Poll<std::result::Result<(), Self::Error>> {
+            Poll::Ready(Ok(()))
+        }
+        fn call(&mut self, req: http::Request<B>) -> Self::Future {
+            match req.uri().path() {
+                "/v1.WorkloadCredentialService/Issue" => {
+                    #[allow(non_camel_case_types)]
+                    struct IssueSvc<T: WorkloadCredentialService>(pub Arc<T>);
+                    impl<
+                        T: WorkloadCredentialService,
+                    > tonic::server::UnaryService<super::WorkloadCredentialIssueRequest>
+                    for IssueSvc<T> {
+                        type Response = super::WorkloadCredentialResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::WorkloadCredentialIssueRequest,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as WorkloadCredentialService>::issue(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = IssueSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/v1.WorkloadCredentialService/Renew" => {
+                    #[allow(non_camel_case_types)]
+                    struct RenewSvc<T: WorkloadCredentialService>(pub Arc<T>);
+                    impl<
+                        T: WorkloadCredentialService,
+                    > tonic::server::UnaryService<super::WorkloadCredentialRenewRequest>
+                    for RenewSvc<T> {
+                        type Response = super::WorkloadCredentialResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::WorkloadCredentialRenewRequest,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as WorkloadCredentialService>::renew(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = RenewSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                _ => {
+                    Box::pin(async move {
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
+                        let headers = response.headers_mut();
+                        headers
+                            .insert(
+                                tonic::Status::GRPC_STATUS,
+                                (tonic::Code::Unimplemented as i32).into(),
+                            );
+                        headers
+                            .insert(
+                                http::header::CONTENT_TYPE,
+                                tonic::metadata::GRPC_CONTENT_TYPE,
+                            );
+                        Ok(response)
+                    })
+                }
+            }
+        }
+    }
+    impl<T> Clone for WorkloadCredentialServiceServer<T> {
+        fn clone(&self) -> Self {
+            let inner = self.inner.clone();
+            Self {
+                inner,
+                accept_compression_encodings: self.accept_compression_encodings,
+                send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
+            }
+        }
+    }
+    /// Generated gRPC service name
+    pub const SERVICE_NAME: &str = "v1.WorkloadCredentialService";
+    impl<T> tonic::server::NamedService for WorkloadCredentialServiceServer<T> {
+        const NAME: &'static str = SERVICE_NAME;
+    }
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Namespace {
     #[prost(string, tag = "1")]
@@ -1155,6 +1848,8 @@ pub struct Namespace {
     pub total_health_instance_count: u32,
     #[prost(uint32, tag = "22")]
     pub total_instance_count: u32,
+    #[prost(uint32, tag = "23")]
+    pub total_config_file_count: u32,
     #[prost(bool, tag = "30")]
     pub editable: bool,
     #[prost(bool, tag = "31")]
@@ -1185,6 +1880,7 @@ pub enum Code {
     HeartbeatTypeNotFound = 400143,
     InvalidMetadata = 400150,
     InvalidMatchRule = 400904,
+    InvalidWorkloadCredentialRequest = 400910,
     /// network relative codes
     ServicesExistedMesh = 400170,
     ResourcesExistedMesh = 400171,
@@ -1203,6 +1899,7 @@ pub enum Code {
     ServiceSubscribedByMeshes = 400213,
     ServiceExistedFluxRateLimits = 400214,
     NamespaceExistedConfigGroups = 400219,
+    NamespaceExistedGovernanceRules = 400220,
     ClientApiNotOpen = 400401,
     NotFoundResource = 404202,
     Unauthorized = 401000,
@@ -1244,8 +1941,14 @@ pub enum Code {
     EmptyAutToken = 401002,
     TokenDisabled = 401003,
     TokenNotExisted = 401004,
+    InvalidWorkloadCredential = 401010,
+    ExpiredWorkloadCredential = 401011,
     AuthTokenForbidden = 403001,
     OperationRoleForbidden = 403002,
+    WorkloadCredentialIssueForbidden = 403010,
+    StaleServiceIdentityRevision = 409010,
+    WorkloadCredentialRateLimited = 429010,
+    WorkloadCredentialIssuerUnavailable = 500010,
 }
 impl Code {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -1275,6 +1978,7 @@ impl Code {
             Self::HeartbeatTypeNotFound => "HeartbeatTypeNotFound",
             Self::InvalidMetadata => "InvalidMetadata",
             Self::InvalidMatchRule => "InvalidMatchRule",
+            Self::InvalidWorkloadCredentialRequest => "InvalidWorkloadCredentialRequest",
             Self::ServicesExistedMesh => "ServicesExistedMesh",
             Self::ResourcesExistedMesh => "ResourcesExistedMesh",
             Self::InvalidMeshParameter => "InvalidMeshParameter",
@@ -1292,6 +1996,7 @@ impl Code {
             Self::ServiceSubscribedByMeshes => "ServiceSubscribedByMeshes",
             Self::ServiceExistedFluxRateLimits => "ServiceExistedFluxRateLimits",
             Self::NamespaceExistedConfigGroups => "NamespaceExistedConfigGroups",
+            Self::NamespaceExistedGovernanceRules => "NamespaceExistedGovernanceRules",
             Self::ClientApiNotOpen => "ClientAPINotOpen",
             Self::NotFoundResource => "NotFoundResource",
             Self::Unauthorized => "Unauthorized",
@@ -1335,8 +2040,16 @@ impl Code {
             Self::EmptyAutToken => "EmptyAutToken",
             Self::TokenDisabled => "TokenDisabled",
             Self::TokenNotExisted => "TokenNotExisted",
+            Self::InvalidWorkloadCredential => "InvalidWorkloadCredential",
+            Self::ExpiredWorkloadCredential => "ExpiredWorkloadCredential",
             Self::AuthTokenForbidden => "AuthTokenForbidden",
             Self::OperationRoleForbidden => "OperationRoleForbidden",
+            Self::WorkloadCredentialIssueForbidden => "WorkloadCredentialIssueForbidden",
+            Self::StaleServiceIdentityRevision => "StaleServiceIdentityRevision",
+            Self::WorkloadCredentialRateLimited => "WorkloadCredentialRateLimited",
+            Self::WorkloadCredentialIssuerUnavailable => {
+                "WorkloadCredentialIssuerUnavailable"
+            }
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -1363,6 +2076,9 @@ impl Code {
             "HeartbeatTypeNotFound" => Some(Self::HeartbeatTypeNotFound),
             "InvalidMetadata" => Some(Self::InvalidMetadata),
             "InvalidMatchRule" => Some(Self::InvalidMatchRule),
+            "InvalidWorkloadCredentialRequest" => {
+                Some(Self::InvalidWorkloadCredentialRequest)
+            }
             "ServicesExistedMesh" => Some(Self::ServicesExistedMesh),
             "ResourcesExistedMesh" => Some(Self::ResourcesExistedMesh),
             "InvalidMeshParameter" => Some(Self::InvalidMeshParameter),
@@ -1382,6 +2098,9 @@ impl Code {
             "ServiceSubscribedByMeshes" => Some(Self::ServiceSubscribedByMeshes),
             "ServiceExistedFluxRateLimits" => Some(Self::ServiceExistedFluxRateLimits),
             "NamespaceExistedConfigGroups" => Some(Self::NamespaceExistedConfigGroups),
+            "NamespaceExistedGovernanceRules" => {
+                Some(Self::NamespaceExistedGovernanceRules)
+            }
             "ClientAPINotOpen" => Some(Self::ClientApiNotOpen),
             "NotFoundResource" => Some(Self::NotFoundResource),
             "Unauthorized" => Some(Self::Unauthorized),
@@ -1425,8 +2144,18 @@ impl Code {
             "EmptyAutToken" => Some(Self::EmptyAutToken),
             "TokenDisabled" => Some(Self::TokenDisabled),
             "TokenNotExisted" => Some(Self::TokenNotExisted),
+            "InvalidWorkloadCredential" => Some(Self::InvalidWorkloadCredential),
+            "ExpiredWorkloadCredential" => Some(Self::ExpiredWorkloadCredential),
             "AuthTokenForbidden" => Some(Self::AuthTokenForbidden),
             "OperationRoleForbidden" => Some(Self::OperationRoleForbidden),
+            "WorkloadCredentialIssueForbidden" => {
+                Some(Self::WorkloadCredentialIssueForbidden)
+            }
+            "StaleServiceIdentityRevision" => Some(Self::StaleServiceIdentityRevision),
+            "WorkloadCredentialRateLimited" => Some(Self::WorkloadCredentialRateLimited),
+            "WorkloadCredentialIssuerUnavailable" => {
+                Some(Self::WorkloadCredentialIssuerUnavailable)
+            }
             _ => None,
         }
     }
@@ -1442,7 +2171,7 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
+    /// 主调服务范围，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
     pub caller: ::core::option::Option<SourceService>,
     /// 被调服务，规则归属和下发绑定到该服务。
@@ -1477,13 +2206,16 @@ pub struct TrafficMirror {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
-    /// 镜像接口范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
-    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMirror.caller 统一表达。
+    /// 镜像接口范围，命中任一 API 即执行镜像。
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 目标服务
@@ -1492,8 +2224,11 @@ pub struct MirrorRule {
     /// 流量镜像百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mirror_percent: u32,
+    /// 流量镜像持续时间，默认无限制
+    #[prost(message, optional, tag = "5")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1554,6 +2289,9 @@ pub struct RateLimit {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `RateLimit`.
 pub mod rate_limit {
@@ -1602,9 +2340,9 @@ pub struct LimitTrigger {
     /// 限流规则名
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// 被调接口名
-    #[prost(message, optional, tag = "2")]
-    pub method: ::core::option::Option<MatchString>,
+    /// 被调 API 范围，命中任一 API 即进入该子限流规则
+    #[prost(message, repeated, tag = "2")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     #[prost(enumeration = "limit_trigger::Resource", tag = "3")]
     pub resource: i32,
     /// 被调的参数过滤条件，满足过滤条件才进入限流规则
@@ -2018,12 +2756,16 @@ pub struct Instance {
     #[prost(string, tag = "18")]
     pub revision: ::prost::alloc::string::String,
 }
-#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct HealthCheck {
     #[prost(enumeration = "health_check::HealthCheckType", tag = "1")]
     pub r#type: i32,
     #[prost(message, optional, tag = "2")]
     pub heartbeat: ::core::option::Option<HeartbeatHealthCheck>,
+    #[prost(message, optional, tag = "3")]
+    pub tcp: ::core::option::Option<TcpHealthCheck>,
+    #[prost(message, optional, tag = "4")]
+    pub http: ::core::option::Option<HttpHealthCheck>,
 }
 /// Nested message and enum types in `HealthCheck`.
 pub mod health_check {
@@ -2042,6 +2784,8 @@ pub mod health_check {
     pub enum HealthCheckType {
         Unknown = 0,
         Heartbeat = 1,
+        Tcp = 2,
+        Http = 3,
     }
     impl HealthCheckType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2052,6 +2796,8 @@ pub mod health_check {
             match self {
                 Self::Unknown => "UNKNOWN",
                 Self::Heartbeat => "HEARTBEAT",
+                Self::Tcp => "TCP",
+                Self::Http => "HTTP",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2059,6 +2805,8 @@ pub mod health_check {
             match value {
                 "UNKNOWN" => Some(Self::Unknown),
                 "HEARTBEAT" => Some(Self::Heartbeat),
+                "TCP" => Some(Self::Tcp),
+                "HTTP" => Some(Self::Http),
                 _ => None,
             }
         }
@@ -2068,6 +2816,18 @@ pub mod health_check {
 pub struct HeartbeatHealthCheck {
     #[prost(uint32, tag = "1")]
     pub ttl: u32,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TcpHealthCheck {
+    #[prost(uint32, tag = "1")]
+    pub interval: u32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct HttpHealthCheck {
+    #[prost(uint32, tag = "1")]
+    pub interval: u32,
+    #[prost(string, tag = "2")]
+    pub path: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InstanceLabels {
@@ -2248,6 +3008,9 @@ pub struct CircuitBreakerRule {
     pub editable: bool,
     #[prost(bool, tag = "15")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "16")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// the condition to judge an input invocation as an error
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -2395,15 +3158,18 @@ pub struct CircuitBreakerPolicy {
 pub struct BlockConfig {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// blocking target api
-    #[prost(message, optional, tag = "2")]
-    pub api: ::core::option::Option<Api>,
+    /// blocking target APIs, any matched API enters this block strategy
+    #[prost(message, repeated, tag = "2")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// conditions to judge an invocation as an error
     #[prost(message, repeated, tag = "3")]
     pub error_conditions: ::prost::alloc::vec::Vec<ErrorCondition>,
     /// trigger condition to trigger circuitbreaking
     #[prost(message, repeated, tag = "4")]
     pub trigger_conditions: ::prost::alloc::vec::Vec<TriggerCondition>,
+    /// whether regex API matches are counted separately
+    #[prost(bool, tag = "5")]
+    pub regex_separate: bool,
 }
 /// fallback config
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2512,6 +3278,9 @@ pub struct FaultDetectRule {
     /// detect sub rules
     #[prost(message, repeated, tag = "12")]
     pub rules: ::prost::alloc::vec::Vec<FaultDetectSubRule>,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "13")]
+    pub namespace: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `FaultDetectRule`.
 pub mod fault_detect_rule {
@@ -2666,6 +3435,9 @@ pub struct LosslessRule {
     pub editable: bool,
     #[prost(bool, tag = "9")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "10")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LosslessOnline {
@@ -2785,7 +3557,7 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 主调服务，namespace/service 均为 "\*" 表示全部服务。
+    /// 主调服务范围，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
     pub caller: ::core::option::Option<SourceService>,
     /// 被调服务，规则归属和下发绑定到该服务。
@@ -2820,13 +3592,16 @@ pub struct TrafficMock {
     pub editable: bool,
     #[prost(bool, tag = "14")]
     pub deleteable: bool,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
-    /// Mock 接口范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
-    /// 请求头、查询参数、路径、Cookie 等流量匹配条件；主调服务由 TrafficMock.caller 统一表达。
+    /// Mock 接口范围，命中任一 API 即执行 Mock。
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 命中后返回的模拟响应
@@ -2835,8 +3610,11 @@ pub struct MockRule {
     /// Mock 命中百分比，0-100
     #[prost(uint32, tag = "4")]
     pub mock_percent: u32,
+    /// 响应延迟，默认无延迟
+    #[prost(message, optional, tag = "5")]
+    pub delay: ::core::option::Option<::prost_types::Duration>,
     /// 子规则是否禁用，默认启用
-    #[prost(bool, tag = "5")]
+    #[prost(bool, tag = "6")]
     pub disable: bool,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2897,13 +3675,45 @@ pub struct TrafficSecurityRule {
     pub editable: bool,
     #[prost(bool, tag = "13")]
     pub deleteable: bool,
+    /// 规则级认证配置。历史规则缺少该字段时继续按旧请求匹配语义执行。
+    #[prost(message, optional, tag = "14")]
+    pub authentication: ::core::option::Option<TrafficSecurityAuthentication>,
+    /// namespace identifies the environment that owns this rule.
+    #[prost(string, tag = "15")]
+    pub namespace: ::prost::alloc::string::String,
+}
+/// 规则级认证配置。新建规则必须显式设置 mode。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TrafficSecurityAuthentication {
+    #[prost(enumeration = "TrafficSecurityAuthMode", tag = "1")]
+    pub mode: i32,
+    #[prost(message, optional, tag = "2")]
+    pub managed_identity: ::core::option::Option<ManagedIdentityAuthentication>,
+    #[prost(message, optional, tag = "3")]
+    pub custom_header: ::core::option::Option<CustomHeaderAuthentication>,
+}
+/// Pole 托管身份认证不包含用户可编辑的身份 ID 或凭证。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ManagedIdentityAuthentication {}
+/// 自定义 Header 兼容认证。
+/// value 是敏感写入字段，管理查询与规则发现不得返回明文。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CustomHeaderAuthentication {
+    #[prost(string, tag = "1")]
+    pub header_name: ::prost::alloc::string::String,
+    /// 仅由管理面创建/更新请求写入；control-plane 持久化前必须清空。
+    #[prost(string, tag = "2")]
+    pub value: ::prost::alloc::string::String,
+    /// control-plane 生成的数据面精确验证摘要；管理面不得接受调用方写入。
+    #[prost(string, tag = "3")]
+    pub value_sha256: ::prost::alloc::string::String,
 }
 /// 单条调用鉴权策略。
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrafficSecurityPolicy {
-    /// 被调 API 范围
-    #[prost(message, optional, tag = "1")]
-    pub api: ::core::option::Option<Api>,
+    /// 被调 API 范围，命中任一 API 即进入该策略
+    #[prost(message, repeated, tag = "1")]
+    pub apis: ::prost::alloc::vec::Vec<Api>,
     /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
@@ -2913,6 +3723,19 @@ pub struct TrafficSecurityPolicy {
     /// 拒绝调用时的响应效果，仅 action=DENY 时生效
     #[prost(message, optional, tag = "4")]
     pub reject_effect: ::core::option::Option<TrafficSecurityRejectEffect>,
+    /// 托管身份模式下，从已认证主体中匹配可信来源服务。
+    /// 不得从调用方自行填写的普通 Header 或 metadata 中取值。
+    #[prost(message, optional, tag = "5")]
+    pub managed_caller: ::core::option::Option<ManagedCallerSelector>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ManagedCallerSelector {
+    /// 接受任意已通过托管身份认证的服务。
+    #[prost(bool, tag = "1")]
+    pub any_authenticated: bool,
+    /// 明确允许或拒绝的来源服务集合，按 namespace/service 匹配已认证主体。
+    #[prost(message, repeated, tag = "2")]
+    pub callers: ::prost::alloc::vec::Vec<SourceService>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct TrafficSecurityRejectEffect {
@@ -2922,6 +3745,37 @@ pub struct TrafficSecurityRejectEffect {
     /// 拒绝原因
     #[prost(string, tag = "2")]
     pub message: ::prost::alloc::string::String,
+}
+/// 调用鉴权认证模式。
+/// 零值必须保留旧语义，避免历史规则在反序列化后静默切换到托管身份。
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrafficSecurityAuthMode {
+    LegacyRequestMatch = 0,
+    ManagedIdentity = 1,
+    CustomHeader = 2,
+}
+impl TrafficSecurityAuthMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::LegacyRequestMatch => "LEGACY_REQUEST_MATCH",
+            Self::ManagedIdentity => "MANAGED_IDENTITY",
+            Self::CustomHeader => "CUSTOM_HEADER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LEGACY_REQUEST_MATCH" => Some(Self::LegacyRequestMatch),
+            "MANAGED_IDENTITY" => Some(Self::ManagedIdentity),
+            "CUSTOM_HEADER" => Some(Self::CustomHeader),
+            _ => None,
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2965,6 +3819,9 @@ pub struct DiscoverRequest {
     pub service: ::core::option::Option<Service>,
     #[prost(message, optional, tag = "30")]
     pub filter: ::core::option::Option<DiscoverFilter>,
+    /// 仅 SERVICE_IDENTITY_BUNDLE 使用；trust domain 由认证 principal 推导。
+    #[prost(message, optional, tag = "31")]
+    pub trust_bundle_query: ::core::option::Option<TrustBundleQuery>,
 }
 /// Nested message and enum types in `DiscoverRequest`.
 pub mod discover_request {
@@ -3010,6 +3867,10 @@ pub mod discover_request {
         TrafficMirrorRule = 28,
         /// 流量 Mock 规则
         TrafficMockRule = 29,
+        /// 当前已认证服务的数据面身份描述
+        ServiceIdentity = 30,
+        /// 当前已认证服务所属 trust domain 的公共验证材料
+        ServiceIdentityBundle = 31,
         /// 服务订阅视图
         ServiceSubscribers = 50,
     }
@@ -3035,6 +3896,8 @@ pub mod discover_request {
                 Self::TrafficSecurityRule => "TRAFFIC_SECURITY_RULE",
                 Self::TrafficMirrorRule => "TRAFFIC_MIRROR_RULE",
                 Self::TrafficMockRule => "TRAFFIC_MOCK_RULE",
+                Self::ServiceIdentity => "SERVICE_IDENTITY",
+                Self::ServiceIdentityBundle => "SERVICE_IDENTITY_BUNDLE",
                 Self::ServiceSubscribers => "SERVICE_SUBSCRIBERS",
             }
         }
@@ -3056,6 +3919,8 @@ pub mod discover_request {
                 "TRAFFIC_SECURITY_RULE" => Some(Self::TrafficSecurityRule),
                 "TRAFFIC_MIRROR_RULE" => Some(Self::TrafficMirrorRule),
                 "TRAFFIC_MOCK_RULE" => Some(Self::TrafficMockRule),
+                "SERVICE_IDENTITY" => Some(Self::ServiceIdentity),
+                "SERVICE_IDENTITY_BUNDLE" => Some(Self::ServiceIdentityBundle),
                 "SERVICE_SUBSCRIBERS" => Some(Self::ServiceSubscribers),
                 _ => None,
             }
@@ -3118,6 +3983,12 @@ pub struct DiscoverResponse {
     /// 流量 Mock 规则
     #[prost(message, repeated, tag = "29")]
     pub traffic_mock_rules: ::prost::alloc::vec::Vec<TrafficMock>,
+    /// 当前已认证服务的数据面身份描述，不包含 Service.token 或 workload 凭证
+    #[prost(message, optional, tag = "30")]
+    pub service_identity: ::core::option::Option<ServiceIdentityDescriptor>,
+    /// 公共验证材料，不包含 workload credential 或任何私钥。
+    #[prost(message, optional, tag = "31")]
+    pub service_identity_bundle: ::core::option::Option<WorkloadTrustBundle>,
 }
 /// Nested message and enum types in `DiscoverResponse`.
 pub mod discover_response {
@@ -3163,6 +4034,10 @@ pub mod discover_response {
         TrafficMirrorRule = 28,
         /// 流量 Mock 规则
         TrafficMockRule = 29,
+        /// 当前已认证服务的数据面身份描述
+        ServiceIdentity = 30,
+        /// 当前已认证服务所属 trust domain 的公共验证材料
+        ServiceIdentityBundle = 31,
         /// 服务订阅视图
         ServiceSubscribers = 50,
     }
@@ -3188,6 +4063,8 @@ pub mod discover_response {
                 Self::TrafficSecurityRule => "TRAFFIC_SECURITY_RULE",
                 Self::TrafficMirrorRule => "TRAFFIC_MIRROR_RULE",
                 Self::TrafficMockRule => "TRAFFIC_MOCK_RULE",
+                Self::ServiceIdentity => "SERVICE_IDENTITY",
+                Self::ServiceIdentityBundle => "SERVICE_IDENTITY_BUNDLE",
                 Self::ServiceSubscribers => "SERVICE_SUBSCRIBERS",
             }
         }
@@ -3209,11 +4086,44 @@ pub mod discover_response {
                 "TRAFFIC_SECURITY_RULE" => Some(Self::TrafficSecurityRule),
                 "TRAFFIC_MIRROR_RULE" => Some(Self::TrafficMirrorRule),
                 "TRAFFIC_MOCK_RULE" => Some(Self::TrafficMockRule),
+                "SERVICE_IDENTITY" => Some(Self::ServiceIdentity),
+                "SERVICE_IDENTITY_BUNDLE" => Some(Self::ServiceIdentityBundle),
                 "SERVICE_SUBSCRIBERS" => Some(Self::ServiceSubscribers),
                 _ => None,
             }
         }
     }
+}
+/// 服务稳定的数据面身份描述。本对象不是凭证，也不包含任何 secret。
+/// control-plane 必须根据 gRPC metadata 中已验证的 service token 推导该对象，
+/// DiscoverRequest.service 只能用于 namespace/service 一致性校验。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ServiceIdentityDescriptor {
+    /// SDK 内部使用的稳定主体标识，不作为用户可编辑配置暴露。
+    #[prost(string, tag = "1")]
+    pub subject: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub service: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub revision: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub credential_mode: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub trust_bundle_version: ::prost::alloc::string::String,
+    #[prost(string, tag = "7")]
+    pub trust_domain: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub audience: ::prost::alloc::string::String,
+    /// 独立 workload credential RPC 的服务端点；凭证本身不得进入 Discover。
+    #[prost(string, tag = "9")]
+    pub credential_endpoint: ::prost::alloc::string::String,
+    /// typed 协议版本和格式能力；旧 string 字段继续保留用于兼容旧 SDK。
+    #[prost(uint32, tag = "10")]
+    pub identity_protocol_version: u32,
+    #[prost(enumeration = "WorkloadCredentialFormat", repeated, tag = "11")]
+    pub credential_formats: ::prost::alloc::vec::Vec<i32>,
 }
 /// Generated client implementations.
 pub mod discover_grpc_client {
@@ -5815,6 +6725,10 @@ pub struct StrategyResources {
     pub roles: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "24")]
     pub auth_policies: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "30")]
+    pub mcp_servers: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "31")]
+    pub a2a_agents: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StrategyResourceLabel {
@@ -5946,6 +6860,8 @@ pub enum ResourceType {
     UserGroups = 21,
     Roles = 22,
     PolicyRules = 23,
+    McpServerResources = 30,
+    A2aAgentResources = 31,
 }
 impl ResourceType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -5970,6 +6886,8 @@ impl ResourceType {
             Self::UserGroups => "UserGroups",
             Self::Roles => "Roles",
             Self::PolicyRules => "PolicyRules",
+            Self::McpServerResources => "MCPServerResources",
+            Self::A2aAgentResources => "A2AAgentResources",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -5991,6 +6909,8 @@ impl ResourceType {
             "UserGroups" => Some(Self::UserGroups),
             "Roles" => Some(Self::Roles),
             "PolicyRules" => Some(Self::PolicyRules),
+            "MCPServerResources" => Some(Self::McpServerResources),
+            "A2AAgentResources" => Some(Self::A2aAgentResources),
             _ => None,
         }
     }

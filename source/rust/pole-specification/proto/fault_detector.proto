@@ -46,6 +46,8 @@ message FaultDetectRule {
   bool deleteable = 11 [ json_name = "deleteable" ];
   // detect sub rules
   repeated FaultDetectSubRule rules = 12;
+  // namespace identifies the environment that owns this rule.
+  string namespace = 13 [ json_name = "namespace" ];
 }
 
 message FaultDetectSubRule {

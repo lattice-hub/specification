@@ -25,6 +25,8 @@ message LosslessRule {
   // 操作标志位
   bool editable = 8 [ json_name = "editable" ];
   bool deleteable = 9 [ json_name = "deleteable" ];
+  // namespace identifies the environment that owns this rule.
+  string namespace = 10 [ json_name = "namespace" ];
 }
 
 message LosslessOnline {

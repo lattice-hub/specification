@@ -23,10 +23,7 @@ fn main() -> Result<()> {
     tonic_prost_build::configure()
         .build_server(true)
         .out_dir("src")
-        .compile_protos(
-            &proto_list,
-            &["proto/".into()],
-        )
+        .compile_protos(&proto_list, &["proto/".into()])
         .unwrap();
     Ok(())
 }

@@ -61,6 +61,8 @@ message LaneGroup {
   // 操作标志位
   bool editable = 11 [ json_name = "editable" ];
   bool deleteable = 12 [ json_name = "deleteable" ];
+  // namespace identifies the environment that owns this lane group.
+  string namespace = 13 [ json_name = "namespace" ];
 }
 
 // 泳道规则
