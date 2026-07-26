@@ -34,6 +34,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - name: Check formatting
+        run: cargo fmt --all -- --check
       - name: Test
         env:
           PROTOC: ${{ github.workspace }}/source/protoc/protoc-linux-x86_64/bin/protoc

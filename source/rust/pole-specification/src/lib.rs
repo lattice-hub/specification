@@ -1,3 +1,4 @@
+#[rustfmt::skip]
 pub mod v1;
 
 /// 限流数据面 gRPC 协议。
