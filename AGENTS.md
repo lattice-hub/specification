@@ -21,16 +21,23 @@
 
 1. 同步远端分支和 tags，确认目标 tag 尚不存在。
 2. 确认待发布提交已包含所有预期历史，并且是 `origin/develop` 的已验证提交。
-3. 运行：
+3. 根据当前平台使用仓库内置的 `protoc`：
+
+   ```shell
+   SPEC_PROTOC="$(pwd)/source/protoc/protoc-$(uname -s | tr 'A-Z' 'a-z')-$(uname -m | tr 'A-Z' 'a-z')/bin/protoc"
+   test -x "$SPEC_PROTOC"
+   ```
+
+4. 运行：
    - `go test ./...`
    - `cargo fmt --all -- --check`
-   - `cargo test --all`
-   - `cargo check --all`
-4. 创建 PR 合入 `develop`，等待 PR CI 和合并后的 `develop` CI 全部通过。
-5. 在最终 `develop` 集成提交上创建 annotated tag，并推送该 tag。
-6. 使用该 tag 发布 GitHub Release；ALPHA 版本标记为 prerelease。
-7. 跟踪 `Release-Rust` 工作流到终态，检查 crate 发布步骤成功。
-8. 最终交付中分别报告 PR、合并提交、tag、GitHub Release 和发布工作流链接。
+   - `PROTOC="$SPEC_PROTOC" cargo test --all`
+   - `PROTOC="$SPEC_PROTOC" cargo check --all`
+5. 创建 PR 合入 `develop`，等待 PR CI 和合并后的 `develop` CI 全部通过。
+6. 在最终 `develop` 集成提交上创建 annotated tag，并推送该 tag。
+7. 使用该 tag 发布 GitHub Release；ALPHA 版本标记为 prerelease。
+8. 跟踪 `Release-Rust` 工作流到终态，检查 crate 发布步骤成功。
+9. 最终交付中分别报告 PR、合并提交、tag、GitHub Release 和发布工作流链接。
 
 ### 安全约束
 
