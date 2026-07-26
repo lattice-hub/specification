@@ -74,6 +74,7 @@ message CustomHeaderAuthentication {
 
 // 单条调用鉴权策略。
 message TrafficSecurityPolicy {
+  reserved "api";
   // 被调 API 范围，命中任一 API 即进入该策略
   repeated API apis = 1 [ json_name = "apis" ];
   // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
@@ -100,6 +101,8 @@ enum TrafficSecurityAction {
 }
 
 message TrafficSecurityRejectEffect {
+  reserved 3;
+  reserved "status_code";
   // 业务错误码
   string code = 1 [ json_name = "code" ];
   // 拒绝原因

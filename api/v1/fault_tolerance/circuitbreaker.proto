@@ -126,6 +126,7 @@ message CircuitBreakerPolicy {
 
 // blocking strategy
 message BlockConfig {
+  reserved "api";
   string name = 1 [ json_name = "name" ];
   // blocking target APIs, any matched API enters this block strategy
   repeated API apis = 2 [ json_name = "apis" ];

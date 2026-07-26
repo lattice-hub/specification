@@ -49,6 +49,7 @@ message RateLimit {
 
 // 单个限流规则信息
 message LimitTrigger {
+  reserved "method";
   // 限流规则名
   string name = 1;
   // 被调 API 范围，命中任一 API 即进入该子限流规则

@@ -2171,10 +2171,10 @@ pub struct TrafficMirror {
     /// 流量镜像规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 主调服务范围，空表示任意主调
+    /// 主调服务范围，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
     pub caller: ::core::option::Option<SourceService>,
-    /// 被调服务，规则只绑定到该服务
+    /// 被调服务，规则归属和下发绑定到该服务。
     #[prost(message, optional, tag = "5")]
     pub callee: ::core::option::Option<DestinationService>,
     /// 流量镜像规则集合
@@ -2212,10 +2212,10 @@ pub struct TrafficMirror {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MirrorRule {
-    /// 镜像接口范围，命中任一 API 即执行镜像
+    /// 镜像接口范围，命中任一 API 即执行镜像。
     #[prost(message, repeated, tag = "1")]
     pub apis: ::prost::alloc::vec::Vec<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 目标服务
@@ -3557,10 +3557,10 @@ pub struct TrafficMock {
     /// 流量 Mock 规则描述
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// 主调服务范围，空表示任意主调
+    /// 主调服务范围，namespace/service 均为 "\*" 表示全部服务。
     #[prost(message, optional, tag = "4")]
     pub caller: ::core::option::Option<SourceService>,
-    /// 被调服务，规则只绑定到该服务
+    /// 被调服务，规则归属和下发绑定到该服务。
     #[prost(message, optional, tag = "5")]
     pub callee: ::core::option::Option<DestinationService>,
     /// 流量 Mock 子规则集合
@@ -3598,10 +3598,10 @@ pub struct TrafficMock {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MockRule {
-    /// Mock 接口范围，命中任一 API 即执行 Mock
+    /// Mock 接口范围，命中任一 API 即执行 Mock。
     #[prost(message, repeated, tag = "1")]
     pub apis: ::prost::alloc::vec::Vec<Api>,
-    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    /// 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
     #[prost(message, optional, tag = "2")]
     pub traffic_match_rule: ::core::option::Option<TrafficMatchRule>,
     /// 命中后返回的模拟响应

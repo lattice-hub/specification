@@ -17,9 +17,10 @@ message TrafficMock {
   string name = 2;
   // 流量 Mock 规则描述
   string description = 3;
-  // 主调服务范围，空表示任意主调
+  reserved "target_service";
+  // 主调服务范围，namespace/service 均为 "*" 表示全部服务。
   SourceService caller = 4 [ json_name = "caller" ];
-  // 被调服务，规则只绑定到该服务
+  // 被调服务，规则归属和下发绑定到该服务。
   DestinationService callee = 5 [ json_name = "callee" ];
   // 流量 Mock 子规则集合
   repeated MockRule rules = 6;
@@ -43,9 +44,10 @@ message TrafficMock {
 }
 
 message MockRule {
-  // Mock 接口范围，命中任一 API 即执行 Mock
+  reserved "api";
+  // Mock 接口范围，命中任一 API 即执行 Mock。
   repeated API apis = 1 [ json_name = "apis" ];
-  // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+  // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
   TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
   // 命中后返回的模拟响应
   MockResponse response = 3;
@@ -58,6 +60,8 @@ message MockRule {
 }
 
 message MockResponse {
+  reserved 4, 5;
+  reserved "status_code", "message";
   // 业务错误码
   string code = 1;
   // 响应头

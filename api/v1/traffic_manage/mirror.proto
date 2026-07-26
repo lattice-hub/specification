@@ -17,9 +17,10 @@ message TrafficMirror {
     string name = 2;
     // 流量镜像规则描述
     string description = 3;
-    // 主调服务范围，空表示任意主调
+    reserved "target_service";
+    // 主调服务范围，namespace/service 均为 "*" 表示全部服务。
     SourceService caller = 4 [ json_name = "caller" ];
-    // 被调服务，规则只绑定到该服务
+    // 被调服务，规则归属和下发绑定到该服务。
     DestinationService callee = 5 [ json_name = "callee" ];
     // 流量镜像规则集合
     repeated MirrorRule rules = 6;
@@ -43,9 +44,10 @@ message TrafficMirror {
 }
 
 message MirrorRule {
-    // 镜像接口范围，命中任一 API 即执行镜像
+    reserved "api";
+    // 镜像接口范围，命中任一 API 即执行镜像。
     repeated API apis = 1 [ json_name = "apis" ];
-    // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件
+    // 主调、请求头、查询参数、路径、Cookie 等流量匹配条件。
     TrafficMatchRule traffic_match_rule = 2 [ json_name = "traffic_match_rule" ];
     // 目标服务
     MirrorDestination destination = 3;

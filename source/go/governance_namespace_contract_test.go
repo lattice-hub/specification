@@ -128,3 +128,55 @@ func TestGovernanceRuleLegacyPayloadRemainsReadable(t *testing.T) {
 		})
 	}
 }
+
+func TestAlpha37WireLayoutRemainsStable(t *testing.T) {
+	tests := []struct {
+		name        string
+		message     proto.Message
+		field       protoreflect.Name
+		number      protoreflect.FieldNumber
+		kind        protoreflect.Kind
+		cardinality protoreflect.Cardinality
+	}{
+		{name: "TrafficMirror.caller", message: &trafficmanage.TrafficMirror{}, field: "caller", number: 4, kind: protoreflect.MessageKind},
+		{name: "TrafficMirror.callee", message: &trafficmanage.TrafficMirror{}, field: "callee", number: 5, kind: protoreflect.MessageKind},
+		{name: "TrafficMirror.rules", message: &trafficmanage.TrafficMirror{}, field: "rules", number: 6, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "TrafficMock.caller", message: &trafficmanage.TrafficMock{}, field: "caller", number: 4, kind: protoreflect.MessageKind},
+		{name: "TrafficMock.callee", message: &trafficmanage.TrafficMock{}, field: "callee", number: 5, kind: protoreflect.MessageKind},
+		{name: "TrafficMock.rules", message: &trafficmanage.TrafficMock{}, field: "rules", number: 6, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "MirrorRule.apis", message: &trafficmanage.MirrorRule{}, field: "apis", number: 1, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "MirrorRule.duration", message: &trafficmanage.MirrorRule{}, field: "duration", number: 5, kind: protoreflect.MessageKind},
+		{name: "MirrorRule.disable", message: &trafficmanage.MirrorRule{}, field: "disable", number: 6, kind: protoreflect.BoolKind},
+		{name: "MockRule.apis", message: &trafficmanage.MockRule{}, field: "apis", number: 1, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "MockRule.delay", message: &trafficmanage.MockRule{}, field: "delay", number: 5, kind: protoreflect.MessageKind},
+		{name: "MockRule.disable", message: &trafficmanage.MockRule{}, field: "disable", number: 6, kind: protoreflect.BoolKind},
+		{name: "MockResponse.code", message: &trafficmanage.MockResponse{}, field: "code", number: 1, kind: protoreflect.StringKind},
+		{name: "LimitTrigger.apis", message: &trafficmanage.LimitTrigger{}, field: "apis", number: 2, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "BlockConfig.apis", message: &faulttolerance.BlockConfig{}, field: "apis", number: 2, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "TrafficSecurityPolicy.apis", message: &security.TrafficSecurityPolicy{}, field: "apis", number: 1, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "TrafficSecurityRejectEffect.code", message: &security.TrafficSecurityRejectEffect{}, field: "code", number: 1, kind: protoreflect.StringKind},
+		{name: "FallbackResponse.code", message: &faulttolerance.FallbackResponse{}, field: "code", number: 1, kind: protoreflect.StringKind},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			field := tt.message.ProtoReflect().Descriptor().Fields().ByName(tt.field)
+			if field == nil {
+				t.Fatalf("field %q is missing", tt.field)
+			}
+			if field.Number() != tt.number {
+				t.Fatalf("field number = %d, want %d", field.Number(), tt.number)
+			}
+			if field.Kind() != tt.kind {
+				t.Fatalf("field kind = %s, want %s", field.Kind(), tt.kind)
+			}
+			wantCardinality := tt.cardinality
+			if wantCardinality == 0 {
+				wantCardinality = protoreflect.Optional
+			}
+			if field.Cardinality() != wantCardinality {
+				t.Fatalf("field cardinality = %s, want %s", field.Cardinality(), wantCardinality)
+			}
+		})
+	}
+}
