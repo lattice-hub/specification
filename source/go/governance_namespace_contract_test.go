@@ -153,7 +153,9 @@ func TestAlpha37WireLayoutRemainsStable(t *testing.T) {
 		{name: "MockResponse.code", message: &trafficmanage.MockResponse{}, field: "code", number: 1, kind: protoreflect.StringKind},
 		{name: "LimitTrigger.apis", message: &trafficmanage.LimitTrigger{}, field: "apis", number: 2, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
 		{name: "BlockConfig.apis", message: &faulttolerance.BlockConfig{}, field: "apis", number: 2, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "BlockConfig.regex_separate", message: &faulttolerance.BlockConfig{}, field: "regex_separate", number: 5, kind: protoreflect.BoolKind},
 		{name: "TrafficSecurityPolicy.apis", message: &security.TrafficSecurityPolicy{}, field: "apis", number: 1, kind: protoreflect.MessageKind, cardinality: protoreflect.Repeated},
+		{name: "TrafficSecurityPolicy.managed_caller", message: &security.TrafficSecurityPolicy{}, field: "managed_caller", number: 5, kind: protoreflect.MessageKind},
 		{name: "TrafficSecurityRejectEffect.code", message: &security.TrafficSecurityRejectEffect{}, field: "code", number: 1, kind: protoreflect.StringKind},
 		{name: "FallbackResponse.code", message: &faulttolerance.FallbackResponse{}, field: "code", number: 1, kind: protoreflect.StringKind},
 	}
@@ -176,6 +178,38 @@ func TestAlpha37WireLayoutRemainsStable(t *testing.T) {
 			}
 			if field.Cardinality() != wantCardinality {
 				t.Fatalf("field cardinality = %s, want %s", field.Cardinality(), wantCardinality)
+			}
+
+			message := tt.message.ProtoReflect()
+			switch {
+			case field.IsList():
+				list := message.Mutable(field).List()
+				list.Append(list.NewElement())
+			case field.Kind() == protoreflect.MessageKind:
+				message.Mutable(field)
+			case field.Kind() == protoreflect.BoolKind:
+				message.Set(field, protoreflect.ValueOfBool(true))
+			case field.Kind() == protoreflect.StringKind:
+				message.Set(field, protoreflect.ValueOfString("alpha-37"))
+			default:
+				t.Fatalf("unsupported test field kind %s", field.Kind())
+			}
+
+			encoded, err := proto.Marshal(tt.message)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			number, _, n := protowire.ConsumeTag(encoded)
+			if n < 0 || number != protowire.Number(tt.number) {
+				t.Fatalf("encoded field number = %d, want %d", number, tt.number)
+			}
+
+			decoded := tt.message.ProtoReflect().Type().New().Interface()
+			if err := proto.Unmarshal(encoded, decoded); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			if !decoded.ProtoReflect().Has(field) {
+				t.Fatalf("field %q was lost after wire round trip", tt.field)
 			}
 		})
 	}
