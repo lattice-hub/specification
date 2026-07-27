@@ -1,0 +1,73 @@
+{
+  "profile": "pole-mustache-v1",
+  "vectors": [
+    {
+      "name": "typed-scalars",
+      "template": "host={{{database.host}}}\nport={{{database.port}}}\nenabled={{{feature.enabled}}}\nratio={{{ratio}}}\n",
+      "schema": [
+        {"name": "database.host", "type": "string", "required": true},
+        {"name": "database.port", "type": "integer", "required": true},
+        {"name": "feature.enabled", "type": "boolean", "required": true},
+        {"name": "ratio", "type": "decimal", "required": true}
+      ],
+      "values": {
+        "database.host": {"type": "string", "value": "db.internal"},
+        "database.port": {"type": "integer", "value": "3306"},
+        "feature.enabled": {"type": "boolean", "value": "true"},
+        "ratio": {"type": "decimal", "value": "1.25"}
+      },
+      "valid": true,
+      "expected": "host=db.internal\nport=3306\nenabled=true\nratio=1.25\n",
+      "expected_sha256": "a3a3dc9c34d8e15d11cc7e81aac555e907306598f74ff917aed1d0b6c7b8e64c"
+    },
+    {
+      "name": "unicode-and-newlines",
+      "template": "message={{{message}}}\nline={{{line}}}\n",
+      "schema": [
+        {"name": "message", "type": "string", "required": true},
+        {"name": "line", "type": "string", "required": true}
+      ],
+      "values": {
+        "message": {"type": "string", "value": "你好，Pole"},
+        "line": {"type": "string", "value": "second"}
+      },
+      "valid": true,
+      "expected": "message=你好，Pole\nline=second\n",
+      "expected_sha256": "37bc0b797db90d3ffd33f45e5395b7e7e6349c0552f72cee92918e237375bdba"
+    },
+    {
+      "name": "missing-required-value",
+      "template": "{{{database.host}}}",
+      "schema": [
+        {"name": "database.host", "type": "string", "required": true}
+      ],
+      "values": {},
+      "valid": false,
+      "diagnostic_code": "MISSING_VALUE"
+    },
+    {
+      "name": "noncanonical-decimal",
+      "template": "{{{ratio}}}",
+      "schema": [
+        {"name": "ratio", "type": "decimal", "required": true}
+      ],
+      "values": {
+        "ratio": {"type": "decimal", "value": "1.250"}
+      },
+      "valid": false,
+      "diagnostic_code": "INVALID_VALUE"
+    },
+    {
+      "name": "forbidden-section",
+      "template": "{{#feature}}{{{name}}}{{/feature}}",
+      "schema": [
+        {"name": "name", "type": "string", "required": true}
+      ],
+      "values": {
+        "name": {"type": "string", "value": "Pole"}
+      },
+      "valid": false,
+      "diagnostic_code": "INVALID_SYNTAX"
+    }
+  ]
+}

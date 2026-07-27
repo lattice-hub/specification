@@ -36,6 +36,14 @@ message PlaceholderValue {
   repeated MatchString values = 2;
 }
 
+// 配置文件模板绑定。模板模式配置文件必须显式固定一个不可变模板发布版本。
+message ConfigTemplateBinding {
+  uint64 template_id = 1 [ json_name = "template_id" ];
+  string template_release_id = 2 [ json_name = "template_release_id" ];
+  // 绑定发布 ID 用于参与客户端可见组合 revision 的计算。
+  string binding_release_id = 3 [ json_name = "binding_release_id" ];
+}
+
 message ConfigFile {
   string id = 1;
   string name = 2;
@@ -56,14 +64,19 @@ message ConfigFile {
   ConfigFileSupportedClient supported_client = 18 [ json_name = "supported_client" ];
   ConfigFilePersistent persistent = 19  [ json_name = "persistent" ];
 
-  // 文件类型
+  // 配置内容模式。CONFIG_FILE 表示 content 是可直接使用的普通文本；
+  // CONFIG_TEMPLATE 表示客户端必须使用 template_binding 和服务端下发的
+  // RenderSnapshot 在本地渲染。
   enum ConfigFileType {
     CONFIG_FILE = 0; // 普通配置文件
-    CONFIG_TEMPLATE = 1; // 配置模板
+    CONFIG_TEMPLATE = 1; // 使用模板渲染的配置文件
   }
   ConfigFileType config_type = 200 [ json_name = "config_type" ];
-  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
-  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
+  // Deprecated: 新模板 Value 使用 NamespaceTemplateValues 和
+  // NamespaceTemplateValueRelease 表达。
+  map<string, PlaceholderValue> placeholder_value_map = 201
+      [deprecated = true, json_name = "placeholder_value_map" ];
+  ConfigTemplateBinding template_binding = 202 [ json_name = "template_binding" ];
 }
 
 enum ConfigFileSupportedClient {
@@ -101,14 +114,16 @@ message ConfigFileRelease {
   // 加密算法
   string encrypt_algo = 24;
 
-  // 文件类型
+  // 配置内容模式，语义与 ConfigFile.config_type 一致。
   enum ConfigFileType {
     CONFIG_FILE = 0; // 普通配置文件
-    CONFIG_TEMPLATE = 1; // 配置模板
+    CONFIG_TEMPLATE = 1; // 使用模板渲染的配置文件
   }
   ConfigFileType config_type = 200 [ json_name = "config_type" ];
-  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
-  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
+  // Deprecated: 使用 template_binding 和独立 Value Release。
+  map<string, PlaceholderValue> placeholder_value_map = 201
+      [deprecated = true, json_name = "placeholder_value_map" ];
+  ConfigTemplateBinding template_binding = 202 [ json_name = "template_binding" ];
 }
 
 message ConfigFileReleaseHistory {
@@ -132,14 +147,51 @@ message ConfigFileReleaseHistory {
   string reason = 17;
   string release_description = 18 [ json_name = "release_description" ];
 
-  // 文件类型
+  // 配置内容模式，语义与 ConfigFile.config_type 一致。
   enum ConfigFileType {
     CONFIG_FILE = 0; // 普通配置文件
-    CONFIG_TEMPLATE = 1; // 配置模板
+    CONFIG_TEMPLATE = 1; // 使用模板渲染的配置文件
   }
   ConfigFileType config_type = 200 [ json_name = "config_type" ];
-  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
-  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
+  // Deprecated: 使用 template_binding 和独立 Value Release。
+  map<string, PlaceholderValue> placeholder_value_map = 201
+      [deprecated = true, json_name = "placeholder_value_map" ];
+  ConfigTemplateBinding template_binding = 202 [ json_name = "template_binding" ];
+}
+
+// pole-mustache 模板引擎及其语法版本。
+message ConfigTemplateEngine {
+  string name = 1;
+  string version = 2;
+}
+
+enum ConfigTemplateParameterType {
+  TEMPLATE_PARAMETER_TYPE_UNSPECIFIED = 0;
+  TEMPLATE_PARAMETER_STRING = 1;
+  TEMPLATE_PARAMETER_BOOLEAN = 2;
+  TEMPLATE_PARAMETER_INTEGER = 3;
+  // decimal 通过规范化十进制字符串传输，禁止科学计数法。
+  TEMPLATE_PARAMETER_DECIMAL = 4;
+}
+
+// 跨语言确定性渲染支持的标量 Value。
+message ConfigTemplateValue {
+  oneof value {
+    string string_value = 1 [ json_name = "string_value" ];
+    bool boolean_value = 2 [ json_name = "boolean_value" ];
+    int64 integer_value = 3 [ json_name = "integer_value" ];
+    string decimal_value = 4 [ json_name = "decimal_value" ];
+  }
+}
+
+message ConfigTemplateParameterSchema {
+  // dotted name，例如 database.host。
+  string name = 1;
+  ConfigTemplateParameterType type = 2;
+  bool required = 3;
+  ConfigTemplateValue default_value = 4 [ json_name = "default_value" ];
+  bool sensitive = 5;
+  string comment = 6;
 }
 
 message ConfigFileTemplate {
@@ -150,6 +202,117 @@ message ConfigFileTemplate {
   string comment = 5;
   string ctime = 6;
   string mtime = 8;
+  ConfigTemplateEngine engine = 9;
+  repeated ConfigTemplateParameterSchema parameter_schema = 10
+      [ json_name = "parameter_schema" ];
+  string revision = 11;
+}
+
+// 全局模板的不可变发布快照。
+message ConfigTemplateRelease {
+  string id = 1;
+  uint64 template_id = 2 [ json_name = "template_id" ];
+  string name = 3;
+  string content = 4;
+  string format = 5;
+  ConfigTemplateEngine engine = 6;
+  repeated ConfigTemplateParameterSchema parameter_schema = 7
+      [ json_name = "parameter_schema" ];
+  uint64 version = 8;
+  string content_sha256 = 9 [ json_name = "content_sha256" ];
+  string comment = 10;
+  string ctime = 11;
+  string create_by = 12 [ json_name = "create_by" ];
+}
+
+// Namespace + Template 唯一定位的 Value 草稿聚合。
+message NamespaceTemplateValues {
+  string id = 1;
+  string namespace = 2;
+  uint64 template_id = 3 [ json_name = "template_id" ];
+  map<string, ConfigTemplateValue> values = 4;
+  string revision = 5;
+  string ctime = 6;
+  string mtime = 7;
+  string modify_by = 8 [ json_name = "modify_by" ];
+}
+
+enum NamespaceTemplateValueReleaseType {
+  TEMPLATE_VALUE_RELEASE_NORMAL = 0;
+  TEMPLATE_VALUE_RELEASE_GRAY = 1;
+}
+
+// Value 的不可变发布快照。灰度规则只由服务端解释，SDK 只接收命中的发布。
+message NamespaceTemplateValueRelease {
+  string id = 1;
+  string values_id = 2 [ json_name = "values_id" ];
+  string namespace = 3;
+  uint64 template_id = 4 [ json_name = "template_id" ];
+  string template_release_id = 5 [ json_name = "template_release_id" ];
+  map<string, ConfigTemplateValue> values = 6;
+  NamespaceTemplateValueReleaseType release_type = 7 [ json_name = "release_type" ];
+  repeated ClientLabel beta_labels = 8 [ json_name = "beta_labels" ];
+  uint32 priority = 9;
+  bool active = 10;
+  uint64 version = 11;
+  string revision = 12;
+  string comment = 13;
+  string ctime = 14;
+  string create_by = 15 [ json_name = "create_by" ];
+}
+
+// 服务端按客户端标签选择 Value Release 后返回的原子渲染快照。
+// rendered content 必须由 SDK 本地生成，服务端预览结果不是运行时权威内容。
+message RenderSnapshot {
+  ConfigTemplateBinding template_binding = 1 [ json_name = "template_binding" ];
+  ConfigTemplateRelease template_release = 2 [ json_name = "template_release" ];
+  NamespaceTemplateValueRelease value_release = 3 [ json_name = "value_release" ];
+  string revision = 4;
+  string expected_rendered_sha256 = 5 [ json_name = "expected_rendered_sha256" ];
+}
+
+// 可直接承载未发布草稿的参考渲染输入。
+message ConfigTemplateRenderInput {
+  string content = 1;
+  string format = 2;
+  ConfigTemplateEngine engine = 3;
+  repeated ConfigTemplateParameterSchema parameter_schema = 4
+      [ json_name = "parameter_schema" ];
+  map<string, ConfigTemplateValue> values = 5;
+}
+
+message RenderPreviewRequest {
+  ConfigTemplateRenderInput input = 1;
+  // 可选，仅用于已发布组合的审计和缓存键；草稿预览时为空。
+  string template_release_id = 2 [ json_name = "template_release_id" ];
+  string value_release_id = 3 [ json_name = "value_release_id" ];
+}
+
+message RenderDiagnostic {
+  enum Severity {
+    DIAGNOSTIC_INFO = 0;
+    DIAGNOSTIC_WARNING = 1;
+    DIAGNOSTIC_ERROR = 2;
+  }
+  Severity severity = 1;
+  string code = 2;
+  string message = 3;
+  string parameter = 4;
+}
+
+// 服务端参考渲染，仅用于预览、校验和跨语言哈希对照。
+message RenderPreview {
+  string rendered_content = 1 [ json_name = "rendered_content" ];
+  string format = 2;
+  string template_release_id = 3 [ json_name = "template_release_id" ];
+  string value_release_id = 4 [ json_name = "value_release_id" ];
+  ConfigTemplateEngine engine = 5;
+  string rendered_sha256 = 6 [ json_name = "rendered_sha256" ];
+  repeated RenderDiagnostic diagnostics = 7;
+  bool valid = 8;
+  // 统一 API 结果码。模板诊断只描述渲染内容，不承载鉴权、参数或系统错误。
+  uint32 code = 9;
+  string info = 10;
 }
 
 enum ConfigClientType {
@@ -188,14 +351,16 @@ message ConfigFilePublishInfo {
   string encrypt_algo = 17 [ json_name = "encrypt_algo" ];
   ConfigFilePersistent persistent = 19 [ json_name = "persistent" ];
 
-  // 文件类型
+  // 配置内容模式，语义与 ConfigFile.config_type 一致。
   enum ConfigFileType {
     CONFIG_FILE = 0; // 普通配置文件
-    CONFIG_TEMPLATE = 1; // 配置模板
+    CONFIG_TEMPLATE = 1; // 使用模板渲染的配置文件
   }
   ConfigFileType config_type = 200 [ json_name = "config_type" ];
-  // 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
-  map<string, PlaceholderValue> placeholder_value_map = 201 [ json_name = "placeholder_value_map" ];
+  // Deprecated: 使用 template_binding 和独立 Value Release。
+  map<string, PlaceholderValue> placeholder_value_map = 201
+      [deprecated = true, json_name = "placeholder_value_map" ];
+  ConfigTemplateBinding template_binding = 202 [ json_name = "template_binding" ];
 }
 
 message ConfigFileGroupRequest {
@@ -211,6 +376,9 @@ message ConfigDiscoverFilter {
   Caller caller = 1;
   // 客户端公钥，用于加密返回的配置 encrypted_key 字段
   string public_key = 2;
+  // 客户端声明可执行的模板引擎版本；模板配置不允许静默降级为原始文本。
+  repeated ConfigTemplateEngine supported_template_engines = 3
+      [ json_name = "supported_template_engines" ];
 }
 
 message ConfigDiscoverRequest {
@@ -246,4 +414,6 @@ message ConfigDiscoverResponse {
 
   repeated ConfigFileRelease file_names = 6 [json_name = "file_names" ];
   repeated ConfigFileGroup file_groups = 7 [ json_name = "file_groups" ];
+  // 仅模板模式返回。服务端已按 filter.caller 的客户端标签匹配唯一 Value Release。
+  RenderSnapshot render_snapshot = 8 [ json_name = "render_snapshot" ];
 }

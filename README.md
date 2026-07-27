@@ -39,6 +39,8 @@ README：
 | anthorization                        |  [v1](/specification/v1/access_control_spec/authorization.md)  |
 | **AI Native Specification**          |
 | mcp server                           |          [v1](/api/v1/ai/mcp.proto)                           |
+| **Configuration Specification**      |
+| config template                      |     [pole-mustache-v1](/CONFIG_TEMPLATE.md)                    |
 
 ## 服务治理接口
 

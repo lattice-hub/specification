@@ -16,6 +16,8 @@ service ConfigGRPC {
   rpc UpdateConfigFile(ConfigFile) returns (Response) {}
   // 发布配置
   rpc PublishConfigFile(ConfigFileRelease) returns (Response) {}
+  // 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
+  rpc PreviewConfigTemplate(RenderPreviewRequest) returns (RenderPreview) {}
   // 统一发现接口
   rpc Discover(stream ConfigDiscoverRequest) returns (stream ConfigDiscoverResponse) {}
 }

@@ -5360,6 +5360,17 @@ pub struct PlaceholderValue {
     #[prost(message, repeated, tag = "2")]
     pub values: ::prost::alloc::vec::Vec<MatchString>,
 }
+/// 配置文件模板绑定。模板模式配置文件必须显式固定一个不可变模板发布版本。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ConfigTemplateBinding {
+    #[prost(uint64, tag = "1")]
+    pub template_id: u64,
+    #[prost(string, tag = "2")]
+    pub template_release_id: ::prost::alloc::string::String,
+    /// 绑定发布 ID 用于参与客户端可见组合 revision 的计算。
+    #[prost(string, tag = "3")]
+    pub binding_release_id: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfigFile {
     #[prost(string, tag = "1")]
@@ -5401,16 +5412,21 @@ pub struct ConfigFile {
     pub persistent: ::core::option::Option<ConfigFilePersistent>,
     #[prost(enumeration = "config_file::ConfigFileType", tag = "200")]
     pub config_type: i32,
-    /// 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+    /// Deprecated: 新模板 Value 使用 NamespaceTemplateValues 和
+    /// NamespaceTemplateValueRelease 表达。
     #[prost(map = "string, message", tag = "201")]
     pub placeholder_value_map: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         PlaceholderValue,
     >,
+    #[prost(message, optional, tag = "202")]
+    pub template_binding: ::core::option::Option<ConfigTemplateBinding>,
 }
 /// Nested message and enum types in `ConfigFile`.
 pub mod config_file {
-    /// 文件类型
+    /// 配置内容模式。CONFIG_FILE 表示 content 是可直接使用的普通文本；
+    /// CONFIG_TEMPLATE 表示客户端必须使用 template_binding 和服务端下发的
+    /// RenderSnapshot 在本地渲染。
     #[derive(
         Clone,
         Copy,
@@ -5426,7 +5442,7 @@ pub mod config_file {
     pub enum ConfigFileType {
         /// 普通配置文件
         ConfigFile = 0,
-        /// 配置模板
+        /// 使用模板渲染的配置文件
         ConfigTemplate = 1,
     }
     impl ConfigFileType {
@@ -5507,16 +5523,18 @@ pub struct ConfigFileRelease {
     pub encrypt_algo: ::prost::alloc::string::String,
     #[prost(enumeration = "config_file_release::ConfigFileType", tag = "200")]
     pub config_type: i32,
-    /// 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+    /// Deprecated: 使用 template_binding 和独立 Value Release。
     #[prost(map = "string, message", tag = "201")]
     pub placeholder_value_map: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         PlaceholderValue,
     >,
+    #[prost(message, optional, tag = "202")]
+    pub template_binding: ::core::option::Option<ConfigTemplateBinding>,
 }
 /// Nested message and enum types in `ConfigFileRelease`.
 pub mod config_file_release {
-    /// 文件类型
+    /// 配置内容模式，语义与 ConfigFile.config_type 一致。
     #[derive(
         Clone,
         Copy,
@@ -5532,7 +5550,7 @@ pub mod config_file_release {
     pub enum ConfigFileType {
         /// 普通配置文件
         ConfigFile = 0,
-        /// 配置模板
+        /// 使用模板渲染的配置文件
         ConfigTemplate = 1,
     }
     impl ConfigFileType {
@@ -5600,16 +5618,18 @@ pub struct ConfigFileReleaseHistory {
     pub release_description: ::prost::alloc::string::String,
     #[prost(enumeration = "config_file_release_history::ConfigFileType", tag = "200")]
     pub config_type: i32,
-    /// 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+    /// Deprecated: 使用 template_binding 和独立 Value Release。
     #[prost(map = "string, message", tag = "201")]
     pub placeholder_value_map: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         PlaceholderValue,
     >,
+    #[prost(message, optional, tag = "202")]
+    pub template_binding: ::core::option::Option<ConfigTemplateBinding>,
 }
 /// Nested message and enum types in `ConfigFileReleaseHistory`.
 pub mod config_file_release_history {
-    /// 文件类型
+    /// 配置内容模式，语义与 ConfigFile.config_type 一致。
     #[derive(
         Clone,
         Copy,
@@ -5625,7 +5645,7 @@ pub mod config_file_release_history {
     pub enum ConfigFileType {
         /// 普通配置文件
         ConfigFile = 0,
-        /// 配置模板
+        /// 使用模板渲染的配置文件
         ConfigTemplate = 1,
     }
     impl ConfigFileType {
@@ -5649,7 +5669,51 @@ pub mod config_file_release_history {
         }
     }
 }
+/// pole-mustache 模板引擎及其语法版本。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ConfigTemplateEngine {
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+}
+/// 跨语言确定性渲染支持的标量 Value。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ConfigTemplateValue {
+    #[prost(oneof = "config_template_value::Value", tags = "1, 2, 3, 4")]
+    pub value: ::core::option::Option<config_template_value::Value>,
+}
+/// Nested message and enum types in `ConfigTemplateValue`.
+pub mod config_template_value {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Value {
+        #[prost(string, tag = "1")]
+        StringValue(::prost::alloc::string::String),
+        #[prost(bool, tag = "2")]
+        BooleanValue(bool),
+        #[prost(int64, tag = "3")]
+        IntegerValue(i64),
+        #[prost(string, tag = "4")]
+        DecimalValue(::prost::alloc::string::String),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ConfigTemplateParameterSchema {
+    /// dotted name，例如 database.host。
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(enumeration = "ConfigTemplateParameterType", tag = "2")]
+    pub r#type: i32,
+    #[prost(bool, tag = "3")]
+    pub required: bool,
+    #[prost(message, optional, tag = "4")]
+    pub default_value: ::core::option::Option<ConfigTemplateValue>,
+    #[prost(bool, tag = "5")]
+    pub sensitive: bool,
+    #[prost(string, tag = "6")]
+    pub comment: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfigFileTemplate {
     #[prost(uint64, tag = "1")]
     pub id: u64,
@@ -5665,6 +5729,220 @@ pub struct ConfigFileTemplate {
     pub ctime: ::prost::alloc::string::String,
     #[prost(string, tag = "8")]
     pub mtime: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "9")]
+    pub engine: ::core::option::Option<ConfigTemplateEngine>,
+    #[prost(message, repeated, tag = "10")]
+    pub parameter_schema: ::prost::alloc::vec::Vec<ConfigTemplateParameterSchema>,
+    #[prost(string, tag = "11")]
+    pub revision: ::prost::alloc::string::String,
+}
+/// 全局模板的不可变发布快照。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConfigTemplateRelease {
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "2")]
+    pub template_id: u64,
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub content: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub format: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "6")]
+    pub engine: ::core::option::Option<ConfigTemplateEngine>,
+    #[prost(message, repeated, tag = "7")]
+    pub parameter_schema: ::prost::alloc::vec::Vec<ConfigTemplateParameterSchema>,
+    #[prost(uint64, tag = "8")]
+    pub version: u64,
+    #[prost(string, tag = "9")]
+    pub content_sha256: ::prost::alloc::string::String,
+    #[prost(string, tag = "10")]
+    pub comment: ::prost::alloc::string::String,
+    #[prost(string, tag = "11")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "12")]
+    pub create_by: ::prost::alloc::string::String,
+}
+/// Namespace + Template 唯一定位的 Value 草稿聚合。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NamespaceTemplateValues {
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "3")]
+    pub template_id: u64,
+    #[prost(map = "string, message", tag = "4")]
+    pub values: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ConfigTemplateValue,
+    >,
+    #[prost(string, tag = "5")]
+    pub revision: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "7")]
+    pub mtime: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub modify_by: ::prost::alloc::string::String,
+}
+/// Value 的不可变发布快照。灰度规则只由服务端解释，SDK 只接收命中的发布。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NamespaceTemplateValueRelease {
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub values_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(uint64, tag = "4")]
+    pub template_id: u64,
+    #[prost(string, tag = "5")]
+    pub template_release_id: ::prost::alloc::string::String,
+    #[prost(map = "string, message", tag = "6")]
+    pub values: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ConfigTemplateValue,
+    >,
+    #[prost(enumeration = "NamespaceTemplateValueReleaseType", tag = "7")]
+    pub release_type: i32,
+    #[prost(message, repeated, tag = "8")]
+    pub beta_labels: ::prost::alloc::vec::Vec<ClientLabel>,
+    #[prost(uint32, tag = "9")]
+    pub priority: u32,
+    #[prost(bool, tag = "10")]
+    pub active: bool,
+    #[prost(uint64, tag = "11")]
+    pub version: u64,
+    #[prost(string, tag = "12")]
+    pub revision: ::prost::alloc::string::String,
+    #[prost(string, tag = "13")]
+    pub comment: ::prost::alloc::string::String,
+    #[prost(string, tag = "14")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "15")]
+    pub create_by: ::prost::alloc::string::String,
+}
+/// 服务端按客户端标签选择 Value Release 后返回的原子渲染快照。
+/// rendered content 必须由 SDK 本地生成，服务端预览结果不是运行时权威内容。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RenderSnapshot {
+    #[prost(message, optional, tag = "1")]
+    pub template_binding: ::core::option::Option<ConfigTemplateBinding>,
+    #[prost(message, optional, tag = "2")]
+    pub template_release: ::core::option::Option<ConfigTemplateRelease>,
+    #[prost(message, optional, tag = "3")]
+    pub value_release: ::core::option::Option<NamespaceTemplateValueRelease>,
+    #[prost(string, tag = "4")]
+    pub revision: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub expected_rendered_sha256: ::prost::alloc::string::String,
+}
+/// 可直接承载未发布草稿的参考渲染输入。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConfigTemplateRenderInput {
+    #[prost(string, tag = "1")]
+    pub content: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub format: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "3")]
+    pub engine: ::core::option::Option<ConfigTemplateEngine>,
+    #[prost(message, repeated, tag = "4")]
+    pub parameter_schema: ::prost::alloc::vec::Vec<ConfigTemplateParameterSchema>,
+    #[prost(map = "string, message", tag = "5")]
+    pub values: ::std::collections::HashMap<
+        ::prost::alloc::string::String,
+        ConfigTemplateValue,
+    >,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RenderPreviewRequest {
+    #[prost(message, optional, tag = "1")]
+    pub input: ::core::option::Option<ConfigTemplateRenderInput>,
+    /// 可选，仅用于已发布组合的审计和缓存键；草稿预览时为空。
+    #[prost(string, tag = "2")]
+    pub template_release_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub value_release_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct RenderDiagnostic {
+    #[prost(enumeration = "render_diagnostic::Severity", tag = "1")]
+    pub severity: i32,
+    #[prost(string, tag = "2")]
+    pub code: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub message: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub parameter: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `RenderDiagnostic`.
+pub mod render_diagnostic {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Severity {
+        DiagnosticInfo = 0,
+        DiagnosticWarning = 1,
+        DiagnosticError = 2,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Self::DiagnosticInfo => "DIAGNOSTIC_INFO",
+                Self::DiagnosticWarning => "DIAGNOSTIC_WARNING",
+                Self::DiagnosticError => "DIAGNOSTIC_ERROR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DIAGNOSTIC_INFO" => Some(Self::DiagnosticInfo),
+                "DIAGNOSTIC_WARNING" => Some(Self::DiagnosticWarning),
+                "DIAGNOSTIC_ERROR" => Some(Self::DiagnosticError),
+                _ => None,
+            }
+        }
+    }
+}
+/// 服务端参考渲染，仅用于预览、校验和跨语言哈希对照。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RenderPreview {
+    #[prost(string, tag = "1")]
+    pub rendered_content: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub format: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub template_release_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub value_release_id: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "5")]
+    pub engine: ::core::option::Option<ConfigTemplateEngine>,
+    #[prost(string, tag = "6")]
+    pub rendered_sha256: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "7")]
+    pub diagnostics: ::prost::alloc::vec::Vec<RenderDiagnostic>,
+    #[prost(bool, tag = "8")]
+    pub valid: bool,
+    /// 统一 API 结果码。模板诊断只描述渲染内容，不承载鉴权、参数或系统错误。
+    #[prost(uint32, tag = "9")]
+    pub code: u32,
+    #[prost(string, tag = "10")]
+    pub info: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WatchConfigFileRequest {
@@ -5723,16 +6001,18 @@ pub struct ConfigFilePublishInfo {
     pub persistent: ::core::option::Option<ConfigFilePersistent>,
     #[prost(enumeration = "config_file_publish_info::ConfigFileType", tag = "200")]
     pub config_type: i32,
-    /// 如果是配置模板，还需要添加占位符对应的 value 值匹配信息
+    /// Deprecated: 使用 template_binding 和独立 Value Release。
     #[prost(map = "string, message", tag = "201")]
     pub placeholder_value_map: ::std::collections::HashMap<
         ::prost::alloc::string::String,
         PlaceholderValue,
     >,
+    #[prost(message, optional, tag = "202")]
+    pub template_binding: ::core::option::Option<ConfigTemplateBinding>,
 }
 /// Nested message and enum types in `ConfigFilePublishInfo`.
 pub mod config_file_publish_info {
-    /// 文件类型
+    /// 配置内容模式，语义与 ConfigFile.config_type 一致。
     #[derive(
         Clone,
         Copy,
@@ -5748,7 +6028,7 @@ pub mod config_file_publish_info {
     pub enum ConfigFileType {
         /// 普通配置文件
         ConfigFile = 0,
-        /// 配置模板
+        /// 使用模板渲染的配置文件
         ConfigTemplate = 1,
     }
     impl ConfigFileType {
@@ -5795,6 +6075,9 @@ pub struct ConfigDiscoverFilter {
     /// 客户端公钥，用于加密返回的配置 encrypted_key 字段
     #[prost(string, tag = "2")]
     pub public_key: ::prost::alloc::string::String,
+    /// 客户端声明可执行的模板引擎版本；模板配置不允许静默降级为原始文本。
+    #[prost(message, repeated, tag = "3")]
+    pub supported_template_engines: ::prost::alloc::vec::Vec<ConfigTemplateEngine>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfigDiscoverRequest {
@@ -5875,6 +6158,9 @@ pub struct ConfigDiscoverResponse {
     pub file_names: ::prost::alloc::vec::Vec<ConfigFileRelease>,
     #[prost(message, repeated, tag = "7")]
     pub file_groups: ::prost::alloc::vec::Vec<ConfigFileGroup>,
+    /// 仅模板模式返回。服务端已按 filter.caller 的客户端标签匹配唯一 Value Release。
+    #[prost(message, optional, tag = "8")]
+    pub render_snapshot: ::core::option::Option<RenderSnapshot>,
 }
 /// Nested message and enum types in `ConfigDiscoverResponse`.
 pub mod config_discover_response {
@@ -5949,6 +6235,72 @@ impl ConfigFileSupportedClient {
             "CLIENT_SDK" => Some(Self::ClientSdk),
             "CLIENT_AGENT" => Some(Self::ClientAgent),
             "CLIENT_ALL" => Some(Self::ClientAll),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ConfigTemplateParameterType {
+    TemplateParameterTypeUnspecified = 0,
+    TemplateParameterString = 1,
+    TemplateParameterBoolean = 2,
+    TemplateParameterInteger = 3,
+    /// decimal 通过规范化十进制字符串传输，禁止科学计数法。
+    TemplateParameterDecimal = 4,
+}
+impl ConfigTemplateParameterType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::TemplateParameterTypeUnspecified => {
+                "TEMPLATE_PARAMETER_TYPE_UNSPECIFIED"
+            }
+            Self::TemplateParameterString => "TEMPLATE_PARAMETER_STRING",
+            Self::TemplateParameterBoolean => "TEMPLATE_PARAMETER_BOOLEAN",
+            Self::TemplateParameterInteger => "TEMPLATE_PARAMETER_INTEGER",
+            Self::TemplateParameterDecimal => "TEMPLATE_PARAMETER_DECIMAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TEMPLATE_PARAMETER_TYPE_UNSPECIFIED" => {
+                Some(Self::TemplateParameterTypeUnspecified)
+            }
+            "TEMPLATE_PARAMETER_STRING" => Some(Self::TemplateParameterString),
+            "TEMPLATE_PARAMETER_BOOLEAN" => Some(Self::TemplateParameterBoolean),
+            "TEMPLATE_PARAMETER_INTEGER" => Some(Self::TemplateParameterInteger),
+            "TEMPLATE_PARAMETER_DECIMAL" => Some(Self::TemplateParameterDecimal),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum NamespaceTemplateValueReleaseType {
+    TemplateValueReleaseNormal = 0,
+    TemplateValueReleaseGray = 1,
+}
+impl NamespaceTemplateValueReleaseType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::TemplateValueReleaseNormal => "TEMPLATE_VALUE_RELEASE_NORMAL",
+            Self::TemplateValueReleaseGray => "TEMPLATE_VALUE_RELEASE_GRAY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TEMPLATE_VALUE_RELEASE_NORMAL" => Some(Self::TemplateValueReleaseNormal),
+            "TEMPLATE_VALUE_RELEASE_GRAY" => Some(Self::TemplateValueReleaseGray),
             _ => None,
         }
     }
@@ -6136,6 +6488,28 @@ pub mod config_grpc_client {
                 .insert(GrpcMethod::new("v1.ConfigGRPC", "PublishConfigFile"));
             self.inner.unary(req, path, codec).await
         }
+        /// 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
+        pub async fn preview_config_template(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RenderPreviewRequest>,
+        ) -> std::result::Result<tonic::Response<super::RenderPreview>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/v1.ConfigGRPC/PreviewConfigTemplate",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("v1.ConfigGRPC", "PreviewConfigTemplate"));
+            self.inner.unary(req, path, codec).await
+        }
         /// 统一发现接口
         pub async fn discover(
             &mut self,
@@ -6190,6 +6564,11 @@ pub mod config_grpc_server {
             &self,
             request: tonic::Request<super::ConfigFileRelease>,
         ) -> std::result::Result<tonic::Response<super::Response>, tonic::Status>;
+        /// 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
+        async fn preview_config_template(
+            &self,
+            request: tonic::Request<super::RenderPreviewRequest>,
+        ) -> std::result::Result<tonic::Response<super::RenderPreview>, tonic::Status>;
         /// Server streaming response type for the Discover method.
         type DiscoverStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::ConfigDiscoverResponse, tonic::Status>,
@@ -6395,6 +6774,52 @@ pub mod config_grpc_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = PublishConfigFileSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/v1.ConfigGRPC/PreviewConfigTemplate" => {
+                    #[allow(non_camel_case_types)]
+                    struct PreviewConfigTemplateSvc<T: ConfigGrpc>(pub Arc<T>);
+                    impl<
+                        T: ConfigGrpc,
+                    > tonic::server::UnaryService<super::RenderPreviewRequest>
+                    for PreviewConfigTemplateSvc<T> {
+                        type Response = super::RenderPreview;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RenderPreviewRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ConfigGrpc>::preview_config_template(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = PreviewConfigTemplateSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
