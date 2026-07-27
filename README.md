@@ -24,6 +24,7 @@ README：
 | **Serivce Management Specification** |
 | namespace                            |  [v1](/specification/v1/service_manage_spec/namespace.md)   |
 | service                              |     [v1](/specification/v1/service_manage_spec/service.md)     |
+| logical service                      |     [logical service and environment binding](/LOGICAL_SERVICE.md) |
 | instance                             |    [v1](/specification/v1/service_manage_spec/instance.md)     |
 | health check                         |   [v1](/specification/v1/service_manage_spec/healthcheck.md)   |
 | **Traffic Mangement Specification**  |
