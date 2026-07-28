@@ -42,6 +42,49 @@ message Service {
   bool deleteable = 41 [ json_name = "deleteable" ];
 }
 
+// LogicalService is a control-plane-only aggregate that groups environment
+// services which may use different runtime names. It is never used for SDK
+// registration or discovery addressing.
+message LogicalService {
+  string id = 1 [ json_name = "id" ];
+  string name = 2 [ json_name = "name" ];
+  string comment = 3 [ json_name = "comment" ];
+  string owners = 4 [ json_name = "owners" ];
+  string business = 5 [ json_name = "business" ];
+  string department = 6 [ json_name = "department" ];
+  string revision = 7 [ json_name = "revision" ];
+  string ctime = 8 [ json_name = "ctime" ];
+  string mtime = 9 [ json_name = "mtime" ];
+  uint32 environment_count = 20 [ json_name = "environment_count" ];
+  uint32 total_instance_count = 21 [ json_name = "total_instance_count" ];
+  uint32 healthy_instance_count = 22 [ json_name = "healthy_instance_count" ];
+  bool editable = 30 [ json_name = "editable" ];
+  bool deleteable = 31 [ json_name = "deleteable" ];
+}
+
+// ServiceEnvironmentBinding connects one existing runtime Service to one
+// LogicalService. service_id is the authoritative binding identity;
+// namespace and service_name are response snapshots for management clients.
+message ServiceEnvironmentBinding {
+  string logical_service_id = 1 [ json_name = "logical_service_id" ];
+  string service_id = 2 [ json_name = "service_id" ];
+  string namespace = 3 [ json_name = "namespace" ];
+  string service_name = 4 [ json_name = "service_name" ];
+  string ctime = 5 [ json_name = "ctime" ];
+  string mtime = 6 [ json_name = "mtime" ];
+  Service service = 10 [ json_name = "service" ];
+}
+
+message BindServiceEnvironmentRequest {
+  string logical_service_id = 1 [ json_name = "logical_service_id" ];
+  string service_id = 2 [ json_name = "service_id" ];
+}
+
+message UnbindServiceEnvironmentRequest {
+  string logical_service_id = 1 [ json_name = "logical_service_id" ];
+  string service_id = 2 [ json_name = "service_id" ];
+}
+
 enum AliasType {
   DEFAULT = 0;
   CL5SID = 1;

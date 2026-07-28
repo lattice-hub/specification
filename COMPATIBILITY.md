@@ -34,3 +34,13 @@
 旧 `placeholder_value_map = 201` 保留并标记 deprecated；新实现使用新增的
 `template_binding = 202` 和独立的模板、Namespace Value Release。发现响应使用新增的
 `render_snapshot = 8`，因此旧 payload 仍然可读，旧客户端会忽略无法识别的新字段。
+
+## Namespace 类型兼容扩展
+
+`Namespace.kind = 10` 区分业务运行环境与 Pole 内部系统空间：
+
+- `NAMESPACE_KIND_BUSINESS = 0` 是 wire 默认值；旧 payload 和旧 JSON 未携带
+  `kind` 时，新客户端天然按业务空间解释。
+- `NAMESPACE_KIND_SYSTEM = 1` 仅用于 Pole 控制面管理的内部系统空间。
+- 旧客户端会忽略新增字段；服务端必须对历史 `pole-system` 记录显式返回
+  `SYSTEM`，不能允许普通创建请求通过该字段伪造系统空间。

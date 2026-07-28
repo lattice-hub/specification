@@ -7,6 +7,11 @@ option go_package = "github.com/pole-io/specification/source/go/api/v1/model";
 option java_package = "io.pole.specification.api.v1.model";
 option java_outer_classname = "NamespaceProto";
 
+enum NamespaceKind {
+  NAMESPACE_KIND_BUSINESS = 0;
+  NAMESPACE_KIND_SYSTEM = 1;
+}
+
 message Namespace {
   string id = 1;
   string name = 2;
@@ -17,6 +22,7 @@ message Namespace {
   string mtime = 7;
   repeated string service_export_to = 8 [ json_name = "service_export_to" ];
   map<string, string> metadata = 9;
+  NamespaceKind kind = 10;
 
   uint32 total_service_count = 20 [json_name = "total_service_count"];
   uint32 total_health_instance_count = 21 [json_name = "total_health_instance_count"];

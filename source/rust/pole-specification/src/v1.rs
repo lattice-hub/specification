@@ -1842,6 +1842,8 @@ pub struct Namespace {
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
+    #[prost(enumeration = "NamespaceKind", tag = "10")]
+    pub kind: i32,
     #[prost(uint32, tag = "20")]
     pub total_service_count: u32,
     #[prost(uint32, tag = "21")]
@@ -1854,6 +1856,32 @@ pub struct Namespace {
     pub editable: bool,
     #[prost(bool, tag = "31")]
     pub deleteable: bool,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum NamespaceKind {
+    Business = 0,
+    System = 1,
+}
+impl NamespaceKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Business => "NAMESPACE_KIND_BUSINESS",
+            Self::System => "NAMESPACE_KIND_SYSTEM",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "NAMESPACE_KIND_BUSINESS" => Some(Self::Business),
+            "NAMESPACE_KIND_SYSTEM" => Some(Self::System),
+            _ => None,
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -2684,6 +2712,74 @@ pub struct Service {
     pub editable: bool,
     #[prost(bool, tag = "41")]
     pub deleteable: bool,
+}
+/// LogicalService is a control-plane-only aggregate that groups environment
+/// services which may use different runtime names. It is never used for SDK
+/// registration or discovery addressing.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LogicalService {
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub comment: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub owners: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub business: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub department: ::prost::alloc::string::String,
+    #[prost(string, tag = "7")]
+    pub revision: ::prost::alloc::string::String,
+    #[prost(string, tag = "8")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "9")]
+    pub mtime: ::prost::alloc::string::String,
+    #[prost(uint32, tag = "20")]
+    pub environment_count: u32,
+    #[prost(uint32, tag = "21")]
+    pub total_instance_count: u32,
+    #[prost(uint32, tag = "22")]
+    pub healthy_instance_count: u32,
+    #[prost(bool, tag = "30")]
+    pub editable: bool,
+    #[prost(bool, tag = "31")]
+    pub deleteable: bool,
+}
+/// ServiceEnvironmentBinding connects one existing runtime Service to one
+/// LogicalService. service_id is the authoritative binding identity;
+/// namespace and service_name are response snapshots for management clients.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServiceEnvironmentBinding {
+    #[prost(string, tag = "1")]
+    pub logical_service_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub service_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
+    pub service_name: ::prost::alloc::string::String,
+    #[prost(string, tag = "5")]
+    pub ctime: ::prost::alloc::string::String,
+    #[prost(string, tag = "6")]
+    pub mtime: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "10")]
+    pub service: ::core::option::Option<Service>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct BindServiceEnvironmentRequest {
+    #[prost(string, tag = "1")]
+    pub logical_service_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub service_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct UnbindServiceEnvironmentRequest {
+    #[prost(string, tag = "1")]
+    pub logical_service_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub service_id: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ServiceAlias {
