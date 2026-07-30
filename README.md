@@ -42,6 +42,8 @@ README：
 | mcp server                           |          [v1](/api/v1/ai/mcp.proto)                           |
 | **Configuration Specification**      |
 | config template                      |     [pole-mustache-v1](/CONFIG_TEMPLATE.md)                    |
+| **Thin SDK Specification**           |
+| target envelope                      |     [TargetEnvelope v1](thin-sdk/target-envelope/v1/README.md) |
 
 ## 服务治理接口
 

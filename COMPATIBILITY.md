@@ -44,3 +44,16 @@
 - `NAMESPACE_KIND_SYSTEM = 1` 仅用于 Pole 控制面管理的内部系统空间。
 - 旧客户端会忽略新增字段；服务端必须对历史 `pole-system` 记录显式返回
   `SYSTEM`，不能允许普通创建请求通过该字段伪造系统空间。
+
+## Thin SDK TargetEnvelope 兼容性
+
+TargetEnvelope 的 wire version 与各语言 SDK SemVer 独立。wire version `1`
+定义于 `thin-sdk/target-envelope/v1`：
+
+- v1 的字段与 Header 集合冻结；新增、删除、重命名字段或改变语义都必须引入新的
+  wire version；
+- SDK 与 Sidecar 只按兼容矩阵中的精确版本组合声明已验证兼容，不推断更高版本；
+- Sidecar 遇到未知 wire version 必须拒绝，不能按已知版本猜测；
+- SDK 与 Sidecar 的已验证精确版本组合统一记录在
+  `thin-sdk/compatibility.json`；
+- 当前矩阵没有已验证的 Sidecar 或 SDK 正式发行版，不能据此宣称端到端 ready。

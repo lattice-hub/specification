@@ -1,0 +1,14 @@
+{
+  "$schema": "./compatibility.schema.json",
+  "schema_version": 1,
+  "contracts": [
+    {
+      "name": "pole-target-envelope",
+      "contract_version": "1.0.0",
+      "envelope_version": "1",
+      "status": "defined",
+      "verification_policy": "Only exact Sidecar and SDK release combinations listed with immutable evidence are verified; compatibility is never inferred.",
+      "verified_combinations": []
+    }
+  ]
+}
