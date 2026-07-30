@@ -44,3 +44,7 @@ jobs:
         run: |
           chmod +x "$PROTOC"
           cargo test --all
+      - name: Check
+        env:
+          PROTOC: ${{ github.workspace }}/source/protoc/protoc-linux-x86_64/bin/protoc
+        run: cargo check --all
