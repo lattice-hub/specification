@@ -122,8 +122,14 @@
 - [x] 恢复权威 Proto 驱动的 Maven 生成工程
 - [x] 增加逐 Proto 与逐 gRPC Service 完整性测试
 - [x] 接入 CI 与 Maven Central Release
-- [ ] 发布并验证首个 Java 制品版本
+- [x] 触发首个 Java 制品发布
+- [ ] 修复 npm 预发布 dist-tag 参数
+- [ ] 发布并验证统一的多语言版本
 
 ### Review
 
-- 待实现和发布完成后补充。
+- PR `#16` 已恢复 Java 生成包和 Maven Central 发布链路，并以合并提交
+  `9d4bfd5` 进入 `develop`。
+- 合并后 Testing 工作流 `30769452097` 全部通过。
+- `v0.1.0-ALPHA.42` 首次触发 Java 发布；Rust 和 PyPI 已成功，npm 11
+  因预发布版本未显式指定 dist-tag 而拒绝发布，需修复后发布新的统一版本。

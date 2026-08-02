@@ -31,7 +31,9 @@
 - npm Trusted Publisher 的 OIDC 权限用于 `npm publish` 或 `npm stage publish`，
   `npm dist-tag` 仍要求维护者交互式 2FA；不能设计依赖发布后自动改 tag 的流程。
 - 若项目当前只有预发布版本但希望默认安装得到最新版本，应在发布时直接更新
-  `latest`，不要先发布到其它 tag 后再依赖 CI 修改 `latest`。
+  `latest`，不要先发布到其它 tag 后再依赖 CI 修改 `latest`。npm 11
+  对预发布版本要求显式传入 `--tag`，因此该策略必须使用
+  `npm publish --tag latest`，不能依赖 `npm publish` 的默认值。
 
 ## 2026-08-03：多语言发布不能只按当前目录推断完整范围
 
