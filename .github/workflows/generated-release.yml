@@ -70,7 +70,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Publish to npm
-        run: npm publish --tag alpha
+        run: npm publish
 
   build-python:
     needs: verify
