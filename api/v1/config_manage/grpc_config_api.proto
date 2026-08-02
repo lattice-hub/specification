@@ -6,7 +6,7 @@ import "config_file.proto";
 import "response.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/config_manage";
-option java_package = "io.pole.specification.api.v1.config.manage";
+option java_package = "io.github.latticehub.pole.specification.api.v1.config.manage";
 option java_outer_classname = "PolarisConfigGRPCService";
 
 service ConfigGRPC {

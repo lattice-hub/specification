@@ -6,7 +6,7 @@ import "types.proto";
 import "router.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/security";
-option java_package = "io.pole.specification.api.v1.security";
+option java_package = "io.github.latticehub.pole.specification.api.v1.security";
 option java_outer_classname = "TrafficSecurityProto";
 
 // 流量安全规则，用于描述服务调用运行时鉴权策略。

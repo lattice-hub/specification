@@ -5,7 +5,7 @@ package v1;
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/security";
-option java_package = "io.pole.specification.api.v1.security";
+option java_package = "io.github.latticehub.pole.specification.api.v1.security";
 option java_outer_classname = "WorkloadIdentityProto";
 
 // WorkloadCredentialFormat 表示数据面凭证的编码与签名格式。
