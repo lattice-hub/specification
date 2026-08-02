@@ -9,6 +9,14 @@
       "status": "defined",
       "verification_policy": "Only exact Sidecar and SDK release combinations listed with immutable evidence are verified; compatibility is never inferred.",
       "verified_combinations": []
+    },
+    {
+      "name": "latticehub-thin-sdk-sidecar",
+      "contract_version": "2.0.0",
+      "envelope_version": "1",
+      "status": "defined",
+      "verification_policy": "Sidecar Session v1 and TargetService v1 require exact Sidecar and SDK release evidence.",
+      "verified_combinations": []
     }
   ]
 }

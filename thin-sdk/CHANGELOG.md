@@ -1,5 +1,14 @@
 # Thin SDK 契约变更记录
 
+## 2.0.0
+
+- 新增 Sidecar Session v1：Thin SDK 通过 gRPC over UDS 建立长连接，Sidecar
+  在首帧主动下发协议 listener 端口表。
+- 新增 TargetService v1，只保留 namespace 与 service。
+- 元信息键改为 `latticehub-target-namespace` 与 `latticehub-target-service`。
+- Thrift 统一使用 Apache Thrift 官方 HTTP Transport。
+- 废弃 TargetEnvelope v1；保留旧资产用于已发布版本追溯。
+
 ## 1.0.0
 
 - 定义 TargetEnvelope wire version `1`。
