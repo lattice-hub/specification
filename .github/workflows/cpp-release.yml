@@ -56,7 +56,7 @@ jobs:
             --generated-dir build/cpp/generated \
             --proto-dir build/cpp/proto \
             --output-dir build/cpp/dist
-          sha256sum --check build/cpp/dist/SHA256SUMS
+          (cd build/cpp/dist && sha256sum --check SHA256SUMS)
       - name: Verify generated source archive
         run: |
           package_root="$(mktemp -d)"

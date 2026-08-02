@@ -163,7 +163,7 @@ jobs:
             --generated-dir build/cpp/generated \
             --proto-dir build/cpp/proto \
             --output-dir build/cpp/dist
-          sha256sum --check build/cpp/dist/SHA256SUMS
+          (cd build/cpp/dist && sha256sum --check SHA256SUMS)
           package_root="$(mktemp -d)"
           tar -xzf build/cpp/dist/pole-specification-cpp-0.1.0-CI.tar.gz \
             -C "$package_root"
