@@ -123,8 +123,8 @@
 - [x] 增加逐 Proto 与逐 gRPC Service 完整性测试
 - [x] 接入 CI 与 Maven Central Release
 - [x] 触发首个 Java 制品发布
-- [ ] 修复 npm 预发布 dist-tag 参数
-- [ ] 发布并验证统一的多语言版本
+- [x] 修复 npm 预发布 dist-tag 参数
+- [x] 发布并验证统一的多语言版本
 
 ### Review
 
@@ -133,3 +133,14 @@
 - 合并后 Testing 工作流 `30769452097` 全部通过。
 - `v0.1.0-ALPHA.42` 首次触发 Java 发布；Rust 和 PyPI 已成功，npm 11
   因预发布版本未显式指定 dist-tag 而拒绝发布，需修复后发布新的统一版本。
+- npm 修复通过 PR `#17` 合入 `develop`，合并提交为 `d33ecaf`；合并后
+  Testing 工作流 `30769797731` 的 Go、Rust、Java、Node.js 和 Python
+  全部通过。
+- annotated tag 和 GitHub prerelease `v0.1.0-ALPHA.43` 已发布；Java 工作流
+  `30769845673`、Rust 工作流 `30769845695` 和 Generated Packages 工作流
+  `30769845687` 全部成功。
+- Maven Central 可下载
+  `io.github.lattice-hub:pole-specification:0.1.0-ALPHA.43`，JAR 包含
+  `io.github.latticehub.pole.specification.api.v1.sidecar.SidecarSessionServiceGrpc`。
+- `GOWORK=off go list -m`、`cargo info`、npm 全新安装和 PyPI 全新虚拟环境安装
+  均验证了 `ALPHA.43`；npm `latest` 已指向 `0.1.0-ALPHA.43`。
