@@ -62,6 +62,8 @@ message LimitTrigger {
     CONCURRENCY = 1;
     // 针对系统资源进行限流
     SYSTEM = 2;
+    // 针对可变权重配额进行限流，例如 LLM token
+    TOKEN = 3;
   }
   Resource resource = 3;
   // 被调的参数过滤条件，满足过滤条件才进入限流规则

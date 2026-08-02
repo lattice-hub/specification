@@ -8,7 +8,7 @@ option java_outer_classname = "RateLimiterService";
 
 import "ratelimiter.proto";
 
-service RateLimitGRPCV2 {
+service RateLimitGRPC {
   // 限流接口
   rpc Service(stream RateLimitRequest) returns(stream RateLimitResponse) {}
 

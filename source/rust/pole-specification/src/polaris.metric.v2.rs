@@ -8,12 +8,18 @@ pub struct RateLimitRequest {
     /// 初始化请求
     #[prost(message, optional, tag = "2")]
     pub rate_limit_init_request: ::core::option::Option<RateLimitInitRequest>,
-    /// 上报请求
+    /// 配额预留请求
     #[prost(message, optional, tag = "3")]
-    pub rate_limit_report_request: ::core::option::Option<RateLimitReportRequest>,
+    pub quota_reserve_request: ::core::option::Option<QuotaReserveRequest>,
     /// 批量初始化请求
     #[prost(message, optional, tag = "4")]
     pub rate_limit_batch_init_request: ::core::option::Option<RateLimitBatchInitRequest>,
+    /// 租约消费更新请求
+    #[prost(message, optional, tag = "5")]
+    pub quota_update_request: ::core::option::Option<QuotaUpdateRequest>,
+    /// 租约结算请求
+    #[prost(message, optional, tag = "6")]
+    pub quota_settle_request: ::core::option::Option<QuotaSettleRequest>,
 }
 /// 限流应答
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -24,14 +30,20 @@ pub struct RateLimitResponse {
     /// 初始化应答
     #[prost(message, optional, tag = "2")]
     pub rate_limit_init_response: ::core::option::Option<RateLimitInitResponse>,
-    /// 上报应答
+    /// 配额预留应答
     #[prost(message, optional, tag = "3")]
-    pub rate_limit_report_response: ::core::option::Option<RateLimitReportResponse>,
+    pub quota_reserve_response: ::core::option::Option<QuotaReserveResponse>,
     /// 批量初始化应答
     #[prost(message, optional, tag = "4")]
     pub rate_limit_batch_init_response: ::core::option::Option<
         RateLimitBatchInitResponse,
     >,
+    /// 租约消费更新应答
+    #[prost(message, optional, tag = "5")]
+    pub quota_update_response: ::core::option::Option<QuotaUpdateResponse>,
+    /// 租约结算应答
+    #[prost(message, optional, tag = "6")]
+    pub quota_settle_response: ::core::option::Option<QuotaSettleResponse>,
 }
 /// 初始化请求
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -124,31 +136,6 @@ pub struct RateLimitBatchInitResponse {
     #[prost(message, repeated, tag = "4")]
     pub result: ::prost::alloc::vec::Vec<BatchInitResult>,
 }
-/// 限流上报请求
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RateLimitReportRequest {
-    /// 客户端标识
-    #[prost(uint32, tag = "1")]
-    pub client_key: u32,
-    /// 已使用的配额数
-    #[prost(message, repeated, tag = "2")]
-    pub quota_uses: ::prost::alloc::vec::Vec<QuotaSum>,
-    /// 配额发生的时间，单位ms
-    #[prost(int64, tag = "3")]
-    pub timestamp: i64,
-}
-/// 限流上报应答
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RateLimitReportResponse {
-    #[prost(uint32, tag = "1")]
-    pub code: u32,
-    /// 剩余配额数
-    #[prost(message, repeated, tag = "2")]
-    pub quota_lefts: ::prost::alloc::vec::Vec<QuotaLeft>,
-    /// 限流server绝对时间，单位ms
-    #[prost(int64, tag = "3")]
-    pub timestamp: i64,
-}
 /// 限流目标，针对哪部分数据进行限流
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct LimitTarget {
@@ -177,6 +164,9 @@ pub struct QuotaTotal {
     /// 限流阈值
     #[prost(uint32, tag = "3")]
     pub max_amount: u32,
+    /// 配额记账方式
+    #[prost(enumeration = "QuotaAccounting", tag = "4")]
+    pub accounting: i32,
 }
 /// 限流计数器
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -199,16 +189,105 @@ pub struct QuotaCounter {
 }
 /// 客户端阈值使用统计
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct QuotaSum {
-    /// 计数器的标识，一个server全局唯一，上报时候带入
+pub struct QuotaReservation {
+    /// 计数器的标识，一个server全局唯一
     #[prost(uint32, tag = "1")]
     pub counter_key: u32,
-    /// 已使用的配额数，上报时候带入
+    /// 请求预留的最大配额
     #[prost(uint32, tag = "2")]
-    pub used: u32,
-    /// 被限流数，上报时候带入
+    pub amount: u32,
+}
+/// 配额租约预留请求。所有 counter 必须原子成功或原子失败。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaReserveRequest {
+    #[prost(uint32, tag = "1")]
+    pub client_key: u32,
+    #[prost(string, tag = "2")]
+    pub idempotency_key: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
+    pub reservations: ::prost::alloc::vec::Vec<QuotaReservation>,
+    #[prost(uint32, tag = "4")]
+    pub ttl_seconds: u32,
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaReserveResponse {
+    #[prost(uint32, tag = "1")]
+    pub code: u32,
+    #[prost(string, tag = "2")]
+    pub lease_id: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
+    pub quota_lefts: ::prost::alloc::vec::Vec<QuotaLeft>,
+    #[prost(int64, tag = "4")]
+    pub expires_at: i64,
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+}
+/// 单个 counter 的累计实际消费量。
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct QuotaConsumption {
+    #[prost(uint32, tag = "1")]
+    pub counter_key: u32,
+    #[prost(uint32, tag = "2")]
+    pub consumed_total: u32,
+}
+/// 流式过程中按 counter 更新累计实际消费量。consumedTotal 只能单调递增。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaUpdateRequest {
+    #[prost(uint32, tag = "1")]
+    pub client_key: u32,
+    #[prost(string, tag = "2")]
+    pub lease_id: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
+    pub consumptions: ::prost::alloc::vec::Vec<QuotaConsumption>,
+    #[prost(uint64, tag = "4")]
+    pub sequence: u64,
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaUpdateResponse {
+    #[prost(uint32, tag = "1")]
+    pub code: u32,
+    #[prost(message, repeated, tag = "2")]
+    pub consumptions: ::prost::alloc::vec::Vec<QuotaConsumption>,
+    #[prost(uint64, tag = "3")]
+    pub sequence: u64,
+    #[prost(int64, tag = "4")]
+    pub timestamp: i64,
+}
+/// 结束租约。消费型配额提交实际消费并归还未使用预留；占用型配额全部归还。
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaSettleRequest {
+    #[prost(uint32, tag = "1")]
+    pub client_key: u32,
+    #[prost(string, tag = "2")]
+    pub lease_id: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
+    pub consumptions: ::prost::alloc::vec::Vec<QuotaConsumption>,
+    #[prost(uint64, tag = "4")]
+    pub sequence: u64,
+    #[prost(int64, tag = "5")]
+    pub timestamp: i64,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct QuotaSettlement {
+    #[prost(uint32, tag = "1")]
+    pub counter_key: u32,
+    #[prost(uint32, tag = "2")]
+    pub consumed_total: u32,
     #[prost(uint32, tag = "3")]
-    pub limited: u32,
+    pub returned_amount: u32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QuotaSettleResponse {
+    #[prost(uint32, tag = "1")]
+    pub code: u32,
+    #[prost(message, repeated, tag = "2")]
+    pub settlements: ::prost::alloc::vec::Vec<QuotaSettlement>,
+    #[prost(int64, tag = "3")]
+    pub timestamp: i64,
 }
 /// 客户端阈值使用统计，由服务端返回
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -241,9 +320,10 @@ pub struct TimeAdjustResponse {
 #[repr(i32)]
 pub enum RateLimitCmd {
     Init = 0,
-    Acquire = 1,
+    Reserve = 1,
     BatchInit = 2,
-    BatchAcquire = 3,
+    Update = 3,
+    Settle = 4,
 }
 impl RateLimitCmd {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -253,18 +333,20 @@ impl RateLimitCmd {
     pub fn as_str_name(&self) -> &'static str {
         match self {
             Self::Init => "INIT",
-            Self::Acquire => "ACQUIRE",
+            Self::Reserve => "RESERVE",
             Self::BatchInit => "BATCH_INIT",
-            Self::BatchAcquire => "BATCH_ACQUIRE",
+            Self::Update => "UPDATE",
+            Self::Settle => "SETTLE",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
             "INIT" => Some(Self::Init),
-            "ACQUIRE" => Some(Self::Acquire),
+            "RESERVE" => Some(Self::Reserve),
             "BATCH_INIT" => Some(Self::BatchInit),
-            "BATCH_ACQUIRE" => Some(Self::BatchAcquire),
+            "UPDATE" => Some(Self::Update),
+            "SETTLE" => Some(Self::Settle),
             _ => None,
         }
     }
@@ -331,8 +413,37 @@ impl QuotaMode {
         }
     }
 }
+/// 配额记账方式
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum QuotaAccounting {
+    /// 消费型配额，已消费量在时间窗口内不可归还，适用于 RPM、TPM
+    Consumable = 0,
+    /// 占用型配额，租约结束后全部归还，适用于并发数
+    Occupancy = 1,
+}
+impl QuotaAccounting {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Consumable => "CONSUMABLE",
+            Self::Occupancy => "OCCUPANCY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CONSUMABLE" => Some(Self::Consumable),
+            "OCCUPANCY" => Some(Self::Occupancy),
+            _ => None,
+        }
+    }
+}
 /// Generated client implementations.
-pub mod rate_limit_grpcv2_client {
+pub mod rate_limit_grpc_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -343,10 +454,10 @@ pub mod rate_limit_grpcv2_client {
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
     #[derive(Debug, Clone)]
-    pub struct RateLimitGrpcv2Client<T> {
+    pub struct RateLimitGrpcClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl RateLimitGrpcv2Client<tonic::transport::Channel> {
+    impl RateLimitGrpcClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -357,7 +468,7 @@ pub mod rate_limit_grpcv2_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> RateLimitGrpcv2Client<T>
+    impl<T> RateLimitGrpcClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -375,7 +486,7 @@ pub mod rate_limit_grpcv2_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> RateLimitGrpcv2Client<InterceptedService<T, F>>
+        ) -> RateLimitGrpcClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -389,7 +500,7 @@ pub mod rate_limit_grpcv2_client {
                 http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            RateLimitGrpcv2Client::new(InterceptedService::new(inner, interceptor))
+            RateLimitGrpcClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -440,11 +551,11 @@ pub mod rate_limit_grpcv2_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/polaris.metric.v2.RateLimitGRPCV2/Service",
+                "/polaris.metric.v2.RateLimitGRPC/Service",
             );
             let mut req = request.into_streaming_request();
             req.extensions_mut()
-                .insert(GrpcMethod::new("polaris.metric.v2.RateLimitGRPCV2", "Service"));
+                .insert(GrpcMethod::new("polaris.metric.v2.RateLimitGRPC", "Service"));
             self.inner.streaming(req, path, codec).await
         }
         /// 时间对齐接口
@@ -465,19 +576,19 @@ pub mod rate_limit_grpcv2_client {
                 })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/polaris.metric.v2.RateLimitGRPCV2/TimeAdjust",
+                "/polaris.metric.v2.RateLimitGRPC/TimeAdjust",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
-                    GrpcMethod::new("polaris.metric.v2.RateLimitGRPCV2", "TimeAdjust"),
+                    GrpcMethod::new("polaris.metric.v2.RateLimitGRPC", "TimeAdjust"),
                 );
             self.inner.unary(req, path, codec).await
         }
     }
 }
 /// Generated server implementations.
-pub mod rate_limit_grpcv2_server {
+pub mod rate_limit_grpc_server {
     #![allow(
         unused_variables,
         dead_code,
@@ -486,9 +597,9 @@ pub mod rate_limit_grpcv2_server {
         clippy::let_unit_value,
     )]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with RateLimitGrpcv2Server.
+    /// Generated trait containing gRPC methods that should be implemented for use with RateLimitGrpcServer.
     #[async_trait]
-    pub trait RateLimitGrpcv2: std::marker::Send + std::marker::Sync + 'static {
+    pub trait RateLimitGrpc: std::marker::Send + std::marker::Sync + 'static {
         /// Server streaming response type for the Service method.
         type ServiceStream: tonic::codegen::tokio_stream::Stream<
                 Item = std::result::Result<super::RateLimitResponse, tonic::Status>,
@@ -510,14 +621,14 @@ pub mod rate_limit_grpcv2_server {
         >;
     }
     #[derive(Debug)]
-    pub struct RateLimitGrpcv2Server<T> {
+    pub struct RateLimitGrpcServer<T> {
         inner: Arc<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
         max_decoding_message_size: Option<usize>,
         max_encoding_message_size: Option<usize>,
     }
-    impl<T> RateLimitGrpcv2Server<T> {
+    impl<T> RateLimitGrpcServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -568,9 +679,9 @@ pub mod rate_limit_grpcv2_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for RateLimitGrpcv2Server<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for RateLimitGrpcServer<T>
     where
-        T: RateLimitGrpcv2,
+        T: RateLimitGrpc,
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
@@ -585,11 +696,11 @@ pub mod rate_limit_grpcv2_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/polaris.metric.v2.RateLimitGRPCV2/Service" => {
+                "/polaris.metric.v2.RateLimitGRPC/Service" => {
                     #[allow(non_camel_case_types)]
-                    struct ServiceSvc<T: RateLimitGrpcv2>(pub Arc<T>);
+                    struct ServiceSvc<T: RateLimitGrpc>(pub Arc<T>);
                     impl<
-                        T: RateLimitGrpcv2,
+                        T: RateLimitGrpc,
                     > tonic::server::StreamingService<super::RateLimitRequest>
                     for ServiceSvc<T> {
                         type Response = super::RateLimitResponse;
@@ -606,7 +717,7 @@ pub mod rate_limit_grpcv2_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RateLimitGrpcv2>::service(&inner, request).await
+                                <T as RateLimitGrpc>::service(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -633,11 +744,11 @@ pub mod rate_limit_grpcv2_server {
                     };
                     Box::pin(fut)
                 }
-                "/polaris.metric.v2.RateLimitGRPCV2/TimeAdjust" => {
+                "/polaris.metric.v2.RateLimitGRPC/TimeAdjust" => {
                     #[allow(non_camel_case_types)]
-                    struct TimeAdjustSvc<T: RateLimitGrpcv2>(pub Arc<T>);
+                    struct TimeAdjustSvc<T: RateLimitGrpc>(pub Arc<T>);
                     impl<
-                        T: RateLimitGrpcv2,
+                        T: RateLimitGrpc,
                     > tonic::server::UnaryService<super::TimeAdjustRequest>
                     for TimeAdjustSvc<T> {
                         type Response = super::TimeAdjustResponse;
@@ -651,7 +762,7 @@ pub mod rate_limit_grpcv2_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RateLimitGrpcv2>::time_adjust(&inner, request).await
+                                <T as RateLimitGrpc>::time_adjust(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -700,7 +811,7 @@ pub mod rate_limit_grpcv2_server {
             }
         }
     }
-    impl<T> Clone for RateLimitGrpcv2Server<T> {
+    impl<T> Clone for RateLimitGrpcServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -713,8 +824,8 @@ pub mod rate_limit_grpcv2_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "polaris.metric.v2.RateLimitGRPCV2";
-    impl<T> tonic::server::NamedService for RateLimitGrpcv2Server<T> {
+    pub const SERVICE_NAME: &str = "polaris.metric.v2.RateLimitGRPC";
+    impl<T> tonic::server::NamedService for RateLimitGrpcServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
 }

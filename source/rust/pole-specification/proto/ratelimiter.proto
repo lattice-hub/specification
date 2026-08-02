@@ -9,9 +9,10 @@ option java_outer_classname = "RateLimiterProto";
 //命令字
 enum RateLimitCmd {
   INIT = 0;
-  ACQUIRE = 1;
+  RESERVE = 1;
   BATCH_INIT = 2;
-  BATCH_ACQUIRE = 3;
+  UPDATE = 3;
+  SETTLE = 4;
 }
 
 //限流请求
@@ -20,10 +21,14 @@ message RateLimitRequest {
   RateLimitCmd cmd = 1;
   //初始化请求
   RateLimitInitRequest rateLimitInitRequest = 2;
-  //上报请求
-  RateLimitReportRequest rateLimitReportRequest = 3;
+  //配额预留请求
+  QuotaReserveRequest quotaReserveRequest = 3;
   //批量初始化请求
   RateLimitBatchInitRequest rateLimitBatchInitRequest = 4;
+  //租约消费更新请求
+  QuotaUpdateRequest quotaUpdateRequest = 5;
+  //租约结算请求
+  QuotaSettleRequest quotaSettleRequest = 6;
 }
 
 //限流应答
@@ -32,10 +37,14 @@ message RateLimitResponse {
   RateLimitCmd cmd = 1;
   //初始化应答
   RateLimitInitResponse rateLimitInitResponse = 2;
-  //上报应答
-  RateLimitReportResponse rateLimitReportResponse = 3;
+  //配额预留应答
+  QuotaReserveResponse quotaReserveResponse = 3;
   //批量初始化应答
   RateLimitBatchInitResponse rateLimitBatchInitResponse = 4;
+  //租约消费更新应答
+  QuotaUpdateResponse quotaUpdateResponse = 5;
+  //租约结算应答
+  QuotaSettleResponse quotaSettleResponse = 6;
 }
 
 //限频模式
@@ -116,25 +125,6 @@ message RateLimitBatchInitResponse {
   repeated BatchInitResult result = 4;
 }
 
-//限流上报请求
-message RateLimitReportRequest {
-  //客户端标识
-  uint32 clientKey = 1;
-  //已使用的配额数
-  repeated QuotaSum quotaUses = 2;
-  //配额发生的时间，单位ms
-  int64 timestamp = 3;
-}
-
-//限流上报应答
-message RateLimitReportResponse {
-  uint32 code = 1;
-  //剩余配额数
-  repeated QuotaLeft quotaLefts = 2;
-  //限流server绝对时间，单位ms
-  int64 timestamp = 3;
-}
-
 //限流目标，针对哪部分数据进行限流
 message LimitTarget {
   //命名空间
@@ -155,6 +145,14 @@ enum QuotaMode {
   DIVIDE = 1;
 }
 
+//配额记账方式
+enum QuotaAccounting {
+  //消费型配额，已消费量在时间窗口内不可归还，适用于 RPM、TPM
+  CONSUMABLE = 0;
+  //占用型配额，租约结束后全部归还，适用于并发数
+  OCCUPANCY = 1;
+}
+
 //阈值配置的值
 message QuotaTotal {
   //阈值模式
@@ -163,6 +161,8 @@ message QuotaTotal {
   uint32 duration = 2;
   //限流阈值
   uint32 maxAmount = 3;
+  //配额记账方式
+  QuotaAccounting accounting = 4;
 }
 
 //限流计数器
@@ -180,13 +180,71 @@ message QuotaCounter {
 }
 
 //客户端阈值使用统计
-message QuotaSum {
-  //计数器的标识，一个server全局唯一，上报时候带入
+message QuotaReservation {
+  //计数器的标识，一个server全局唯一
   uint32 counterKey = 1;
-  //已使用的配额数，上报时候带入
-  uint32 used = 2;
-  //被限流数，上报时候带入
-  uint32 limited = 3;
+  //请求预留的最大配额
+  uint32 amount = 2;
+}
+
+//配额租约预留请求。所有 counter 必须原子成功或原子失败。
+message QuotaReserveRequest {
+  uint32 clientKey = 1;
+  string idempotencyKey = 2;
+  repeated QuotaReservation reservations = 3;
+  uint32 ttlSeconds = 4;
+  int64 timestamp = 5;
+}
+
+message QuotaReserveResponse {
+  uint32 code = 1;
+  string leaseId = 2;
+  repeated QuotaLeft quotaLefts = 3;
+  int64 expiresAt = 4;
+  int64 timestamp = 5;
+}
+
+//单个 counter 的累计实际消费量。
+message QuotaConsumption {
+  uint32 counterKey = 1;
+  uint32 consumedTotal = 2;
+}
+
+//流式过程中按 counter 更新累计实际消费量。consumedTotal 只能单调递增。
+message QuotaUpdateRequest {
+  uint32 clientKey = 1;
+  string leaseId = 2;
+  repeated QuotaConsumption consumptions = 3;
+  uint64 sequence = 4;
+  int64 timestamp = 5;
+}
+
+message QuotaUpdateResponse {
+  uint32 code = 1;
+  repeated QuotaConsumption consumptions = 2;
+  uint64 sequence = 3;
+  int64 timestamp = 4;
+}
+
+//结束租约。消费型配额提交实际消费并归还未使用预留；占用型配额全部归还。
+message QuotaSettleRequest {
+  uint32 clientKey = 1;
+  string leaseId = 2;
+  repeated QuotaConsumption consumptions = 3;
+  uint64 sequence = 4;
+  int64 timestamp = 5;
+}
+
+message QuotaSettlement {
+  uint32 counterKey = 1;
+  uint32 consumedTotal = 2;
+  uint32 returnedAmount = 3;
+}
+
+message QuotaSettleResponse {
+  uint32 code = 1;
+  repeated QuotaSettlement settlements = 2;
+  int64 timestamp = 3;
 }
 
 //客户端阈值使用统计，由服务端返回

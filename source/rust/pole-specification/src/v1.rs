@@ -2426,6 +2426,8 @@ pub mod limit_trigger {
         Concurrency = 1,
         /// 针对系统资源进行限流
         System = 2,
+        /// 针对可变权重配额进行限流，例如 LLM token
+        Token = 3,
     }
     impl Resource {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2437,6 +2439,7 @@ pub mod limit_trigger {
                 Self::Qps => "QPS",
                 Self::Concurrency => "CONCURRENCY",
                 Self::System => "SYSTEM",
+                Self::Token => "TOKEN",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2445,6 +2448,7 @@ pub mod limit_trigger {
                 "QPS" => Some(Self::Qps),
                 "CONCURRENCY" => Some(Self::Concurrency),
                 "SYSTEM" => Some(Self::System),
+                "TOKEN" => Some(Self::Token),
                 _ => None,
             }
         }
