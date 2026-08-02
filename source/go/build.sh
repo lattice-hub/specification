@@ -29,6 +29,7 @@ fault_tolerance_dir=${workdir}/api/v1/fault_tolerance
 config_manage_dir=${workdir}/api/v1/config_manage
 security_dir=${workdir}/api/v1/security
 ai_dir=${workdir}/api/v1/ai
+sidecar_dir=${workdir}/api/v1/sidecar
 ratelimiter_dir=${workdir}/api/v1/traffic_manage/ratelimiter
 out_dir=${workdir}/source/go
 
@@ -39,6 +40,7 @@ proto_files_fault_tolerance="circuitbreaker.proto fault_detector.proto"
 proto_files_config_manage="config_file.proto grpc_config_api.proto"
 proto_files_security="auth.proto traffic_security.proto workload_identity.proto"
 proto_files_ai="mcp.proto"
+proto_files_sidecar="bootstrap.proto"
 proto_files_ratelimiter="ratelimiter.proto grpcapi_ratelimiter.proto"
 
 if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
@@ -122,6 +124,17 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --proto_path=. ${proto_files_ai}
     mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/ai" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/ai"
+    "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
+    popd
+    popd
+
+    pushd "${sidecar_dir}"
+    "${protoc_dir}"/bin/protoc \
+        --plugin=protoc-gen-go="${protoc_dir}"/bin/protoc-gen-go \
+        --go_out=plugins=grpc:"${out_dir}" \
+        --proto_path=. ${proto_files_sidecar}
+    mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/sidecar" "${out_dir}/api/v1"
+    pushd "${out_dir}/api/v1/sidecar"
     "${protoc_dir}"/bin/protoc-go-inject-tag -input="*.pb.go"
     popd
     popd

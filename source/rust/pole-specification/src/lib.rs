@@ -1,6 +1,14 @@
 #[rustfmt::skip]
 pub mod v1;
 
+pub mod pole {
+    pub mod sidecar {
+        pub mod v1 {
+            include!("pole.sidecar.v1.rs");
+        }
+    }
+}
+
 /// 限流数据面 gRPC 协议。
 ///
 /// 限流规则通过 `v1::RateLimit::cluster` 选择目标集群，SDK 使用这里的双向流协议

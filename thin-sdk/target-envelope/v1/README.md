@@ -1,5 +1,9 @@
 # TargetEnvelope v1
 
+> **已废弃**：该契约错误地把协议、方法和 endpoint 混入目标服务身份，并使用
+> `x-pole-*` 键。新实现必须使用 Sidecar Session v1 与 TargetService v1；本目录
+> 仅为已发布 `thin-sdk-contract-v1.0.0` 保留，不得继续扩展。
+
 ## 目标
 
 Thin SDK 在语言框架已经识别逻辑目标后、连接本地 Pole Sidecar 前构造
