@@ -32,3 +32,10 @@
   `npm dist-tag` 仍要求维护者交互式 2FA；不能设计依赖发布后自动改 tag 的流程。
 - 若项目当前只有预发布版本但希望默认安装得到最新版本，应在发布时直接更新
   `latest`，不要先发布到其它 tag 后再依赖 CI 修改 `latest`。
+
+## 2026-08-03：多语言发布不能只按当前目录推断完整范围
+
+- 用户要求检查 specification 的“每个语言”发布时，必须同时核对当前树、历史删除、
+  Maven/npm/PyPI/crates Registry 和消费者依赖；当前树缺少工程不等于该语言不在目标范围。
+- Java Specification 的正式坐标是 `io.github.lattice-hub:pole-specification`，生成
+  package 使用 `io.github.latticehub.pole.specification.*`，二者不能混淆。

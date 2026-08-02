@@ -114,3 +114,16 @@
   `github.com/pole-io/specification@v0.1.0-ALPHA.41`。
 - npm `alpha` 已指向本次版本；`latest` 从 bootstrap 切换到本次版本需要维护者
   在本机完成一次 2FA。后续 Release 直接使用 `npm publish` 自动更新 `latest`。
+
+## 2026-08-03 Java Specification 生成包恢复
+
+- [x] 追查 Java 工程删除历史与 Maven Central 状态
+- [x] 明确新坐标和 Java package namespace
+- [x] 恢复权威 Proto 驱动的 Maven 生成工程
+- [x] 增加逐 Proto 与逐 gRPC Service 完整性测试
+- [x] 接入 CI 与 Maven Central Release
+- [ ] 发布并验证首个 Java 制品版本
+
+### Review
+
+- 待实现和发布完成后补充。

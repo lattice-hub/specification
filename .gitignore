@@ -19,6 +19,7 @@ source/node/node_modules
 source/node/proto
 source/node/src/generated
 source/node/src/proto-files.json
+source/java/pole-specification/target
 source/rust/pole-specification/target
 venv
 debug/

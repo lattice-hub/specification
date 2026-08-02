@@ -1,18 +1,28 @@
-# Node.js 与 Python gRPC 生成包
+# Java、Node.js 与 Python gRPC 生成包
 
 本仓库以 `api/` 中的 Proto 为唯一权威来源，在 CI 和 Release 阶段生成并发布：
 
 | 语言 | Registry | 包名 | 生成方式 |
 | --- | --- | --- | --- |
+| Java | Maven Central | `io.github.lattice-hub:pole-specification` | `protobuf-maven-plugin` 与 `grpc-java` |
 | Node.js | npm | `@lattice-hub/pole-specification` | `@grpc/proto-loader` 与 `proto-loader-gen-types` |
 | Python | PyPI | `pole-specification` | `grpcio-tools` |
 
 生成文件不提交到 Git。普通分支和 Pull Request 由 `.github/workflows/testing.yml`
 重新生成、测试和打包；发布 GitHub Release 后，
-`.github/workflows/generated-release.yml` 使用 Release tag 设置包版本并发布。
+Java 由 `.github/workflows/java-release.yml` 发布，Node.js 与 Python 由
+`.github/workflows/generated-release.yml` 发布，均使用 Release tag 设置包版本。
 Python 生成器固定版本，且包声明的 `grpcio`、`protobuf` 最低版本与生成代码一致。
 
 ## 本地验证
+
+```shell
+docker run --rm \
+  -v "$PWD:/workspace" \
+  -w /workspace/source/java/pole-specification \
+  maven:3.9.11-eclipse-temurin-17 \
+  mvn --batch-mode --no-transfer-progress clean verify
+```
 
 ```shell
 cd source/node
@@ -32,6 +42,18 @@ python -m build
 ## Registry 配置
 
 发布工作流使用 GitHub Actions OIDC，不需要保存长期 npm 或 PyPI Token。
+
+### Maven Central
+
+Java 发布使用 GitHub `maven-central` Environment，并读取以下 Secrets：
+
+- `MAVEN_CENTRAL_USERNAME`
+- `MAVEN_CENTRAL_TOKEN`
+- `MAVEN_GPG_PRIVATE_KEY`
+- `MAVEN_GPG_PASSPHRASE`
+
+Sonatype namespace 为 `io.github.lattice-hub`，发布坐标为
+`io.github.lattice-hub:pole-specification`。
 
 ### npm
 
