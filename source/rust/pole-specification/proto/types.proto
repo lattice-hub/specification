@@ -4,7 +4,7 @@ package v1;
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/model";
 
-option java_package = "io.pole.specification.api.v1.model";
+option java_package = "io.github.latticehub.pole.specification.api.v1.model";
 option java_outer_classname = "TypesProto";
 
 // 主调服务信息数据

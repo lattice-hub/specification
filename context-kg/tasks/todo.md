@@ -41,3 +41,16 @@
   Schema 已闭环，无剩余 P1/P2。
 - `go test ./...`、`cargo fmt --all -- --check`、`cargo test --all`、
   `cargo check --all`、JSON Schema normalized vectors 与 SHA256 校验均通过。
+
+## Java 生成包 Namespace 迁移（2026-08-02）
+
+- [x] 将全部 Proto `java_package` 从 `io.pole.specification.*` 迁移到 `io.github.latticehub.pole.specification.*`。
+- [x] 重新生成 Go descriptor，并同步 Rust Proto 输入。
+- [x] 同步 Sidecar 与四语言 Thin SDK 的 bootstrap 契约副本。
+- [x] 完成 Go、Rust、Java 与契约校验。
+
+### Review
+
+- Maven namespace 与 Java 源码 package 分离；Specification 生成类型统一迁移到 `io.github.latticehub.pole.specification.*`。
+- Java Thin SDK 公共 API 使用 `io.github.latticehub.client`，不增加重复的 `pole` 层级。
+- Java package option 不改变 Protobuf wire contract；Go/Rust descriptor 与各消费者 vendored bootstrap 已重新生成或同步。

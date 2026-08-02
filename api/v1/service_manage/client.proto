@@ -5,7 +5,7 @@ package v1;
 import "types.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/service_manage";
-option java_package = "io.pole.specification.api.v1.service.manage";
+option java_package = "io.github.latticehub.pole.specification.api.v1.service.manage";
 option java_outer_classname = "ClientProto";
 
 message Client {
