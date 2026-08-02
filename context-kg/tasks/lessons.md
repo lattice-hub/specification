@@ -13,3 +13,10 @@
 
 - Maven Central 使用已验证的 `io.github.lattice-hub` 作为 `groupId`；Java package 不能照搬含连字符的 namespace。
 - Pole Java Thin SDK 的公共 package 固定为 `io.github.latticehub.client`；Specification 生成类型使用独立的 `io.github.latticehub.pole.specification.*` 层级。
+
+## 2026-08-03：区分 Specification 生成包与 Thin SDK 发布
+
+- 在讨论 Node.js、Python 和 Maven 包发布时，如果上下文指向 spec 仓库，目标是
+  `specification` 编译生成的 gRPC/Protobuf 语言产物，不是对应 Thin SDK。
+- 配置 Registry、Trusted Publisher 或给出首次发布命令前，必须先确认目标仓库中
+  已存在实际生成目录、包元数据、版本来源和发布工作流；不能用 Thin SDK 包代替。

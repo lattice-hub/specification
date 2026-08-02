@@ -54,3 +54,16 @@
 - Maven namespace 与 Java 源码 package 分离；Specification 生成类型统一迁移到 `io.github.latticehub.pole.specification.*`。
 - Java Thin SDK 公共 API 使用 `io.github.latticehub.client`，不增加重复的 `pole` 层级。
 - Java package option 不改变 Protobuf wire contract；Go/Rust descriptor 与各消费者 vendored bootstrap 已重新生成或同步。
+
+## 2026-08-03 Node.js gRPC npm 产物发布核查
+
+- [x] 核对 `develop` 与全部本地、远端分支
+- [x] 扫描 Node.js 包元数据、生成目录和 npm workflow
+- [x] 区分 Specification 生成包与 Node.js Thin SDK
+
+### Review
+
+- 当前 `specification` 只包含 Go 生成代码和 Rust crate；不存在 Node.js
+  `package.json`、生成脚本、生成产物或 npm 发布 workflow。
+- 因此当前没有可安全执行的 npm 首次发布命令；必须先定义包名、生成技术栈、
+  版本来源和发布内容，再实现并验证发布链路。
