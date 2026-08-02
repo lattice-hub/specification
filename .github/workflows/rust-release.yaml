@@ -1,52 +1,33 @@
-# 相当于脚本用途的一个声明
-name: Release-Rust
-# 触发脚本的事件  这里为发布release之后触发
+name: Release Rust
+
 on:
   release:
-    types: [ published ]
+    types: [published]
+
+permissions:
+  contents: read
+
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-      - name: Checkout code for rust
-        # Reference your environment variables
-        uses: actions/checkout@v3.4.0
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v2
-        with:
-          version: "23.x"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: Build rust
-        run: |
-          cd source/rust/pole-specification
-          echo "run sed start"
-          sed -i 's/^version = ".*"/version = "'${VERSION:1}'"/g' Cargo.toml
-          echo "run sed end"
-          cat Cargo.toml
-          pwd
-          cd ../
-          bash build.sh
-          cd pole-specification
-          rm build.rs
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Set crate version
+        working-directory: source/rust/pole-specification
         env:
-          VERSION: ${{ steps.get_version.outputs.VERSION }}
-      - name: Run cargo login
-        uses: actions-rs/cargo@v1
-        with:
-          command: login
-          args: ${{ secrets.CRATES_IO_TOKEN }}
-      - name: Run cargo publish
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          args: --package pole-specification --allow-dirty
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: sed -i 's/^version = ".*"/version = "'"${RELEASE_TAG#v}"'"/' Cargo.toml
+      - name: Generate and build crate
+        run: |
+          chmod +x source/protoc/protoc-linux-x86_64/bin/protoc
+          cd source/rust
+          bash build.sh
+          rm pole-specification/build.rs
+      - name: Publish to crates.io
+        working-directory: source/rust
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: cargo publish --package pole-specification --allow-dirty
