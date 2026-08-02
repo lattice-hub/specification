@@ -144,3 +144,24 @@
   `io.github.latticehub.pole.specification.api.v1.sidecar.SidecarSessionServiceGrpc`。
 - `GOWORK=off go list -m`、`cargo info`、npm 全新安装和 PyPI 全新虚拟环境安装
   均验证了 `ALPHA.43`；npm `latest` 已指向 `0.1.0-ALPHA.43`。
+
+## 2026-08-03 C++ Specification 生成包
+
+- [x] 核对现有多语言生成和发布边界
+- [x] 定义 CMake 包与 GitHub Release 资产形式
+- [x] 实现全量 Protobuf 与 gRPC C++ 生成
+- [x] 增加完整性、编译与安装验证
+- [x] 接入 Pull Request CI 与 Release 附件发布
+- [ ] 通过 PR 合入 `develop`
+
+### Review
+
+- C++ CMake 工程从权威 `api/` 生成 26 个 Proto 对应的 104 个 Message/gRPC
+  源文件，不提交生成副本；Release 产出 `.tar.gz`、`.zip` 和 `SHA256SUMS`。
+- 固定使用 gRPC 1.64.3、Protobuf 26.1 及其官方 Abseil revision，工具链下载
+  校验 SHA-256，并由 GitHub Actions cache 复用。
+- `RateLimitGRPC.Service` 仅在 C++ API 中映射为 `Stream`，自动校验生成描述符
+  仍使用 `/polaris.metric.v2.RateLimitGRPC/Service`，且打包 Proto 与权威源逐字节一致。
+- Ubuntu 24.04 ARM64 容器已通过全量编译、2 个 CTest、CMake 安装、独立消费者
+  `find_package` 编译运行、压缩包校验及解压后二次构建。
+- PR、远端 x86_64 CI 和合入状态待提交后补充。

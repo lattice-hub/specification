@@ -114,3 +114,63 @@ jobs:
       - name: Test and package generated Java API
         working-directory: source/java/pole-specification
         run: mvn --batch-mode --no-transfer-progress clean verify
+
+  cpp:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "4"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Cache gRPC C++ toolchain
+        uses: actions/cache@v5
+        with:
+          path: build/cpp-deps
+          key: grpc-cpp-1.64.3-protobuf-26.1-${{ runner.os }}-${{ runner.arch }}-v1
+      - name: Install C++ dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            libc-ares-dev \
+            libre2-dev \
+            libssl-dev \
+            pkg-config \
+            zlib1g-dev
+          bash source/cpp/pole-specification/scripts/install_grpc.sh build/cpp-deps
+      - name: Generate, build, and test C++ package
+        run: |
+          cmake \
+            -S source/cpp/pole-specification \
+            -B build/cpp \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-deps"
+          cmake --build build/cpp
+          ctest --test-dir build/cpp --output-on-failure
+          cmake --install build/cpp --prefix build/cpp-install
+          cmake \
+            -S source/cpp/pole-specification/tests/consumer \
+            -B build/cpp-consumer \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-install;$PWD/build/cpp-deps"
+          cmake --build build/cpp-consumer
+      - name: Build generated source archives
+        run: |
+          python source/cpp/pole-specification/scripts/package.py \
+            --version 0.1.0-CI \
+            --generated-dir build/cpp/generated \
+            --proto-dir build/cpp/proto \
+            --output-dir build/cpp/dist
+          sha256sum --check build/cpp/dist/SHA256SUMS
+          package_root="$(mktemp -d)"
+          tar -xzf build/cpp/dist/pole-specification-cpp-0.1.0-CI.tar.gz \
+            -C "$package_root"
+          cmake \
+            -S "$package_root/pole-specification-cpp-0.1.0-CI" \
+            -B build/cpp-package \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-deps"
+          cmake --build build/cpp-package

@@ -1,0 +1,59 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(pole_specification_cpp LANGUAGES CXX)
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" POLE_SPECIFICATION_VERSION)
+string(STRIP "${POLE_SPECIFICATION_VERSION}" POLE_SPECIFICATION_VERSION)
+
+find_package(Protobuf 5.26.1 CONFIG REQUIRED)
+find_package(gRPC 1.64 CONFIG REQUIRED)
+
+file(GLOB POLE_GENERATED_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/generated/*.cc")
+file(GLOB POLE_GENERATED_HEADERS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/generated/*.h")
+if(NOT POLE_GENERATED_SOURCES OR NOT POLE_GENERATED_HEADERS)
+    message(FATAL_ERROR "The generated C++ package is incomplete")
+endif()
+
+add_library(pole-specification ${POLE_GENERATED_SOURCES} ${POLE_GENERATED_HEADERS})
+add_library(PoleSpecification::pole-specification ALIAS pole-specification)
+target_compile_features(pole-specification PUBLIC cxx_std_17)
+target_include_directories(
+    pole-specification
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated>
+        $<INSTALL_INTERFACE:include/pole/specification>
+)
+target_link_libraries(pole-specification PUBLIC protobuf::libprotobuf gRPC::grpc++)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    cmake/PoleSpecificationConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/PoleSpecificationConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/PoleSpecification
+)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/PoleSpecificationConfigVersion.cmake"
+    VERSION 0.1.0
+    COMPATIBILITY SameMajorVersion
+)
+
+install(
+    TARGETS pole-specification
+    EXPORT PoleSpecificationTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+install(FILES ${POLE_GENERATED_HEADERS} DESTINATION include/pole/specification)
+install(
+    EXPORT PoleSpecificationTargets
+    FILE PoleSpecificationTargets.cmake
+    NAMESPACE PoleSpecification::
+    DESTINATION lib/cmake/PoleSpecification
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/PoleSpecificationConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/PoleSpecificationConfigVersion.cmake"
+    DESTINATION lib/cmake/PoleSpecification
+)

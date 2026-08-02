@@ -41,3 +41,14 @@
   Maven/npm/PyPI/crates Registry 和消费者依赖；当前树缺少工程不等于该语言不在目标范围。
 - Java Specification 的正式坐标是 `io.github.lattice-hub:pole-specification`，生成
   package 使用 `io.github.latticehub.pole.specification.*`，二者不能混淆。
+
+## 2026-08-03：Thin SDK 语言范围必须与 Specification 生成链路对齐
+
+- 新增 C++ Thin SDK 时，Specification 必须同步从权威 `api/` 产出 C++
+  Protobuf Message 和 gRPC Stub；不能让 Thin SDK 手工复制 Proto 或自行维护生成副本。
+- C++ 没有本项目已配置的通用 Registry，因此先以带 CMake target 的 GitHub
+  Release 源码包作为正式产物，并在 CI 中验证生成、编译和打包。
+- 全量 C++ 编译会暴露其它语言没有暴露的生成器命名冲突；已发布的 RPC
+  wire path 不能为了生成方便直接改名。若官方生成器无法处理，允许仅对 C++ API
+  使用方法别名，但必须自动校验生成描述符仍使用原始 wire path，且发布包保留未修改
+  的权威 Proto。
