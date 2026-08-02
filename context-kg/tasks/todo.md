@@ -90,3 +90,16 @@
 - 测试工作流的 Checkout 与 Go Action 已升级，消除 GitHub 托管 runner 的
   Node.js 20 弃用告警。
 - Go 全量测试、Rust fmt/test/check 与 `git diff --check` 均通过。
+
+## 2026-08-03 Specification v0.1.0-ALPHA.41 多语言发布
+
+- [x] 核对最新 tag、Release 与制品发布入口
+- [x] 现代化 Rust Release 工作流并验证
+- [ ] 提交并推送发布前修复
+- [ ] 创建 annotated tag 与 GitHub prerelease
+- [ ] 跟踪 Rust、Node.js、Python 发布工作流
+- [ ] 验证 Go tag、crates.io、npm、PyPI 可消费
+
+### Review
+
+- 待发布完成后补充。
