@@ -87,4 +87,6 @@
   `grpcio>=1.80.0`、`protobuf>=6.31.1`，避免生成代码与声明依赖不一致。
 - `actionlint` 对新增及修改的工作流检查通过；GitHub 已创建 `npm`、`pypi`
   Environments，发布使用 OIDC，无长期 Registry Token。
+- 测试工作流的 Checkout 与 Go Action 已升级，消除 GitHub 托管 runner 的
+  Node.js 20 弃用告警。
 - Go 全量测试、Rust fmt/test/check 与 `git diff --check` 均通过。
