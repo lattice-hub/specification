@@ -96,6 +96,11 @@ cd source/rust
 bash build.sh
 ```
 
+- Node.js 与 Python
+
+Node.js npm 包和 Python PyPI 包均从 `api/` 自动生成。构建、使用及 Trusted
+Publishing 配置见 [Node.js 与 Python gRPC 生成包](./GENERATED_PACKAGES.md)。
+
 ### 如何使用
 
 - Java语言，只需要添加`pole-specification`的依赖即可完成。

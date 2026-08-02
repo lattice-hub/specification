@@ -20,3 +20,8 @@
   `specification` 编译生成的 gRPC/Protobuf 语言产物，不是对应 Thin SDK。
 - 配置 Registry、Trusted Publisher 或给出首次发布命令前，必须先确认目标仓库中
   已存在实际生成目录、包元数据、版本来源和发布工作流；不能用 Thin SDK 包代替。
+
+## 2026-08-03：CodeGraph 索引属于本地资产
+
+- `.codegraph/` 是本地代码索引，不是项目源码或发布产物；各仓库必须通过
+  `.gitignore` 排除，不能暂存、提交或推送。

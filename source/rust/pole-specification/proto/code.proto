@@ -93,7 +93,7 @@ enum Code {
     NotFoundUserGroup                       = 400314;
     NotFoundAuthStrategyRule                = 400315;
     NotAllowModifyDefaultStrategyPrincipal  = 400508;
-    NotAllowModifyOwnerDefaultStrategy      = 400509;;
+    NotAllowModifyOwnerDefaultStrategy      = 400509;
 
     EmptyAutToken    = 401002;
     TokenDisabled    = 401003;

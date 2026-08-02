@@ -1,0 +1,126 @@
+name: Release Generated Packages
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install Node.js dependencies
+        working-directory: source/node
+        run: npm ci
+      - name: Test Node.js package
+        working-directory: source/node
+        run: npm test
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: source/python/pyproject.toml
+      - name: Install Python dependencies
+        working-directory: source/python
+        run: python -m pip install ".[dev]"
+      - name: Generate Python package
+        working-directory: source/python
+        run: python scripts/generate.py
+      - name: Test Python package
+        working-directory: source/python
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests
+
+  publish-npm:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: source/node
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Set package version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: npm version "${RELEASE_TAG#v}" --no-git-tag-version --allow-same-version
+      - name: Install dependencies
+        run: npm ci
+      - name: Publish to npm
+        run: npm publish
+
+  build-python:
+    needs: verify
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: source/python
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: source/python/pyproject.toml
+      - name: Install dependencies
+        run: python -m pip install ".[dev]"
+      - name: Set package version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: python scripts/set_version.py "$RELEASE_TAG"
+      - name: Generate gRPC sources
+        run: python scripts/generate.py
+      - name: Build distributions
+        run: python -m build
+      - name: Verify wheel import
+        run: |
+          python -m pip install --force-reinstall dist/*.whl
+          python -c "from pole_specification.generated import bootstrap_pb2, bootstrap_pb2_grpc"
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: source/python/dist/
+          if-no-files-found: error
+
+  publish-pypi:
+    needs: build-python
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pole-specification/
+    permissions:
+      id-token: write
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

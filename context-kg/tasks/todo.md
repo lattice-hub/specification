@@ -67,3 +67,24 @@
   `package.json`、生成脚本、生成产物或 npm 发布 workflow。
 - 因此当前没有可安全执行的 npm 首次发布命令；必须先定义包名、生成技术栈、
   版本来源和发布内容，再实现并验证发布链路。
+
+## 2026-08-03 Node.js 与 Python gRPC 生成包自动化
+
+- [x] 定义 npm 与 PyPI 包结构和版本映射
+- [x] 实现 Node.js Proto、类型和加载入口生成
+- [x] 实现 Python Message、类型和 gRPC Stub 生成
+- [x] 增加分支与 Pull Request 持续验证
+- [x] 增加 GitHub Release OIDC 发布工作流
+- [x] 完成仓库级验证并推送
+
+### Review
+
+- npm 包 `@lattice-hub/pole-specification` 生成 26 个权威 Proto 的动态加载入口和
+  TypeScript 类型；`npm test` 与 `npm pack --dry-run` 通过。
+- PyPI 包 `pole-specification` 生成 Message、`.pyi`、Client Stub 与 Servicer；
+  单元测试、sdist、wheel 构建及 wheel 独立导入通过。
+- Python 生成器固定为 `grpcio-tools==1.80.0`，运行时下限同步为
+  `grpcio>=1.80.0`、`protobuf>=6.31.1`，避免生成代码与声明依赖不一致。
+- `actionlint` 对新增及修改的工作流检查通过；GitHub 已创建 `npm`、`pypi`
+  Environments，发布使用 OIDC，无长期 Registry Token。
+- Go 全量测试、Rust fmt/test/check 与 `git diff --check` 均通过。

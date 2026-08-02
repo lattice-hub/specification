@@ -1,0 +1,60 @@
+{
+  "name": "@lattice-hub/pole-specification",
+  "version": "0.1.0",
+  "description": "Official Node.js gRPC definitions for Pole Specification",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lattice-hub/specification.git",
+    "directory": "source/node"
+  },
+  "homepage": "https://github.com/lattice-hub/specification",
+  "bugs": {
+    "url": "https://github.com/lattice-hub/specification/issues"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./generated/*": {
+      "types": "./dist/generated/*.d.ts",
+      "require": "./dist/generated/*.js",
+      "default": "./dist/generated/*.js"
+    },
+    "./proto/*": "./proto/*"
+  },
+  "files": [
+    "dist",
+    "proto",
+    "README.md",
+    "LICENSE-APACHE",
+    "LICENSE-MIT"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "npm run generate && tsc -p tsconfig.json",
+    "generate": "node scripts/generate.mjs",
+    "prepack": "npm run build",
+    "test": "npm run build && node --test test/*.test.cjs",
+    "typecheck": "npm run generate && tsc --noEmit -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.0",
+    "@grpc/proto-loader": "^0.8.0",
+    "long": "^5.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
