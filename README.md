@@ -70,11 +70,11 @@ README：
 
 - Java语言
 
-Java的编译相关的工程在`/source/java/pole-specification`下，通过以下命令可以构建：
+Java 的生成工程在 `/source/java/pole-specification` 下，使用 Maven 构建：
 
 ```shell
-cd source/java
-bash build.sh
+cd source/java/pole-specification
+mvn clean verify
 ```
 
 - Go语言
@@ -107,10 +107,10 @@ Publishing 配置见 [Node.js 与 Python gRPC 生成包](./GENERATED_PACKAGES.md
 
 ```xml
 <dependency>
-    <groupId>io.pole</groupId>
+    <groupId>io.github.lattice-hub</groupId>
     <artifactId>pole-specification</artifactId>
     <!-- 版本号可换成最新版本号-->
-    <version>v1.3.0</version>
+    <version>0.1.0-ALPHA.42</version>
 </dependency>
 ```
 
