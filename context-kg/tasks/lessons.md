@@ -25,3 +25,10 @@
 
 - `.codegraph/` 是本地代码索引，不是项目源码或发布产物；各仓库必须通过
   `.gitignore` 排除，不能暂存、提交或推送。
+
+## 2026-08-03：npm OIDC 不负责发布后的 dist-tag 管理
+
+- npm Trusted Publisher 的 OIDC 权限用于 `npm publish` 或 `npm stage publish`，
+  `npm dist-tag` 仍要求维护者交互式 2FA；不能设计依赖发布后自动改 tag 的流程。
+- 若项目当前只有预发布版本但希望默认安装得到最新版本，应在发布时直接更新
+  `latest`，不要先发布到其它 tag 后再依赖 CI 修改 `latest`。

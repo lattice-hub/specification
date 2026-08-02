@@ -95,11 +95,22 @@
 
 - [x] 核对最新 tag、Release 与制品发布入口
 - [x] 现代化 Rust Release 工作流并验证
-- [ ] 提交并推送发布前修复
-- [ ] 创建 annotated tag 与 GitHub prerelease
-- [ ] 跟踪 Rust、Node.js、Python 发布工作流
-- [ ] 验证 Go tag、crates.io、npm、PyPI 可消费
+- [x] 提交并推送发布前修复
+- [x] 创建 annotated tag 与 GitHub prerelease
+- [x] 跟踪 Rust、Node.js、Python 发布工作流
+- [x] 验证 Go tag、crates.io、npm、PyPI 可消费
 
 ### Review
 
-- 待发布完成后补充。
+- 发布前修复通过 PR `#14` 合入 `develop`，合并提交为 `18c78fb`；合并后
+  Testing 工作流 `30768671079` 的 Go、Rust、Node.js、Python 全部通过。
+- annotated tag 与 GitHub prerelease `v0.1.0-ALPHA.41` 已发布。
+- Rust 工作流 `30768728739` 成功，crates.io 可下载
+  `pole-specification 0.1.0-ALPHA.41`。
+- Generated Packages 工作流 `30768728734` 成功；npm 可下载
+  `@lattice-hub/pole-specification@0.1.0-ALPHA.41`，PyPI wheel 与 sdist
+  `pole-specification 0.1.0a41` 均可下载且 wheel 导入通过。
+- `GOWORK=off go list -m` 可解析
+  `github.com/pole-io/specification@v0.1.0-ALPHA.41`。
+- npm `alpha` 已指向本次版本；`latest` 从 bootstrap 切换到本次版本需要维护者
+  在本机完成一次 2FA。后续 Release 直接使用 `npm publish` 自动更新 `latest`。
