@@ -166,3 +166,15 @@
   `find_package` 编译运行、压缩包校验及解压后二次构建。
 - PR #19 的 Go、Rust、Node.js、Python、Java 与新增 C++ job 全部通过；C++ job
   在 Ubuntu x86_64 上完成固定工具链构建并保存 cache，本提交随 PR 合入 `develop`。
+
+## 2026-08-04 Specification v0.1.0-ALPHA.44 多语言发布
+
+- [x] 核验 ALPHA.43 Java、Node.js、Python 发布状态
+- [x] 确认 `develop` 集成提交与发布前 CI
+- [ ] 创建 annotated tag 与 GitHub prerelease
+- [ ] 跟踪 Rust、Java、Node.js、Python、C++ 工作流
+- [ ] 验证各 Registry 可消费与 C++ Release 资产
+
+### Review
+
+- 待发布和验证后补充。
