@@ -152,7 +152,7 @@
 - [x] 实现全量 Protobuf 与 gRPC C++ 生成
 - [x] 增加完整性、编译与安装验证
 - [x] 接入 Pull Request CI 与 Release 附件发布
-- [ ] 通过 PR 合入 `develop`
+- [x] 通过 PR 合入 `develop`
 
 ### Review
 
@@ -164,4 +164,5 @@
   仍使用 `/polaris.metric.v2.RateLimitGRPC/Service`，且打包 Proto 与权威源逐字节一致。
 - Ubuntu 24.04 ARM64 容器已通过全量编译、2 个 CTest、CMake 安装、独立消费者
   `find_package` 编译运行、压缩包校验及解压后二次构建。
-- PR、远端 x86_64 CI 和合入状态待提交后补充。
+- PR #19 的 Go、Rust、Node.js、Python、Java 与新增 C++ job 全部通过；C++ job
+  在 Ubuntu x86_64 上完成固定工具链构建并保存 cache，本提交随 PR 合入 `develop`。
