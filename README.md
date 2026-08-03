@@ -110,7 +110,7 @@ Node.js npm 包、Python PyPI 包和 C++ CMake 源码包均从 `api/` 自动生�
     <groupId>io.github.lattice-hub</groupId>
     <artifactId>pole-specification</artifactId>
     <!-- 版本号可换成最新版本号-->
-    <version>0.1.0-ALPHA.43</version>
+    <version>0.1.0-ALPHA.44</version>
 </dependency>
 ```
 
