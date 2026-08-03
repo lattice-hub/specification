@@ -1,0 +1,74 @@
+name: Release C++
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "4"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Cache gRPC C++ toolchain
+        uses: actions/cache@v5
+        with:
+          path: build/cpp-deps
+          key: grpc-cpp-1.64.3-protobuf-26.1-${{ runner.os }}-${{ runner.arch }}-v1
+      - name: Install C++ dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            libc-ares-dev \
+            libre2-dev \
+            libssl-dev \
+            pkg-config \
+            zlib1g-dev
+          bash source/cpp/pole-specification/scripts/install_grpc.sh build/cpp-deps
+      - name: Generate, build, and test
+        run: |
+          cmake \
+            -S source/cpp/pole-specification \
+            -B build/cpp \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-deps" \
+            -DPOLE_SPECIFICATION_VERSION="${GITHUB_REF_NAME#v}"
+          cmake --build build/cpp
+          ctest --test-dir build/cpp --output-on-failure
+          cmake --install build/cpp --prefix build/cpp-install
+          cmake \
+            -S source/cpp/pole-specification/tests/consumer \
+            -B build/cpp-consumer \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-install;$PWD/build/cpp-deps"
+          cmake --build build/cpp-consumer
+      - name: Package generated C++ sources
+        run: |
+          python source/cpp/pole-specification/scripts/package.py \
+            --version "$GITHUB_REF_NAME" \
+            --generated-dir build/cpp/generated \
+            --proto-dir build/cpp/proto \
+            --output-dir build/cpp/dist
+          (cd build/cpp/dist && sha256sum --check SHA256SUMS)
+      - name: Verify generated source archive
+        run: |
+          package_root="$(mktemp -d)"
+          tar -xzf build/cpp/dist/pole-specification-cpp-*.tar.gz -C "$package_root"
+          cmake \
+            -S "$package_root/pole-specification-cpp-${GITHUB_REF_NAME#v}" \
+            -B build/cpp-package \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/cpp-deps"
+          cmake --build build/cpp-package
+      - name: Upload C++ Release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" build/cpp/dist/* --clobber

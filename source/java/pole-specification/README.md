@@ -6,7 +6,7 @@ Pole Specification 的官方 Java Protobuf Message 与 gRPC Stub 包。
 <dependency>
     <groupId>io.github.lattice-hub</groupId>
     <artifactId>pole-specification</artifactId>
-    <version>0.1.0-ALPHA.42</version>
+    <version>0.1.0-ALPHA.43</version>
 </dependency>
 ```
 
