@@ -171,10 +171,22 @@
 
 - [x] 核验 ALPHA.43 Java、Node.js、Python 发布状态
 - [x] 确认 `develop` 集成提交与发布前 CI
-- [ ] 创建 annotated tag 与 GitHub prerelease
-- [ ] 跟踪 Rust、Java、Node.js、Python、C++ 工作流
-- [ ] 验证各 Registry 可消费与 C++ Release 资产
+- [x] 创建 annotated tag 与 GitHub prerelease
+- [x] 跟踪 Rust、Java、Node.js、Python、C++ 工作流
+- [x] 验证各 Registry 可消费与 C++ Release 资产
 
 ### Review
 
-- 待发布和验证后补充。
+- 发布准备通过 PR `#20` 合入 `develop`，合并提交为 `78a6d3e`；合并后 Testing
+  工作流 `30831280406` 的 Go、Rust、Java、Node.js、Python 和 C++ 全部成功。
+- annotated tag 和 GitHub prerelease `v0.1.0-ALPHA.44` 已发布，tag 指向已验证的
+  `78a6d3e` 集成提交。
+- Rust 工作流 `30831516151`、Java 工作流 `30831516501`、Generated Packages
+  工作流 `30831516914` 和 C++ 工作流 `30831515866` 全部成功。
+- Maven Central 可下载 `io.github.lattice-hub:pole-specification:0.1.0-ALPHA.44`，
+  JAR 包含 `SidecarSessionServiceGrpc`；npm `latest` 指向 `0.1.0-ALPHA.44`，全新
+  npm 工程可加载 26 个 Proto 和 `SidecarSessionService`。
+- PyPI wheel 与 sdist `0.1.0a44` 可下载，全新虚拟环境可导入 Message 和 Stub；
+  crates.io `0.1.0-ALPHA.44` 与 Go module tag 均可解析。
+- GitHub Release 包含 C++ `.tar.gz`、`.zip` 和 `SHA256SUMS`，校验和通过；归档内
+  版本为 `0.1.0-ALPHA.44`，包含 26 个权威 Proto 和 104 个生成源码文件。
