@@ -2320,6 +2320,9 @@ pub struct RateLimit {
     /// namespace identifies the environment that owns this rule.
     #[prost(string, tag = "15")]
     pub namespace: ::prost::alloc::string::String,
+    /// 被调服务，规则下发与运行时配额按该服务绑定。
+    #[prost(message, optional, tag = "16")]
+    pub callee: ::core::option::Option<DestinationService>,
 }
 /// Nested message and enum types in `RateLimit`.
 pub mod rate_limit {

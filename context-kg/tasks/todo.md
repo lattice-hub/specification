@@ -1,3 +1,15 @@
+# 2026-08-04 限流运行时目标服务与 ALPHA.45
+
+- [x] 为 `RateLimit` 增加正式 `callee` 作用域
+- [x] 重新生成并验证多语言协议产物
+- [ ] 通过 PR 合入 `develop`
+- [ ] 发布 `v0.1.0-ALPHA.45`
+- [ ] 验证 control-plane 可按 tag 消费
+
+## Review
+
+- 待完成。
+
 # 仓库发布流程固化与 `.38` Release
 
 - [x] 在仓库根目录新增本地 `AGENTS.md` 发布规范

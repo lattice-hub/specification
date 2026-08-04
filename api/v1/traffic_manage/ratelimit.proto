@@ -4,6 +4,7 @@ package v1;
 
 import "google/protobuf/duration.proto";
 import "types.proto";
+import "router.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/traffic_manage";
 option java_package = "io.github.latticehub.pole.specification.api.v1.traffic.manage";
@@ -45,6 +46,8 @@ message RateLimit {
   bool deleteable = 14 [ json_name = "deleteable" ];
   // namespace identifies the environment that owns this rule.
   string namespace = 15 [ json_name = "namespace" ];
+  // 被调服务，规则下发与运行时配额按该服务绑定。
+  DestinationService callee = 16 [ json_name = "callee" ];
 }
 
 // 单个限流规则信息
