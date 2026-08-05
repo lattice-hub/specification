@@ -212,7 +212,7 @@
 - [x] 扩展 C++ 与 C# Thin SDK 兼容矩阵
 - [x] 更新 Go、Rust 生成代码与跨语言契约测试
 - [x] 验证 Go、Rust、Node.js、Python、Java、C#
-- [ ] 通过 PR C++ 固定工具链验证
+- [x] 修正 C++ 生成 API 测试并触发固定工具链复验
 
 ### Review
 
@@ -222,4 +222,6 @@
   端口；注册中心端点由 Sidecar 映射为 Pod IP 与对应协议 ingress listener。
 - 本地已通过 Go、Rust、Node.js、Python、Java Docker Maven 与 C# 测试；本机
   Protobuf 35 与仓库锁定的 Protobuf 26.1 不兼容，C++ 留给 PR CI 固定工具链验证。
+- 首轮 C++ CI 已成功生成和编译新 Stub，但历史测试仍断言 service 只有一个方法；
+  已改为校验两个方法以及 `OpenControlSession` 的双向流属性并触发复验。
 - 本次只准备契约变更，不创建 tag 或 GitHub Release；外部制品发布仍需单独授权。

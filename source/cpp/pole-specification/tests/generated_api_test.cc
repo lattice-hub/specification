@@ -11,8 +11,13 @@ int main() {
 
     const auto* service = google::protobuf::DescriptorPool::generated_pool()
                               ->FindServiceByName("pole.sidecar.v1.SidecarSessionService");
-    if (service == nullptr || service->method_count() != 1) {
+    if (service == nullptr || service->method_count() != 2) {
         return 2;
+    }
+    const auto* control_session = service->FindMethodByName("OpenControlSession");
+    if (control_session == nullptr || !control_session->client_streaming() ||
+        !control_session->server_streaming()) {
+        return 3;
     }
 
     using Stub = pole::sidecar::v1::SidecarSessionService::Stub;
