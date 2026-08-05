@@ -224,4 +224,11 @@
   Protobuf 35 与仓库锁定的 Protobuf 26.1 不兼容，C++ 留给 PR CI 固定工具链验证。
 - 首轮 C++ CI 已成功生成和编译新 Stub，但历史测试仍断言 service 只有一个方法；
   已改为校验两个方法以及 `OpenControlSession` 的双向流属性并触发复验。
-- 本次只准备契约变更，不创建 tag 或 GitHub Release；外部制品发布仍需单独授权。
+- 用户授权发布后发现 `v0.1.0-ALPHA.47` 已指向更早的提交；遵循不可移动已推送
+  tag 的发布规则，改用 `v0.1.0-ALPHA.48`，tag 指向已验证的合并提交
+  `2642bc29c0a512f4da84ec4eb862b1e1ceee9833`。
+- GitHub prerelease `v0.1.0-ALPHA.48` 已发布；Rust `31039309898`、Java
+  `31039309969`、C++ `31039309990`、Generated Packages `31039310044` 与 C#
+  `31039310045` 工作流全部成功。
+- Go module、crates.io、npm、PyPI、Maven Central、NuGet 与 GitHub Release C++
+  归档均完成外部下载验证；npm/Python 还验证了 `OpenControlSession` 为双向流。
