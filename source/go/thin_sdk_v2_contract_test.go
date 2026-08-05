@@ -55,11 +55,16 @@ func TestSidecarBootstrapProtoContract(t *testing.T) {
 	text := string(content)
 	for _, required := range []string{
 		"rpc OpenSession(ClientHello) returns (stream SidecarEvent)",
+		"rpc OpenControlSession(stream ClientEvent) returns (stream SidecarEvent)",
 		"PROTOCOL_HTTP = 1",
 		"PROTOCOL_GRPC = 2",
 		"PROTOCOL_DUBBO = 3",
 		"PROTOCOL_THRIFT = 4",
 		"ListenerSnapshot listener_snapshot = 1",
+		"LocalServiceStatus local_service_status = 2",
+		"LocalServiceRegistration register_local_service = 2",
+		"LocalServiceUnregistration unregister_local_service = 3",
+		"uint32 local_port = 5",
 	} {
 		if !strings.Contains(text, required) {
 			t.Fatalf("bootstrap proto missing %q", required)

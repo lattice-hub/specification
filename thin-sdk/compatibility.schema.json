@@ -46,7 +46,7 @@
       ],
       "properties": {
         "sidecar_version": {"type": "string", "minLength": 1},
-        "sdk_language": {"enum": ["java", "nodejs", "python", "go"]},
+        "sdk_language": {"enum": ["java", "nodejs", "python", "go", "cpp", "csharp"]},
         "sdk_version": {"type": "string", "minLength": 1},
         "evidence": {
           "type": "object",

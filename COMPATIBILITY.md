@@ -57,3 +57,14 @@ TargetEnvelope 的 wire version 与各语言 SDK SemVer 独立。wire version `1
 - SDK 与 Sidecar 的已验证精确版本组合统一记录在
   `thin-sdk/compatibility.json`；
 - 当前矩阵没有已验证的 Sidecar 或 SDK 正式发行版，不能据此宣称端到端 ready。
+
+## Sidecar Session 兼容扩展
+
+Thin SDK 与 Sidecar 的 `3.0.0` 契约保留原有 server-streaming `OpenSession`，并新增
+双向 streaming `OpenControlSession`，因此旧 SDK 仍可只接收 loopback 出站 listener 快照。
+
+新 SDK 在 `OpenControlSession` 的首个 client message 发送 `ClientHello`，之后可发送本地服务
+注册和注销事件。注册只允许声明本地业务端口；Sidecar 固定连接 `127.0.0.1`，并把
+注册中心实例转换为 Pod IP 与协议对应的入站 listener 端口。注册归属于 stream，
+stream 断开时必须全部撤销。入站 listener 不进入 `ListenerSnapshot`，避免 Thin SDK
+错误地把 Pod 网络入口当成本地出站目标。

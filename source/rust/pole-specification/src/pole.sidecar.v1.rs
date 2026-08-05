@@ -8,6 +8,23 @@ pub struct ClientHello {
     #[prost(enumeration = "Protocol", repeated, tag = "3")]
     pub supported_protocols: ::prost::alloc::vec::Vec<i32>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ClientEvent {
+    #[prost(oneof = "client_event::Event", tags = "1, 2, 3")]
+    pub event: ::core::option::Option<client_event::Event>,
+}
+/// Nested message and enum types in `ClientEvent`.
+pub mod client_event {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Event {
+        #[prost(message, tag = "1")]
+        Hello(super::ClientHello),
+        #[prost(message, tag = "2")]
+        RegisterLocalService(super::LocalServiceRegistration),
+        #[prost(message, tag = "3")]
+        UnregisterLocalService(super::LocalServiceUnregistration),
+    }
+}
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Listener {
     #[prost(enumeration = "Protocol", tag = "1")]
@@ -17,12 +34,43 @@ pub struct Listener {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListenerSnapshot {
+    /// These listeners are loopback-only outbound listeners used by the local
+    /// Thin SDK. Ingress listeners are never exposed through bootstrap.
     #[prost(message, repeated, tag = "1")]
     pub listeners: ::prost::alloc::vec::Vec<Listener>,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LocalServiceRegistration {
+    /// Stable and unique within one OpenControlSession stream.
+    #[prost(string, tag = "1")]
+    pub registration_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub namespace: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub service: ::prost::alloc::string::String,
+    #[prost(enumeration = "Protocol", tag = "4")]
+    pub protocol: i32,
+    /// The Sidecar always connects to this port through 127.0.0.1.
+    #[prost(uint32, tag = "5")]
+    pub local_port: u32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LocalServiceUnregistration {
+    #[prost(string, tag = "1")]
+    pub registration_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct LocalServiceStatus {
+    #[prost(string, tag = "1")]
+    pub registration_id: ::prost::alloc::string::String,
+    #[prost(enumeration = "LocalServiceState", tag = "2")]
+    pub state: i32,
+    #[prost(string, tag = "3")]
+    pub message: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SidecarEvent {
-    #[prost(oneof = "sidecar_event::Event", tags = "1")]
+    #[prost(oneof = "sidecar_event::Event", tags = "1, 2")]
     pub event: ::core::option::Option<sidecar_event::Event>,
 }
 /// Nested message and enum types in `SidecarEvent`.
@@ -31,6 +79,8 @@ pub mod sidecar_event {
     pub enum Event {
         #[prost(message, tag = "1")]
         ListenerSnapshot(super::ListenerSnapshot),
+        #[prost(message, tag = "2")]
+        LocalServiceStatus(super::LocalServiceStatus),
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -64,6 +114,38 @@ impl Protocol {
             "PROTOCOL_GRPC" => Some(Self::Grpc),
             "PROTOCOL_DUBBO" => Some(Self::Dubbo),
             "PROTOCOL_THRIFT" => Some(Self::Thrift),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum LocalServiceState {
+    Unspecified = 0,
+    Registered = 1,
+    Unregistered = 2,
+    Rejected = 3,
+}
+impl LocalServiceState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Unspecified => "LOCAL_SERVICE_STATE_UNSPECIFIED",
+            Self::Registered => "LOCAL_SERVICE_STATE_REGISTERED",
+            Self::Unregistered => "LOCAL_SERVICE_STATE_UNREGISTERED",
+            Self::Rejected => "LOCAL_SERVICE_STATE_REJECTED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LOCAL_SERVICE_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "LOCAL_SERVICE_STATE_REGISTERED" => Some(Self::Registered),
+            "LOCAL_SERVICE_STATE_UNREGISTERED" => Some(Self::Unregistered),
+            "LOCAL_SERVICE_STATE_REJECTED" => Some(Self::Rejected),
             _ => None,
         }
     }
@@ -159,6 +241,7 @@ pub mod sidecar_session_service_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
+        /// Legacy listener bootstrap retained for existing Thin SDKs.
         pub async fn open_session(
             &mut self,
             request: impl tonic::IntoRequest<super::ClientHello>,
@@ -188,6 +271,38 @@ pub mod sidecar_session_service_client {
                 );
             self.inner.server_streaming(req, path, codec).await
         }
+        /// Long-lived Thin SDK control session. The first ClientEvent must contain
+        /// ClientHello. Registrations belong to this stream and are removed when it
+        /// closes.
+        pub async fn open_control_session(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<Message = super::ClientEvent>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::SidecarEvent>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/pole.sidecar.v1.SidecarSessionService/OpenControlSession",
+            );
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "pole.sidecar.v1.SidecarSessionService",
+                        "OpenControlSession",
+                    ),
+                );
+            self.inner.streaming(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -209,11 +324,28 @@ pub mod sidecar_session_service_server {
             >
             + std::marker::Send
             + 'static;
+        /// Legacy listener bootstrap retained for existing Thin SDKs.
         async fn open_session(
             &self,
             request: tonic::Request<super::ClientHello>,
         ) -> std::result::Result<
             tonic::Response<Self::OpenSessionStream>,
+            tonic::Status,
+        >;
+        /// Server streaming response type for the OpenControlSession method.
+        type OpenControlSessionStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<super::SidecarEvent, tonic::Status>,
+            >
+            + std::marker::Send
+            + 'static;
+        /// Long-lived Thin SDK control session. The first ClientEvent must contain
+        /// ClientHello. Registrations belong to this stream and are removed when it
+        /// closes.
+        async fn open_control_session(
+            &self,
+            request: tonic::Request<tonic::Streaming<super::ClientEvent>>,
+        ) -> std::result::Result<
+            tonic::Response<Self::OpenControlSessionStream>,
             tonic::Status,
         >;
     }
@@ -337,6 +469,56 @@ pub mod sidecar_session_service_server {
                                 max_encoding_message_size,
                             );
                         let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/pole.sidecar.v1.SidecarSessionService/OpenControlSession" => {
+                    #[allow(non_camel_case_types)]
+                    struct OpenControlSessionSvc<T: SidecarSessionService>(pub Arc<T>);
+                    impl<
+                        T: SidecarSessionService,
+                    > tonic::server::StreamingService<super::ClientEvent>
+                    for OpenControlSessionSvc<T> {
+                        type Response = super::SidecarEvent;
+                        type ResponseStream = T::OpenControlSessionStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<tonic::Streaming<super::ClientEvent>>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as SidecarSessionService>::open_control_session(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = OpenControlSessionSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.streaming(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)

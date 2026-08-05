@@ -35,6 +35,9 @@ public sealed class GeneratedApiTests
             SidecarSessionService.Descriptor.FullName);
         Assert.True(SidecarSessionService.Descriptor.Methods[0].IsServerStreaming);
         Assert.Equal("OpenSession", SidecarSessionService.Descriptor.Methods[0].Name);
+        Assert.True(SidecarSessionService.Descriptor.Methods[1].IsClientStreaming);
+        Assert.True(SidecarSessionService.Descriptor.Methods[1].IsServerStreaming);
+        Assert.Equal("OpenControlSession", SidecarSessionService.Descriptor.Methods[1].Name);
     }
 
     [Fact]
