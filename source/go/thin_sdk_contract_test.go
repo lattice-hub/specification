@@ -250,7 +250,7 @@ func TestThinSDKCompatibilityStartsUnverified(t *testing.T) {
 	}
 	contract = document.Contracts[1]
 	if contract.Name != "latticehub-thin-sdk-sidecar" ||
-		contract.ContractVersion != "2.0.0" ||
+		contract.ContractVersion != "3.0.0" ||
 		contract.EnvelopeVersion != "1" ||
 		contract.Status != "defined" ||
 		contract.VerificationPolicy == "" ||

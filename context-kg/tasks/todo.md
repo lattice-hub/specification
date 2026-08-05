@@ -202,3 +202,24 @@
   crates.io `0.1.0-ALPHA.44` 与 Go module tag 均可解析。
 - GitHub Release 包含 C++ `.tar.gz`、`.zip` 和 `SHA256SUMS`，校验和通过；归档内
   版本为 `0.1.0-ALPHA.44`，包含 26 个权威 Proto 和 104 个生成源码文件。
+
+## 2026-08-06 Thin SDK 控制会话 v3
+
+- [x] 保留兼容的 `OpenSession` server stream
+- [x] 增加 `OpenControlSession` 双向控制流
+- [x] 定义本地服务注册、注销与状态事件
+- [x] 明确 listener 仅代表本地出站端口
+- [x] 扩展 C++ 与 C# Thin SDK 兼容矩阵
+- [x] 更新 Go、Rust 生成代码与跨语言契约测试
+- [x] 验证 Go、Rust、Node.js、Python、Java、C#
+- [ ] 通过 PR C++ 固定工具链验证
+
+### Review
+
+- 控制会话首个客户端事件必须为 `ClientHello`，Sidecar 首个服务端事件仍为完整
+  `ListenerSnapshot`；后续客户端可声明或撤销本地业务服务。
+- `LocalServiceRegistration.local_port` 是 Pod 内业务进程端口，不是注册中心发布
+  端口；注册中心端点由 Sidecar 映射为 Pod IP 与对应协议 ingress listener。
+- 本地已通过 Go、Rust、Node.js、Python、Java Docker Maven 与 C# 测试；本机
+  Protobuf 35 与仓库锁定的 Protobuf 26.1 不兼容，C++ 留给 PR CI 固定工具链验证。
+- 本次只准备契约变更，不创建 tag 或 GitHub Release；外部制品发布仍需单独授权。
