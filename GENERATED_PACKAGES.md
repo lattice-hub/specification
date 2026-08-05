@@ -96,8 +96,17 @@ GitHub 仓库需要同名的 `npm` 和 `pypi` Environments。可以按需为环�
 
 ### NuGet
 
-C# 发布使用 GitHub `nuget` Environment，并读取 `NUGET_API_KEY` Secret。
-API Key 需要允许向 NuGet.org 推送 `LatticeHub.Pole.Specification`。
+C# 发布使用 NuGet.org Trusted Publishing，不保存长期 API Key。先在 NuGet.org 的
+`LatticeHub.Pole.Specification` 包设置中添加 GitHub Actions Trusted Publisher：
+
+- Organization or user：`lattice-hub`
+- Repository：`specification`
+- Workflow filename：`csharp-release.yml`
+- Environment name：`nuget`
+
+GitHub 仓库的 `nuget` Environment 需要配置变量 `NUGET_USER`，值为 NuGet.org
+个人资料中的用户名（不是邮箱）。`.github/workflows/csharp-release.yml` 使用 OIDC
+换取一小时有效的临时 API Key，再发布 `LatticeHub.Pole.Specification`。
 
 ## 版本映射
 
