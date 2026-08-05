@@ -96,9 +96,9 @@ cd source/rust
 bash build.sh
 ```
 
-- Node.js、Python 与 C++
+- Node.js、Python、C++ 与 C#
 
-Node.js npm 包、Python PyPI 包和 C++ CMake 源码包均从 `api/` 自动生成。
+Node.js npm 包、Python PyPI 包、C++ CMake 源码包和 C# NuGet 包均从 `api/` 自动生成。
 构建、使用及发布配置见 [多语言 gRPC 生成包](./GENERATED_PACKAGES.md)。
 
 ### 如何使用

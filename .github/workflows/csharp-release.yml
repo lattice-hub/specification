@@ -1,0 +1,51 @@
+name: Release CSharp
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: nuget
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+      - name: Set release version
+        id: version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "release tag must use vX.Y.Z or a SemVer prerelease: $RELEASE_TAG"
+            exit 1
+          fi
+          echo "value=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Test
+        run: >-
+          dotnet test
+          source/csharp/LatticeHub.Pole.Specification.Tests/LatticeHub.Pole.Specification.Tests.csproj
+          --configuration Release
+      - name: Pack
+        run: >-
+          dotnet pack
+          source/csharp/LatticeHub.Pole.Specification/LatticeHub.Pole.Specification.csproj
+          --configuration Release
+          --no-restore
+          -p:PackageVersion=${{ steps.version.outputs.value }}
+          --output artifacts
+      - name: Publish to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: >-
+          dotnet nuget push "artifacts/*.nupkg"
+          --api-key "$NUGET_API_KEY"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate

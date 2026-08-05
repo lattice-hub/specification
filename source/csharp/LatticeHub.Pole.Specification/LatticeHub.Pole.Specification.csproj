@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>LatticeHub.Pole.Specification</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Lattice Hub Contributors</Authors>
+    <Description>Official C# Protobuf messages and gRPC services for Pole Specification</Description>
+    <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/lattice-hub/specification</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lattice-hub/specification.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.35.1" />
+    <PackageReference Include="Grpc.Core.Api" Version="2.83.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.83.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="$(MSBuildThisFileDirectory)../../../api/v1/**/*.proto"
+              ProtoRoot="$(MSBuildThisFileDirectory)../../../api/v1/%(RecursiveDir)"
+              AdditionalImportDirs="$(MSBuildThisFileDirectory)../../../api/v1/ai;$(MSBuildThisFileDirectory)../../../api/v1/config_manage;$(MSBuildThisFileDirectory)../../../api/v1/fault_tolerance;$(MSBuildThisFileDirectory)../../../api/v1/model;$(MSBuildThisFileDirectory)../../../api/v1/security;$(MSBuildThisFileDirectory)../../../api/v1/service_manage;$(MSBuildThisFileDirectory)../../../api/v1/sidecar;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage/ratelimiter"
+              GrpcServices="Both"
+              Link="%(Filename)%(Extension)" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

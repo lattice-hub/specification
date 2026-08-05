@@ -22,7 +22,10 @@ source/node/src/proto-files.json
 source/java/pole-specification/target
 source/cpp/pole-specification/build
 source/cpp/pole-specification/dist
+source/csharp/**/bin
+source/csharp/**/obj
 source/rust/pole-specification/target
+build/
 venv
 debug/
 target/
