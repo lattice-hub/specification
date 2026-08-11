@@ -7257,6 +7257,8 @@ pub struct StrategyResources {
     pub mcp_servers: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
     #[prost(message, repeated, tag = "31")]
     pub a2a_agents: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
+    #[prost(message, repeated, tag = "32")]
+    pub skills: ::prost::alloc::vec::Vec<StrategyResourceEntry>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct StrategyResourceLabel {
@@ -7390,6 +7392,7 @@ pub enum ResourceType {
     PolicyRules = 23,
     McpServerResources = 30,
     A2aAgentResources = 31,
+    SkillResources = 32,
 }
 impl ResourceType {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -7416,6 +7419,7 @@ impl ResourceType {
             Self::PolicyRules => "PolicyRules",
             Self::McpServerResources => "MCPServerResources",
             Self::A2aAgentResources => "A2AAgentResources",
+            Self::SkillResources => "SkillResources",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -7439,6 +7443,7 @@ impl ResourceType {
             "PolicyRules" => Some(Self::PolicyRules),
             "MCPServerResources" => Some(Self::McpServerResources),
             "A2AAgentResources" => Some(Self::A2aAgentResources),
+            "SkillResources" => Some(Self::SkillResources),
             _ => None,
         }
     }
