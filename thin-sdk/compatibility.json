@@ -17,6 +17,14 @@
       "status": "defined",
       "verification_policy": "Sidecar OpenControlSession, local service registration, split ingress/egress listeners, and TargetService v1 require exact Sidecar and SDK release evidence.",
       "verified_combinations": []
+    },
+    {
+      "name": "latticehub-traffic-context",
+      "contract_version": "1.0.0",
+      "envelope_version": "1",
+      "status": "defined",
+      "verification_policy": "TrafficContext v1 requires exact Sidecar and SDK release evidence for W3C Baggage encoding, native or OTel context propagation, and protocol carrier integration.",
+      "verified_combinations": []
     }
   ]
 }

@@ -1,5 +1,11 @@
 # Thin SDK 契约变更记录
 
+## Unreleased
+
+- 新增 TrafficContext v1：使用 W3C Baggage 保留成员传播 campaign、lane 和
+  bucket；OTel-backed 与语言原生上下文运行时共享同一 wire 契约。
+- 明确 `traceparent/tracestate`、TargetService 与 TrafficContext 的职责边界。
+
 ## 2.0.0
 
 - 新增 Sidecar Session v1：Thin SDK 通过 gRPC over UDS 建立长连接，Sidecar

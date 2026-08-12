@@ -6,6 +6,7 @@
 
 - Sidecar Session wire version：`1`
 - TargetService wire version：`1`
+- TrafficContext wire version：`1`
 - 契约版本：`2.0.0`
 - 状态：协议已定义，尚无完成端到端验证的 Sidecar 或 SDK 正式发行版
 
@@ -15,13 +16,17 @@
 - [TargetService v1 语义](target-service/v1/README.md)
 - [TargetService v1 JSON Schema](target-service/v1/schema.json)
 - [TargetService v1 一致性向量](target-service/v1/conformance.json)
+- [TrafficContext v1 语义](traffic-context/v1/README.md)
+- [TrafficContext v1 JSON Schema](traffic-context/v1/schema.json)
+- [TrafficContext v1 一致性向量](traffic-context/v1/conformance.json)
 - [已废弃 TargetEnvelope v1](target-envelope/v1/README.md)
 - [兼容矩阵](compatibility.json)
 - [兼容矩阵 Schema](compatibility.schema.json)
 - [变更记录](CHANGELOG.md)
 
-各语言 SDK 必须 vendoring TargetService v1 的 `schema.json`、`conformance.json`
-和 `SHA256SUMS`，并在语言原生测试中执行全部向量。`contract/VERSION` 必须记录
+各语言 SDK 必须 vendoring TargetService v1 与 TrafficContext v1 的
+`schema.json`、`conformance.json` 和 `SHA256SUMS`，并在语言原生测试中执行全部
+向量。`contract/VERSION` 必须记录
 契约版本和 specification 的完整 Git commit SHA，构成不可变来源定位。SDK 不应
 通过 Git submodule 或网络在构建期读取本仓库。
 
@@ -30,7 +35,7 @@
 
 ## 版本关系
 
-Sidecar Session、TargetService wire version 与 SDK 包版本独立：
+Sidecar Session、TargetService、TrafficContext wire version 与 SDK 包版本独立：
 
 - wire version 只在线路语义不兼容时提升；
 - Java、Node.js、Python、Go SDK 各自遵循独立 SemVer；

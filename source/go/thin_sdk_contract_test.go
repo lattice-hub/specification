@@ -235,7 +235,7 @@ func TestThinSDKCompatibilityStartsUnverified(t *testing.T) {
 	if err := json.Unmarshal(content, &document); err != nil {
 		t.Fatalf("decode Thin SDK compatibility: %v", err)
 	}
-	if document.SchemaVersion != 1 || len(document.Contracts) != 2 {
+	if document.SchemaVersion != 1 || len(document.Contracts) != 3 {
 		t.Fatalf("unexpected compatibility document: %+v", document)
 	}
 	contract := document.Contracts[0]
@@ -257,6 +257,16 @@ func TestThinSDKCompatibilityStartsUnverified(t *testing.T) {
 		contract.VerifiedCombinations == nil ||
 		len(contract.VerifiedCombinations) != 0 {
 		t.Fatalf("unexpected initial Thin SDK v2 compatibility: %+v", contract)
+	}
+	contract = document.Contracts[2]
+	if contract.Name != "latticehub-traffic-context" ||
+		contract.ContractVersion != "1.0.0" ||
+		contract.EnvelopeVersion != "1" ||
+		contract.Status != "defined" ||
+		contract.VerificationPolicy == "" ||
+		contract.VerifiedCombinations == nil ||
+		len(contract.VerifiedCombinations) != 0 {
+		t.Fatalf("unexpected initial TrafficContext compatibility: %+v", contract)
 	}
 }
 
