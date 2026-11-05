@@ -72,6 +72,9 @@ enum Code {
     EncryptConfigFileException      = 400809;
     GroupExistActiveRelease        = 400810;
     DecryptConfigFileException      = 400811;
+    ConfigCursorReset              = 409020;
+    ConfigRenderFailed             = 422020;
+    ConfigUnavailable              = 503020;
 
     // auth codes
     InvalidUserOwners          = 400410;

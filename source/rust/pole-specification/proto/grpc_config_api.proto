@@ -2,22 +2,18 @@ syntax = "proto3";
 
 package v1;
 
-import "config_file.proto";
+import "config.proto";
 import "response.proto";
 
 option go_package = "github.com/pole-io/specification/source/go/api/v1/config_manage";
 option java_package = "io.github.latticehub.pole.specification.api.v1.config.manage";
-option java_outer_classname = "PolarisConfigGRPCService";
+option java_outer_classname = "PoleConfigGRPCService";
 
+// ConfigGRPC 是唯一配置客户端 gRPC 服务，逐请求授权；管理操作只通过 HTTP 提供。
 service ConfigGRPC {
-  // 创建配置
-  rpc CreateConfigFile(ConfigFile) returns (Response) {}
-  // 更新配置
-  rpc UpdateConfigFile(ConfigFile) returns (Response) {}
-  // 发布配置
-  rpc PublishConfigFile(ConfigFileRelease) returns (Response) {}
-  // 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
-  rpc PreviewConfigTemplate(RenderPreviewRequest) returns (RenderPreview) {}
-  // 统一发现接口
-  rpc Discover(stream ConfigDiscoverRequest) returns (stream ConfigDiscoverResponse) {}
+  // Discover 在同一流上按收到的请求顺序逐次读取，一请求一完整响应；无请求时不发送。
+  // 每帧先授权，再按 ConfigKey/labels 选灰度和有效 values；Response.data 为 ConfigResult，由 SDK 本地渲染。
+  // 即使 snapshot_revision 未变也返回完整当前快照，由 SDK 去重；不登记订阅，不主动 push。
+  // 领域失败使用公共 Response.code/info，data 缺省，后续请求可继续；EOF 正常结束，传输异常关闭流。
+  rpc Discover(stream pole.config.v1.DiscoverRequest) returns (stream Response) {}
 }

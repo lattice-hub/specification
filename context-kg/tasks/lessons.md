@@ -1,5 +1,11 @@
 # 经验记录
 
+## 2026-10-03：客户端统一 Discover 包含消息与 HTTP 入口收拢
+
+- 用户明确配置客户端统一 Discover 后，不能仅删除 Watch RPC 而保留原生 HTTP watch 或 WatchRequest。
+- 调整时同时核对权威 Proto、HTTP 文档、生成产物和跨语言契约测试；客户端只保留 DiscoverRequest 与 Discover。
+- 外部兼容协议的监听语义归属其适配层，不作为保留原生 Watch 的理由。
+
 ## 2026-07-26：发 tag 不等于完成发布
 
 - 在本仓库中，用户要求“发版”或“走 release”时，不能止于创建和推送 Git tag。

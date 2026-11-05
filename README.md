@@ -17,7 +17,7 @@ README：
 
 ## 服务治理标准
 
-北极星服务治理标准遵循下一代架构基金会所制定的[服务治理标准](https://github.com/nextarch/SIG-Microservice)，在此之上进行了扩展：
+Pole 服务治理标准遵循下一代架构基金会所制定的[服务治理标准](https://github.com/nextarch/SIG-Microservice)，在此之上进行了扩展：
 
 |                                      |                         Latest Release                         |
 |:-------------------------------------|:--------------------------------------------------------------:|
@@ -41,7 +41,8 @@ README：
 | **AI Native Specification**          |
 | mcp server                           |          [v1](/api/v1/ai/mcp.proto)                           |
 | **Configuration Specification**      |
-| config template                      |     [pole-mustache-v1](/CONFIG_TEMPLATE.md)                    |
+| unified configuration                |     [v1 管理 HTTP 与客户端解析协议](./CONFIG.md)                      |
+| SDK-local template rendering    |     [pole-mustache-v1](./CONFIG_TEMPLATE.md)                    |
 | **Thin SDK Specification**           |
 | target envelope                      |     [TargetEnvelope v1](thin-sdk/target-envelope/v1/README.md) |
 
@@ -65,6 +66,9 @@ README：
 | authentication                       |      [v1](/api/v1/access-control/auth.proto)       |
 | **AI Native Specification**          |
 | mcp server                           |           [v1](/api/v1/ai/mcp.proto)              |
+| **Configuration Specification**      |
+| configuration management            | [管理 HTTP 消息](./api/v1/config/config.proto) |
+| configuration clients               | [ConfigGRPC Discover 逐次请求/响应](./api/v1/config_manage/grpc_config_api.proto) |
 
 ## 如何构建
 

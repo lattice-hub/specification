@@ -1,0 +1,333 @@
+syntax = "proto3";
+
+package pole.config.v1;
+option go_package = "github.com/pole-io/specification/source/go/api/v1/config";
+option java_package = "io.github.latticehub.pole.specification.api.v1.config";
+option java_outer_classname = "ConfigProto";
+
+// ConfigKey 是环境内配置的稳定定位。三个字段必填；canonical identity 由服务端派生，暂不支持重命名。
+message ConfigKey {
+  string environment = 1;
+  string group = 2;
+  string name = 3;
+}
+
+// ValueType 是参数声明和标量共用的封闭类型集；零值和未知枚举值必须拒绝。
+enum ValueType {
+  VALUE_TYPE_UNSPECIFIED = 0;
+  VALUE_TYPE_STRING = 1;
+  VALUE_TYPE_BOOLEAN = 2;
+  VALUE_TYPE_INTEGER = 3;
+  VALUE_TYPE_DECIMAL = 4;
+}
+
+// Scalar 使用无损字符串表示标量；规范文本及参数语法见 CONFIG_TEMPLATE.md。
+// boolean 使用 true/false，integer/decimal 按类型校验；禁止以浮点数传输后再还原精度。
+message Scalar {
+  ValueType type = 1;
+  string value = 2;
+}
+
+// Parameter 声明参数约束，默认值仅存在于 ConfigDefinition.default_values。
+message Parameter {
+  string name = 1;
+  ValueType type = 2;
+  bool required = 3;
+}
+
+// MatchType 是受众标签匹配方式；零值及未知值无效。
+enum MatchType {
+  MATCH_TYPE_UNSPECIFIED = 0;
+  MATCH_TYPE_EXACT = 1;
+  MATCH_TYPE_REGEX = 2;
+  MATCH_TYPE_NOT_EQUALS = 3;
+  MATCH_TYPE_IN = 4;
+  MATCH_TYPE_NOT_IN = 5;
+  MATCH_TYPE_RANGE = 6;
+}
+
+// LabelCondition 的 value 语义和约束见 CONFIG.md。
+message LabelCondition {
+  string key = 1;
+  MatchType type = 2;
+  string value = 3;
+}
+
+// Audience 的 labels 和 conditions 不得混用；条件按 AND 组合，缺少标签不匹配。
+// 空选择器仅用于 normal/default，不允许灰度或 ValueRule 使用空选择器。标签不是授权凭据。
+message Audience {
+  map<string, string> labels = 1;
+  repeated LabelCondition conditions = 2;
+}
+
+// ValueRule 命中时仅覆盖其声明的 values；选择唯一最小 priority，最高优先级并列视为歧义并拒绝。
+// priority 必须非负，负值返回公共 Code.InvalidParameter；零是有效的最高优先级。
+message ValueRule {
+  string id = 1;
+  int32 priority = 2;
+  Audience audience = 3;
+  map<string, Scalar> values = 4;
+}
+
+// ConfigDefinition 是一次发布冻结的完整内容定义，不与其他发布的 values 动态拼接。
+// literal 按原始字节恒等输出且参数/values/规则为空；pole-mustache-v1 使用固定版本语法。
+// 保存/发布只做结构、语法、类型和取值完整性校验，不执行模板替换或输出格式校验。
+message ConfigDefinition {
+  bytes content = 1;
+  string engine = 2;
+  string format = 3;
+  repeated Parameter parameters = 4;
+  map<string, Scalar> default_values = 5;
+  repeated ValueRule value_rules = 6;
+  ProtocolCompatibility compatibility = 7;
+  // 新模型按每个参数的 bindings 顺序选择首个命中条件组；与旧 values/rules 互斥。
+  repeated NamedConditionGroup condition_groups = 8;
+  repeated ParameterBindings parameter_bindings = 9;
+}
+
+message NamedConditionGroup {
+  string id = 1;
+  string name = 2;
+  Audience audience = 3;
+}
+message ParameterBinding {
+  string id = 1;
+  string group_id = 2;
+  Scalar value = 3;
+}
+message ParameterBindings {
+  string name = 1;
+  repeated ParameterBinding bindings = 2;
+  // 消息 presence 区分未设置和空字符串兜底。
+  Scalar fallback = 3;
+}
+
+// 管理目录和共享正文，不替代各环境独立的草稿和发布。
+message ConfigFileKey { string group = 1; string name = 2; }
+message ConfigFileTemplate {
+  ConfigFileKey key = 1;
+  ConfigDefinition definition = 2;
+  repeated string environments = 3;
+  uint64 revision = 4;
+  string description = 5;
+}
+message GetFileTemplateRequest { ConfigFileKey key = 1; string environment = 2; }
+message SaveFileTemplateRequest { ConfigFileTemplate template = 1; uint64 expected_revision = 2; }
+message ListConfigFilesRequest {
+  string environment = 1;
+  string group = 2;
+  string query = 3;
+  uint32 page_size = 4;
+  string page_token = 5;
+}
+message ConfigFileSummary {
+  ConfigFileKey key = 1;
+  string environment = 2;
+  string description = 3;
+  bool has_shared_template = 4;
+  bool has_draft = 5;
+  bool has_active_release = 6;
+  bool offline = 7;
+  uint64 draft_revision = 8;
+}
+message ConfigFileList { repeated ConfigFileSummary items = 1; string next_page_token = 2; }
+
+// ProtocolCompatibility 是该发布允许的服务端协议转换，缺省全部关闭。
+// 仅部署已启用对应适配器且选中发布显式开启该协议时，允许兼容请求执行服务端渲染。
+// 原生 Discover 和 Preview 不因这些开关开启而执行渲染。
+message ProtocolCompatibility {
+  bool apollo = 1;
+  bool nacos = 2;
+  bool consul = 3;
+}
+
+message ConfigDraft {
+  ConfigKey key = 1;
+  ConfigDefinition definition = 2;
+  uint64 revision = 3;
+}
+
+enum ReleaseKind {
+  RELEASE_KIND_UNSPECIFIED = 0;
+  RELEASE_KIND_NORMAL = 1;
+  RELEASE_KIND_GRAY = 2;
+}
+
+// ConfigRelease 内容、投放条件、priority 和 sequence 不可变；sequence 在配置环境内唯一且单调递增。
+// 命中灰度按 priority ASC、sequence DESC 唯一选择；无命中才回落 active normal。
+// priority 必须非负；normal 的 priority 固定为零且 audience 为空，不参加灰度排序。
+message ConfigRelease {
+  string id = 1;
+  ConfigKey key = 2;
+  ConfigDefinition definition = 3;
+  ReleaseKind kind = 4;
+  Audience audience = 5;
+  int32 priority = 6;
+  uint64 sequence = 7;
+  string created_at = 8; // RFC 3339 时间。
+  string created_by = 9;
+  string source_release_id = 10; // 回滚/晋升等来源的审计引用，不代表动态继承。
+}
+
+// ReleaseSummary 是当前管理视图中的发布摘要，类型本身不携带 definition。
+// key 由所在 ConfigState 给出；active 是生效关系，停止不改写 ConfigRelease。
+message ReleaseSummary {
+  string id = 1;
+  ReleaseKind kind = 2;
+  Audience audience = 3;
+  int32 priority = 4;
+  uint64 sequence = 5;
+  string created_at = 6; // RFC 3339 时间。
+  string created_by = 7;
+  string source_release_id = 8;
+  bool active = 9;
+}
+
+// ConfigState 是 v1.Response.data 中一致读取的管理视图，不作为内部完整发布集合或存储模型。
+// 最多一个 active normal，可以有多个 active gray。
+// incarnation 标识资源存在期，下线保留草稿/历史；重建不得复用旧存在期。
+// releases 仅为按 sequence DESC 排序的当前历史摘要页，不是全量生效集合。
+// active_release_ids 是完整生效集合；selected_release 仅按 GetStateRequest.release_id 单取。
+// 写入响应返回默认第一页，不附带 selected_release；单次响应不累积历史正文。
+message ConfigState {
+  ConfigKey key = 1;
+  ConfigDraft draft = 2;
+  repeated ReleaseSummary releases = 3;
+  uint64 release_set_revision = 4;
+  string incarnation = 5;
+  bool offline = 6;
+  string next_page_token = 7; // 指向本页最后实际返回的 sequence，不跳过未返回成员；没有后续页时为空。
+  ConfigRelease selected_release = 8; // 仅 GetState.release_id 指定时返回单份完整历史发布。
+  repeated string active_release_ids = 9; // 全量 active normal+gray ID，不受分页影响；最多1 normal+128 gray。
+}
+
+// Cursor 是持久提交观察位置，仅同 scope/epoch 的 position 可比较；不同世代必须全量重同步。
+message Cursor {
+  string scope = 1;
+  string epoch = 2;
+  uint64 position = 3;
+}
+
+// ConfigPresence 只描述成功读取时的业务存在状态；请求失败统一使用 v1.Response.code/info。
+enum ConfigPresence {
+  CONFIG_PRESENCE_UNSPECIFIED = 0;
+  CONFIG_PRESENCE_PRESENT = 1;
+  CONFIG_PRESENCE_ABSENT = 2;
+}
+
+// RenderSnapshot 是 SDK/控制台本地渲染的完整输入；同一发布内选值后原子构造。
+// content 是模板原文或 literal 原始字节，values 是 default_values 加唯一命中规则后的有效值。
+// 不下发其他受众的规则/values、草稿、历史或兼容开关；服务端不计算最终输出及其摘要。
+message RenderSnapshot {
+  bytes content = 1;
+  string engine = 2;
+  string format = 3;
+  repeated Parameter parameters = 4;
+  map<string, Scalar> values = 5;
+}
+
+// ConfigResult 作为 v1.Response.data 返回；外层成功才允许消费此业务数据。
+// PRESENT 必须有 snapshot（content 可以为空）；ABSENT 无 snapshot/release_id，必须撤下当前值。
+// snapshot_revision 绑定 key、存在期、选中发布、引擎、模板、参数、有效 values 和输出格式，不可排序。
+// 结果与 observation_cursor 来自同一读取快照；SDK 本地校验/渲染成功后才接纳新版本及游标。
+message ConfigResult {
+  ConfigPresence presence = 1;
+  ConfigKey key = 2;
+  string release_id = 3;
+  string snapshot_revision = 4;
+  RenderSnapshot snapshot = 5;
+  Cursor observation_cursor = 6;
+}
+
+// 所有 expected_* 都必须作精确 CAS；零表示初始草稿/无发布，绝不表示跳过并发检查。
+message SaveDraftRequest {
+  ConfigKey key = 1;
+  ConfigDefinition definition = 2;
+  uint64 expected_draft_revision = 3;
+}
+// GetState 分页读取发布元数据；每页来自同一一致视图并重新授权。
+// page_size=0 默认20，最大100；成员元数据页的 protobuf 编码总量最多256 KiB，可能提前截页。
+// page_token 为 opaque，绑定 key/incarnation/release_set_revision/before_sequence；集合变更返回 Code.DataConflict，须从首页重查。
+// release_id 非空时另外返回该 key 下指定历史发布的完整定义；不存在返回 Code.NotFoundResource，不跨配置查询。
+message GetStateRequest {
+  ConfigKey key = 1;
+  uint32 page_size = 2;
+  string page_token = 3;
+  string release_id = 4;
+}
+
+// Preview 只静态校验提交的定义并按 labels 选值，返回 v1.Response(data=RenderSnapshot)，由控制台本地渲染。
+// 不保存、不发布、不在服务端渲染，不产生运行时发布身份、snapshot_revision 或观察游标。
+message PreviewRequest {
+  ConfigKey key = 1;
+  ConfigDefinition definition = 2;
+  map<string, string> labels = 3;
+}
+
+// Publish 原子冻结草稿、增加发布、生效关系及持久游标。normal 只替换当前 normal；gray 不影响其他发布。
+// priority 必须非负；normal 必须使用 priority=0 和空 audience，违反时返回 Code.InvalidParameter。
+// replace_release_id 非空时仅替换指定同 kind 的 active 发布；gray 为空时追加。
+// stop_release_id 非空时仅在本次 normal 发布中明确停止该 active gray，与发布原子执行。
+message PublishRequest {
+  ConfigKey key = 1;
+  uint64 expected_draft_revision = 2;
+  uint64 expected_release_set_revision = 3;
+  ReleaseKind kind = 4;
+  Audience audience = 5;
+  int32 priority = 6;
+  string replace_release_id = 7;
+  string stop_release_id = 8;
+}
+
+// Stop 仅停止指定 active gray；release_id 必填，不允许空值隐式停止全部。
+message StopRequest {
+  ConfigKey key = 1;
+  uint64 expected_release_set_revision = 2;
+  string release_id = 3;
+}
+// StopAllGray 仅停止当前 key 的全部 active gray，保留 normal 及历史。
+message StopAllGrayRequest {
+  ConfigKey key = 1;
+  uint64 expected_release_set_revision = 2;
+}
+
+// CopyReleaseToDraft 将指定历史发布的完整定义复制为待编辑草稿。
+// normal/gray 均可作为来源；仅推进草稿 revision，不激活或停止任何版本。
+message CopyReleaseToDraftRequest {
+  ConfigKey key = 1;
+  string release_id = 2;
+  uint64 expected_draft_revision = 3;
+  uint64 expected_release_set_revision = 4;
+}
+
+// Rollback 新建历史快照发布；source.kind 决定 normal/gray，受众与优先级也取自 source。
+// replace_release_id 指定唯一同 kind 的 active 目标；gray 必填，normal 无目标时仅允许无 active normal。
+// 保留其他版本；新 sequence 可改变同优先级灰度的流量归属，不能原地恢复旧 sequence。
+message RollbackRequest {
+  ConfigKey key = 1;
+  string source_release_id = 2;
+  string replace_release_id = 3;
+  uint64 expected_release_set_revision = 4;
+}
+
+// Offline 仅下线指定环境配置，原子停止其全部 active 发布；保留草稿、历史及其他环境。
+message OfflineRequest {
+  ConfigKey key = 1;
+  uint64 expected_release_set_revision = 2;
+}
+
+// Discover 先鉴权后按 labels 选择发布和有效 values，返回 v1.Response(data=ConfigResult)，不执行渲染。
+// min_cursor 是读取下限；落后实例补齐或返回公共 Code.ConfigUnavailable。
+// scope/epoch 不再可接纳时返回 Code.ConfigCursorReset，不得成功交付更旧视图或回落次选版本。
+message DiscoverRequest {
+  ConfigKey key = 1;
+  map<string, string> labels = 2;
+  Cursor min_cursor = 3;
+}
+
+// 将指定生效灰度的冻结定义原子转为正式发布；不修改草稿或其他灰度。
+message PromoteGrayRequest {
+  ConfigKey key = 1;
+  string release_id = 2;
+  uint64 expected_release_set_revision = 3;
+}

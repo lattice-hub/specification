@@ -1,29 +1,26 @@
-use std::io::Result;
+use std::io::{Error, Result};
 use std::path::PathBuf;
 
 fn main() -> Result<()> {
     let proto_dir: PathBuf = "proto".into(); // rust proto file dir
-    let mut proto_list = Vec::new(); // proto file list
-    let lists = proto_dir.read_dir().expect("read proto dir failed");
-    for entry_path in lists {
-        if entry_path.as_ref().unwrap().path().is_file() {
-            proto_list.push(entry_path.unwrap().path())
+    let mut proto_list = Vec::new();
+    for entry in proto_dir.read_dir()? {
+        let path = entry?.path();
+        if path.is_file()
+            && path
+                .extension()
+                .is_some_and(|extension| extension == "proto")
+        {
+            proto_list.push(path);
         }
     }
-
-    // let mut config = prost_build::Config::new();
-    // config.protoc_arg("--experimental_allow_proto3_optional");
-    // config.default_package_filename("specification");
-    // config
-    //     .out_dir("src")
-    //     .type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]")
-    //     .compile_protos(&proto_list, &["proto/"])
-    //     .unwrap();
+    // 固定输入顺序，避免文件系统遍历顺序改变合并 package 的生成源码。
+    proto_list.sort();
 
     tonic_prost_build::configure()
         .build_server(true)
         .out_dir("src")
         .compile_protos(&proto_list, &["proto/".into()])
-        .unwrap();
+        .map_err(Error::other)?;
     Ok(())
 }

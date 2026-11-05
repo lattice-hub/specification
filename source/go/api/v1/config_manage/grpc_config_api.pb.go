@@ -8,6 +8,7 @@ package config_manage
 
 import (
 	context "context"
+	config "github.com/pole-io/specification/source/go/api/v1/config"
 	model "github.com/pole-io/specification/source/go/api/v1/model"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -28,64 +29,35 @@ var File_grpc_config_api_proto protoreflect.FileDescriptor
 
 var file_grpc_config_api_proto_rawDesc = []byte{
 	0x0a, 0x15, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x61, 0x70,
-	0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x76, 0x31, 0x1a, 0x11, 0x63, 0x6f, 0x6e,
-	0x66, 0x69, 0x67, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0e,
-	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0xc1,
-	0x02, 0x0a, 0x0a, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x12, 0x32, 0x0a,
-	0x10, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
-	0x65, 0x12, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c,
-	0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x12, 0x32, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69,
-	0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x0e, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69,
-	0x67, 0x46, 0x69, 0x6c, 0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x11, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68,
-	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x15, 0x2e, 0x76, 0x31, 0x2e,
-	0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73,
-	0x65, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x12, 0x46, 0x0a, 0x15, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x43, 0x6f, 0x6e, 0x66,
-	0x69, 0x67, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x12, 0x18, 0x2e, 0x76, 0x31, 0x2e,
-	0x52, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x6e, 0x64, 0x65, 0x72,
-	0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x22, 0x00, 0x12, 0x47, 0x0a, 0x08, 0x44, 0x69, 0x73,
-	0x63, 0x6f, 0x76, 0x65, 0x72, 0x12, 0x19, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69,
-	0x67, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x44, 0x69, 0x73, 0x63,
-	0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01,
-	0x30, 0x01, 0x42, 0x99, 0x01, 0x0a, 0x3c, 0x69, 0x6f, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x6c, 0x61, 0x74, 0x74, 0x69, 0x63, 0x65, 0x68, 0x75, 0x62, 0x2e, 0x70, 0x6f, 0x6c, 0x65,
-	0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x2e, 0x6d, 0x61, 0x6e,
-	0x61, 0x67, 0x65, 0x42, 0x18, 0x50, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x43, 0x6f, 0x6e, 0x66,
-	0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5a, 0x3f, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c, 0x65, 0x2d, 0x69,
-	0x6f, 0x2f, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f,
-	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31,
-	0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x76, 0x31, 0x1a, 0x0c, 0x63, 0x6f, 0x6e,
+	0x66, 0x69, 0x67, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0e, 0x72, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x32, 0x4d, 0x0a, 0x0a, 0x43, 0x6f, 0x6e,
+	0x66, 0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x12, 0x3f, 0x0a, 0x08, 0x44, 0x69, 0x73, 0x63, 0x6f,
+	0x76, 0x65, 0x72, 0x12, 0x1f, 0x2e, 0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x69, 0x73, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x96, 0x01, 0x0a, 0x3c, 0x69, 0x6f, 0x2e,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x6c, 0x61, 0x74, 0x74, 0x69, 0x63, 0x65, 0x68, 0x75,
+	0x62, 0x2e, 0x70, 0x6f, 0x6c, 0x65, 0x2e, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x63, 0x6f, 0x6e, 0x66,
+	0x69, 0x67, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x42, 0x15, 0x50, 0x6f, 0x6c, 0x65, 0x43,
+	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x47, 0x52, 0x50, 0x43, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x5a, 0x3f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x6f, 0x6c,
+	0x65, 0x2d, 0x69, 0x6f, 0x2f, 0x73, 0x70, 0x65, 0x63, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x2f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69,
+	0x2f, 0x76, 0x31, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67,
+	0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_grpc_config_api_proto_goTypes = []interface{}{
-	(*ConfigFile)(nil),             // 0: v1.ConfigFile
-	(*ConfigFileRelease)(nil),      // 1: v1.ConfigFileRelease
-	(*RenderPreviewRequest)(nil),   // 2: v1.RenderPreviewRequest
-	(*ConfigDiscoverRequest)(nil),  // 3: v1.ConfigDiscoverRequest
-	(*model.Response)(nil),         // 4: v1.Response
-	(*RenderPreview)(nil),          // 5: v1.RenderPreview
-	(*ConfigDiscoverResponse)(nil), // 6: v1.ConfigDiscoverResponse
+	(*config.DiscoverRequest)(nil), // 0: pole.config.v1.DiscoverRequest
+	(*model.Response)(nil),         // 1: v1.Response
 }
 var file_grpc_config_api_proto_depIdxs = []int32{
-	0, // 0: v1.ConfigGRPC.CreateConfigFile:input_type -> v1.ConfigFile
-	0, // 1: v1.ConfigGRPC.UpdateConfigFile:input_type -> v1.ConfigFile
-	1, // 2: v1.ConfigGRPC.PublishConfigFile:input_type -> v1.ConfigFileRelease
-	2, // 3: v1.ConfigGRPC.PreviewConfigTemplate:input_type -> v1.RenderPreviewRequest
-	3, // 4: v1.ConfigGRPC.Discover:input_type -> v1.ConfigDiscoverRequest
-	4, // 5: v1.ConfigGRPC.CreateConfigFile:output_type -> v1.Response
-	4, // 6: v1.ConfigGRPC.UpdateConfigFile:output_type -> v1.Response
-	4, // 7: v1.ConfigGRPC.PublishConfigFile:output_type -> v1.Response
-	5, // 8: v1.ConfigGRPC.PreviewConfigTemplate:output_type -> v1.RenderPreview
-	6, // 9: v1.ConfigGRPC.Discover:output_type -> v1.ConfigDiscoverResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	0, // 0: v1.ConfigGRPC.Discover:input_type -> pole.config.v1.DiscoverRequest
+	1, // 1: v1.ConfigGRPC.Discover:output_type -> v1.Response
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -96,7 +68,6 @@ func file_grpc_config_api_proto_init() {
 	if File_grpc_config_api_proto != nil {
 		return
 	}
-	file_config_file_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
@@ -128,15 +99,10 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ConfigGRPCClient interface {
-	// 创建配置
-	CreateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error)
-	// 更新配置
-	UpdateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error)
-	// 发布配置
-	PublishConfigFile(ctx context.Context, in *ConfigFileRelease, opts ...grpc.CallOption) (*model.Response, error)
-	// 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
-	PreviewConfigTemplate(ctx context.Context, in *RenderPreviewRequest, opts ...grpc.CallOption) (*RenderPreview, error)
-	// 统一发现接口
+	// Discover 在同一流上按收到的请求顺序逐次读取，一请求一完整响应；无请求时不发送。
+	// 每帧先授权，再按 ConfigKey/labels 选灰度和有效 values；Response.data 为 ConfigResult，由 SDK 本地渲染。
+	// 即使 snapshot_revision 未变也返回完整当前快照，由 SDK 去重；不登记订阅，不主动 push。
+	// 领域失败使用公共 Response.code/info，data 缺省，后续请求可继续；EOF 正常结束，传输异常关闭流。
 	Discover(ctx context.Context, opts ...grpc.CallOption) (ConfigGRPC_DiscoverClient, error)
 }
 
@@ -146,42 +112,6 @@ type configGRPCClient struct {
 
 func NewConfigGRPCClient(cc grpc.ClientConnInterface) ConfigGRPCClient {
 	return &configGRPCClient{cc}
-}
-
-func (c *configGRPCClient) CreateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
-	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/CreateConfigFile", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *configGRPCClient) UpdateConfigFile(ctx context.Context, in *ConfigFile, opts ...grpc.CallOption) (*model.Response, error) {
-	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/UpdateConfigFile", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *configGRPCClient) PublishConfigFile(ctx context.Context, in *ConfigFileRelease, opts ...grpc.CallOption) (*model.Response, error) {
-	out := new(model.Response)
-	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/PublishConfigFile", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *configGRPCClient) PreviewConfigTemplate(ctx context.Context, in *RenderPreviewRequest, opts ...grpc.CallOption) (*RenderPreview, error) {
-	out := new(RenderPreview)
-	err := c.cc.Invoke(ctx, "/v1.ConfigGRPC/PreviewConfigTemplate", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *configGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption) (ConfigGRPC_DiscoverClient, error) {
@@ -194,8 +124,8 @@ func (c *configGRPCClient) Discover(ctx context.Context, opts ...grpc.CallOption
 }
 
 type ConfigGRPC_DiscoverClient interface {
-	Send(*ConfigDiscoverRequest) error
-	Recv() (*ConfigDiscoverResponse, error)
+	Send(*config.DiscoverRequest) error
+	Recv() (*model.Response, error)
 	grpc.ClientStream
 }
 
@@ -203,12 +133,12 @@ type configGRPCDiscoverClient struct {
 	grpc.ClientStream
 }
 
-func (x *configGRPCDiscoverClient) Send(m *ConfigDiscoverRequest) error {
+func (x *configGRPCDiscoverClient) Send(m *config.DiscoverRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *configGRPCDiscoverClient) Recv() (*ConfigDiscoverResponse, error) {
-	m := new(ConfigDiscoverResponse)
+func (x *configGRPCDiscoverClient) Recv() (*model.Response, error) {
+	m := new(model.Response)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -217,15 +147,10 @@ func (x *configGRPCDiscoverClient) Recv() (*ConfigDiscoverResponse, error) {
 
 // ConfigGRPCServer is the server API for ConfigGRPC service.
 type ConfigGRPCServer interface {
-	// 创建配置
-	CreateConfigFile(context.Context, *ConfigFile) (*model.Response, error)
-	// 更新配置
-	UpdateConfigFile(context.Context, *ConfigFile) (*model.Response, error)
-	// 发布配置
-	PublishConfigFile(context.Context, *ConfigFileRelease) (*model.Response, error)
-	// 服务端参考渲染，只用于发布前预览、校验和跨语言哈希对照。
-	PreviewConfigTemplate(context.Context, *RenderPreviewRequest) (*RenderPreview, error)
-	// 统一发现接口
+	// Discover 在同一流上按收到的请求顺序逐次读取，一请求一完整响应；无请求时不发送。
+	// 每帧先授权，再按 ConfigKey/labels 选灰度和有效 values；Response.data 为 ConfigResult，由 SDK 本地渲染。
+	// 即使 snapshot_revision 未变也返回完整当前快照，由 SDK 去重；不登记订阅，不主动 push。
+	// 领域失败使用公共 Response.code/info，data 缺省，后续请求可继续；EOF 正常结束，传输异常关闭流。
 	Discover(ConfigGRPC_DiscoverServer) error
 }
 
@@ -233,18 +158,6 @@ type ConfigGRPCServer interface {
 type UnimplementedConfigGRPCServer struct {
 }
 
-func (*UnimplementedConfigGRPCServer) CreateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateConfigFile not implemented")
-}
-func (*UnimplementedConfigGRPCServer) UpdateConfigFile(context.Context, *ConfigFile) (*model.Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateConfigFile not implemented")
-}
-func (*UnimplementedConfigGRPCServer) PublishConfigFile(context.Context, *ConfigFileRelease) (*model.Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PublishConfigFile not implemented")
-}
-func (*UnimplementedConfigGRPCServer) PreviewConfigTemplate(context.Context, *RenderPreviewRequest) (*RenderPreview, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PreviewConfigTemplate not implemented")
-}
 func (*UnimplementedConfigGRPCServer) Discover(ConfigGRPC_DiscoverServer) error {
 	return status.Errorf(codes.Unimplemented, "method Discover not implemented")
 }
@@ -253,85 +166,13 @@ func RegisterConfigGRPCServer(s *grpc.Server, srv ConfigGRPCServer) {
 	s.RegisterService(&_ConfigGRPC_serviceDesc, srv)
 }
 
-func _ConfigGRPC_CreateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfigFile)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigGRPCServer).CreateConfigFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigGRPC/CreateConfigFile",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigGRPCServer).CreateConfigFile(ctx, req.(*ConfigFile))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConfigGRPC_UpdateConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfigFile)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigGRPCServer).UpdateConfigFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigGRPC/UpdateConfigFile",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigGRPCServer).UpdateConfigFile(ctx, req.(*ConfigFile))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConfigGRPC_PublishConfigFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfigFileRelease)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigGRPCServer).PublishConfigFile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigGRPC/PublishConfigFile",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigGRPCServer).PublishConfigFile(ctx, req.(*ConfigFileRelease))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConfigGRPC_PreviewConfigTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RenderPreviewRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigGRPCServer).PreviewConfigTemplate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigGRPC/PreviewConfigTemplate",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigGRPCServer).PreviewConfigTemplate(ctx, req.(*RenderPreviewRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ConfigGRPC_Discover_Handler(srv interface{}, stream grpc.ServerStream) error {
 	return srv.(ConfigGRPCServer).Discover(&configGRPCDiscoverServer{stream})
 }
 
 type ConfigGRPC_DiscoverServer interface {
-	Send(*ConfigDiscoverResponse) error
-	Recv() (*ConfigDiscoverRequest, error)
+	Send(*model.Response) error
+	Recv() (*config.DiscoverRequest, error)
 	grpc.ServerStream
 }
 
@@ -339,12 +180,12 @@ type configGRPCDiscoverServer struct {
 	grpc.ServerStream
 }
 
-func (x *configGRPCDiscoverServer) Send(m *ConfigDiscoverResponse) error {
+func (x *configGRPCDiscoverServer) Send(m *model.Response) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *configGRPCDiscoverServer) Recv() (*ConfigDiscoverRequest, error) {
-	m := new(ConfigDiscoverRequest)
+func (x *configGRPCDiscoverServer) Recv() (*config.DiscoverRequest, error) {
+	m := new(config.DiscoverRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -354,24 +195,7 @@ func (x *configGRPCDiscoverServer) Recv() (*ConfigDiscoverRequest, error) {
 var _ConfigGRPC_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "v1.ConfigGRPC",
 	HandlerType: (*ConfigGRPCServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateConfigFile",
-			Handler:    _ConfigGRPC_CreateConfigFile_Handler,
-		},
-		{
-			MethodName: "UpdateConfigFile",
-			Handler:    _ConfigGRPC_UpdateConfigFile_Handler,
-		},
-		{
-			MethodName: "PublishConfigFile",
-			Handler:    _ConfigGRPC_PublishConfigFile_Handler,
-		},
-		{
-			MethodName: "PreviewConfigTemplate",
-			Handler:    _ConfigGRPC_PreviewConfigTemplate_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Discover",

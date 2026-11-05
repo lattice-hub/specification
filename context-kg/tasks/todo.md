@@ -1,4 +1,52 @@
+---
+type: Task Record
+---
+
 # 2026-08-04 限流运行时目标服务与 ALPHA.45
+
+## 原生 SDK 渲染与公共响应收敛（2026-10-03）
+
+- [x] 核对公共 Response/Code、spec 与控制面调用链，保留共享工作区已有修改。
+- [x] 原生 Discover 分发 RenderSnapshot；明确定义 SDK 本地渲染及失败接纳规则。
+- [x] 删除配置专用响应/错误体系，复用 Response、BatchQueryResponse 和公共 Code。
+- [x] 定义 Apollo/Nacos/Consul 兼容转换显式开关；保存、发布、原生读取和服务端预览不执行渲染。
+- [x] 同步规范、Go/Rust 生成代码和跨语言契约测试，执行检查并记录结果。
+
+### 本轮范围与纠正规则
+
+- 修改范围为 specification 的协议、生成产物、文档和合同测试。control-plane 当前仍引用本轮前已从 spec 删除的 ReleaseMember/PromoteRequest；运行时迁移、SDK 渲染实现和三个兼容适配器接入单独验收，不以协议通过代表实现完成。
+- 统一发布只决定模板、values 和规则的版本原子性，不决定渲染位置。原生 SDK 本地渲染，控制台本地预览；服务端仅在用户显式开启兼容转换后渲染对应协议请求。
+- 业务快照属于 Response.data，不因此另建响应和错误码体系。不提交、推送或部署。
+
+### 本轮 Review
+
+- 原生 Discover 保持逐请求/逐响应，统一使用 v1.Response(data=ConfigResult)。RenderSnapshot 只含原文、引擎、格式、参数和当前有效 values，SDK 成功渲染后才接纳快照版本与游标；不携带服务端预渲染摘要。
+- 删除配置私有 Error/ErrorCode、StateResponse、PreviewResponse 和最终内容专用 ResolvedConfig。分页字段直接并入管理投影 ConfigState，Response.data 直接承载该状态；普通列表/批量写入沿用已有公共响应，不增加对应新接口。
+- ConfigDefinition.compatibility 的 apollo/nacos/consul 缺省 false，与发布冻结。明确部署适配器和选中发布双条件、关闭后不复用渲染缓存、不回落其他已开启的发布；原生入口和控制台预览始终不触发服务端渲染。
+- 公共 Code 仅补 ConfigCursorReset、ConfigRenderFailed、ConfigUnavailable。Go/Rust 生成代码和 wire/Any/默认关闭合同同步；Rust 公共 Response 生成位置因依赖顺序移动，其字段未变，其他模块并行修改保留。
+- 验证通过：go test ./...、go vet ./...、cargo test --all、cargo check --all、cargo fmt --all -- --check、Node 生成/构建/测试、Python 生成及3项测试、定向脚本语法、Rust Proto 副本/文档链接检查、git diff --check。
+- 本轮未修改 control-plane、SDK 或实际兼容转换实现；没有执行运行时行为验收、提交、推送或部署。协议开关的默认值/编解码已验证，不等于对应适配器已按开关执行。
+
+## TrafficContext v1 传播契约（2026-08-06）
+
+- [x] 核对 TargetService v1、Sidecar TrafficContext 与 OTel 传播边界
+- [x] 定义 W3C Baggage 保留键、字段约束和失败语义
+- [x] 增加 Schema、conformance vectors 与校验和
+- [x] 更新 Thin SDK 契约索引与兼容性声明
+- [x] 运行格式、Go 与 Rust 验证并记录 Review
+
+### TrafficContext v1 Review
+
+- 冻结 `latticehub-traffic-context` 1.0.0：W3C Baggage 保留 version/campaign/lane/bucket，TargetService 与 Trace wire 契约保持独立。
+- JSON Schema 通过 `x-latticehub-maxUtf8Bytes` 声明 128-byte 约束，conformance 同时提供 43 个中文字符的超限拒绝向量，避免按字符数误判。
+- 有效向量覆盖完整标签、Unicode/保留字符和仅 lane 的部分标签；接收端向量覆盖缺 version、重复、未知 version、bucket 越界、非 canonical 与 UTF-8 byte 越界。
+- 双轴审查发现的 Schema 字节语义、可选字段、空 carrier 与 W3C 180 成员边界均已修复。
+- 运行时语义允许语言习惯的 closeable `attach` 或 callback `runWith`；Node.js 标准 OTel
+  bridge 明确使用 `context.with`，禁止把 SDK 私有存储冒充为 OTel active Context。
+- Java、Go、Node.js、Python、C++、C# 已 vendoring 四项资产并执行全部 TrafficContext
+  valid 与 Sidecar receive valid/invalid 向量；精确发布来源仍需本次 Specification 合入后写入
+  各仓 `contract/VERSION`，当前不得伪造未提交内容的 commit SHA。
+- `go test ./...`、`cargo fmt --all -- --check`、`cargo test --all`、`cargo check --all` 与 `git diff --check` 全部通过。
 
 - [x] 为 `RateLimit` 增加正式 `callee` 作用域
 - [x] 重新生成并验证多语言协议产物
@@ -232,3 +280,77 @@
   `31039310045` 工作流全部成功。
 - Go module、crates.io、npm、PyPI、Maven Central、NuGet 与 GitHub Release C++
   归档均完成外部下载验证；npm/Python 还验证了 `OpenControlSession` 为双向流。
+
+## 2026-10-02 配置中心统一 v1 契约
+
+- [x] 定义统一 ConfigDefinition/ConfigRelease/ResolvedConfig，九个管理 HTTP 动作、HTTP resolve/watch 与唯一客户端 Discover 读取流
+- [x] 固定 CAS、多灰度、服务端渲染和观察游标语义
+- [x] 生成 Go/Rust 类型与客户端服务 Stub，保留已有 v1 并行改动
+- [x] 增加有界 StateResponse、历史元数据分页与按 ID 单版本读取
+- [x] 补齐原生 HTTP/gRPC 映射、权限边界及初版容量限制
+- [x] 完成契约测试与定向交叉审查
+
+### Review
+
+- 新合同见 [配置中心统一 v1](../../CONFIG.md) 与 [权威 Proto](../../api/v1/config/config.proto)。
+  发布冻结完整定义，运行时仅返回最终字节，原生 SDK 不取得模板、默认 values 或规则。
+- 管理动作只通过 HTTP；config.proto 不声明 service。客户端统一复用 v1.ConfigGRPC，仅保留
+  Discover 双向流，直接使用 ResolveRequest/ResolvedConfig，一请求一完整响应且无主动 push；
+  不保留独立 Resolve/Watch 或 Create/Update/Publish/Preview 管理 gRPC 方法及旧发现消息转换。
+- GetState 的 page_size/page_token/release_id 复用同一管理 HTTP state 接口；StateResponse 的 members 只返回
+  sequence DESC 的历史元数据页，active_release_ids 保留全量生效 ID，selected_release 按 ID
+  单独返回完整历史，避免管理响应累积全部历史正文。所有写入响应返回默认第一页。
+- token 绑定 key/incarnation/release_set_revision 与 before_sequence；集合变化冲突要求重查，
+  纯草稿修改不使历史页 token 失效。文档固定定义总量 1 MiB、正文/渲染 512 KiB、页面元数据
+  256 KiB、最多 128 个 active gray 和 HTTP 请求 4 MiB 等初版资源限制，不宣称三种外部协议兼容。
+- Go 全量测试、统一配置生成包与契约测试的 go vet、Rust 全量 test/check、cargo fmt 检查、
+  git diff --check 与 Proto 副本一致性检查通过。Go/Rust 共享非 UTF-8/uint64 上界和分页固定 wire 向量。
+- 全量 go vet 的旧 v1 测试在 config_template_contract_test.go:232 存在 copylock 基线，未改动。
+  本次验证证明生成协议与 wire 合同；control-plane 持久事务、分页投影和 HTTP 长轮询由其核心测试另行验收。
+- 未执行提交、推送、发布或部署；Console、原生 SDK 接入及 Apollo/Nacos/Consul 适配不属于此 spec 阶段。
+
+
+## 2026-10-02 配置 spec 收拢与生成一致性
+
+- [x] 移除旧配置公开模型，统一服务端渲染语法与测试向量
+- [x] 引入 ValueType、PreviewResponse、ReleaseSummary，明确 CopyReleaseToDraft
+- [x] 补充管理 HTTP 幂等键合同，保留 Discover 逐次请求/响应语义
+- [x] 修复 C# 导入与 Java 包名，统一 Pole 服务命名及生成产物
+- [x] 运行跨语言生成、契约测试与格式检查，核对无关工作区改动
+
+### Review
+
+- 范围仅为 specification；control-plane/SDK 的新合同接入与幂等实现单独验收。
+- 本次不保留旧配置模型兼容；限流协议只调整产品命名为 pole.metric.v2，不改变其独立协议版本。
+- 移除 config_file.proto、对应 Go/Rust 产物及旧 wire 测试；配置只公开统一发布和服务端渲染合同。
+- 新增 ValueType、PreviewResponse、ReleaseSummary；ConfigState.releases 是摘要页，
+  CopyReleaseToDraft 支持复制 normal/gray 历史定义。管理 HTTP 写入要求 Idempotency-Key；
+  该项目前是规范，持久幂等仍需 control-plane 实现。Discover 的路径和逐次响应语义保持不变。
+- 模板规范和 12 个共享向量改用统一 PreviewRequest JSON；覆盖单规则覆盖、歧义、精确大整数、
+  空正文及 literal 二进制。spec 测试验证消息/字节/摘要，不声称已经运行服务端引擎。
+- Go 全量 test/vet、Rust 全量 test/check/fmt、Node 生成/编译/测试、Python 生成及 3 项测试、
+  C# 实际生成/构建及 3 项测试通过。26 份 Proto 的描述符、Java 源码和 C++ 消息生成通过；
+  Java/C++ 完整编译未执行，本机缺少 JDK/Maven 和 C++ gRPC 插件。
+- Rust 生成输入增加 .proto 过滤及稳定排序；核对所有 Rust Proto 副本与 api 一致，
+  auth Proto/Go 产物与现有 skill 契约测试的初始 SHA-256 保持不变。
+- git diff --check 通过。知识库 lint 仍有既有 lessons.md 缺少 frontmatter 的 1 个错误和
+  缺少根/tasks 索引的 2 个警告，本次 task 记录没有新增诊断。
+- 此次含不兼容的配置类型/字段和限流 RPC package 调整，消费者需按新 spec 接入；
+  未验证 control-plane、SDK 或第三方协议适配，不执行提交、推送、发布或部署。
+
+## 2026-10-03 原生配置客户端统一 Discover
+
+- [x] 删除 WatchRequest 与原生 HTTP resolve/watch，统一 DiscoverRequest
+- [x] 明确 Discover 逐次请求/响应、不等待变化、不主动推送的语义
+- [x] 同步 Go/Rust 生成产物，验证跨语言契约与工作区保护
+
+### Review
+
+- 本条以当前 SDK 本地渲染、公共 Response/Code 的配置合同为准；此前服务端渲染记录为历史。
+- 原生客户端只通过 `/v1.ConfigGRPC/Discover` 读取；管理操作仍通过 HTTP。
+- Apollo/Nacos/Consul 的监听和等待语义由可选适配层处理，不引入原生 Watch。
+- Go 全量 test/vet、Rust 全量 test/check/fmt、Node.js 生成/编译/测试、Python 生成及
+  3 项测试、C# 实际生成/构建及 3 项测试通过；生成服务仅公开 Discover。
+- Rust 配置 Proto 副本与权威文件一致；auth、公共 Code 及已有 skill 契约测试的
+  8 份文件 SHA-256 保持不变，git diff --check 通过。
+- 范围仅为 specification；实现仓库接入、提交、推送、发布和部署不在本次范围。

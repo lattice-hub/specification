@@ -16,6 +16,36 @@
 
 set -e
 
+# 统一配置定向生成入口：保留工作区已有 v1 生成文件及并行改动。
+if [[ "${1:-}" == "config" ]]; then
+    spec_root=$(cd "$(dirname "$0")/../.." && pwd)
+    spec_protoc_dir="${spec_root}/source/protoc/protoc-$(uname -s | tr 'A-Z' 'a-z')-$(uname -m | tr 'A-Z' 'a-z')"
+    mkdir -p "${spec_root}/source/go/api/v1/config" "${spec_root}/source/go/api/v1/config_manage"
+    # 配置错误复用公共 Code，定向同步新增的配置码，不重建其他模型。
+    "${spec_protoc_dir}/bin/protoc" \
+        --plugin=protoc-gen-go="${spec_protoc_dir}/bin/protoc-gen-go" \
+        --go_out=plugins=grpc,paths=source_relative:"${spec_root}/source/go/api/v1/model" \
+        --proto_path="${spec_root}/api/v1/model" "${spec_root}/api/v1/model/code.proto"
+    "${spec_protoc_dir}/bin/protoc" \
+        --plugin=protoc-gen-go="${spec_protoc_dir}/bin/protoc-gen-go" \
+        --go_out=plugins=grpc,paths=source_relative:"${spec_root}/source/go/api/v1/config" \
+        --proto_path="${spec_root}/api/v1/config" "${spec_root}/api/v1/config/config.proto"
+    "${spec_protoc_dir}/bin/protoc" \
+        --plugin=protoc-gen-go="${spec_protoc_dir}/bin/protoc-gen-go" \
+        --go_out=plugins=grpc,paths=source_relative:"${spec_root}/source/go/api/v1/config_manage" \
+        --proto_path="${spec_root}/api/v1/config_manage" \
+        --proto_path="${spec_root}/api/v1/config" \
+        --proto_path="${spec_root}/api/v1/model" \
+        --proto_path="${spec_protoc_dir}/include" \
+        "${spec_root}/api/v1/config_manage/grpc_config_api.proto"
+    exit 0
+fi
+
+if [[ $# -gt 0 ]]; then
+    printf 'Usage: bash build.sh [config]\n' >&2
+    exit 2
+fi
+
 CURRENT_OS=$(uname -s | tr 'A-Z' 'a-z')
 CURRENT_ARCH=$(uname -m | tr 'A-Z' 'a-z')
 
@@ -37,7 +67,7 @@ proto_files_model="types.proto response.proto namespace.proto code.proto"
 proto_files_service_manage="client.proto service.proto grpcapi.proto heartbeat.proto contract.proto"
 proto_files_traffic_manage="router.proto ratelimit.proto lane.proto lossless.proto mirror.proto mock.proto"
 proto_files_fault_tolerance="circuitbreaker.proto fault_detector.proto"
-proto_files_config_manage="config_file.proto grpc_config_api.proto"
+proto_files_config_manage="grpc_config_api.proto"
 proto_files_security="auth.proto traffic_security.proto workload_identity.proto"
 proto_files_ai="mcp.proto"
 proto_files_sidecar="bootstrap.proto"
@@ -95,6 +125,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
         --go_out=plugins=grpc:"${out_dir}" \
         --proto_path="${protoc_dir}"/include \
         --proto_path="${model_dir}" \
+        --proto_path="${workdir}/api/v1/config" \
         --proto_path=. ${proto_files_config_manage}
     mv "${out_dir}/github.com/pole-io/specification/source/go/api/v1/config_manage" "${out_dir}/api/v1"
     pushd "${out_dir}/api/v1/config_manage"
@@ -169,6 +200,7 @@ if [[ "$CURRENT_OS" == "linux" || "$CURRENT_OS" == "darwin" ]]; then
     popd
 
     rm -rf "${out_dir}/github.com"
+    bash "${out_dir}/build.sh" config
 else
     docker run --rm -it -v "$(dirname $(pwd))":/app --workdir /app/source/go debian:buster bash build.sh
 fi

@@ -10,7 +10,7 @@ from pathlib import Path
 
 LEGACY_CPP_METHOD_MAPPINGS = {
     "grpcapi_ratelimiter.proto": {
-        "service": "polaris.metric.v2.RateLimitGRPC",
+        "service": "pole.metric.v2.RateLimitGRPC",
         "wire_method": "Service",
         "cpp_method": "Stream",
     }

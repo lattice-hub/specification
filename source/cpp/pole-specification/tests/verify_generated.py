@@ -8,7 +8,7 @@ from pathlib import Path
 SERVICE_PATTERN = re.compile(r"(?m)^\s*service\s+([A-Za-z][A-Za-z0-9_]*)\s*\{")
 LEGACY_CPP_METHOD_MAPPINGS = {
     "grpcapi_ratelimiter.proto": {
-        "service": "polaris.metric.v2.RateLimitGRPC",
+        "service": "pole.metric.v2.RateLimitGRPC",
         "wire_method": "Service",
         "cpp_method": "Stream",
     }

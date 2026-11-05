@@ -16,6 +16,22 @@
 
 set -e
 
+# 定向同步统一配置消息与唯一客户端服务，不复制其他工作区 Proto。
+if [[ "${1:-}" == "config" ]]; then
+    spec_root=$(cd "$(dirname "$0")/../.." && pwd)
+    spec_protoc="${spec_root}/source/protoc/protoc-$(uname -s | tr 'A-Z' 'a-z')-$(uname -m | tr 'A-Z' 'a-z')/bin/protoc"
+    cp "${spec_root}/api/v1/config/config.proto" "${spec_root}/source/rust/pole-specification/proto/config.proto"
+    cp "${spec_root}/api/v1/config_manage/grpc_config_api.proto" "${spec_root}/source/rust/pole-specification/proto/grpc_config_api.proto"
+    cp "${spec_root}/api/v1/model/code.proto" "${spec_root}/source/rust/pole-specification/proto/code.proto"
+    PROTOC="${spec_protoc}" cargo build --manifest-path "${spec_root}/source/rust/pole-specification/Cargo.toml"
+    exit 0
+fi
+
+if [[ $# -gt 0 ]]; then
+    printf 'Usage: bash build.sh [config]\n' >&2
+    exit 2
+fi
+
 CURRENT_OS=$(uname -s | tr 'A-Z' 'a-z')
 CURRENT_ARCH=$(uname -m | tr 'A-Z' 'a-z')
 
@@ -47,6 +63,7 @@ cp ${config_manage_dir}/*.proto ${rust_root_dir}/proto/
 cp ${security_dir}/*.proto ${rust_root_dir}/proto/
 cp ${ai_dir}/*.proto ${rust_root_dir}/proto/
 cp ${sidecar_dir}/*.proto ${rust_root_dir}/proto/
+cp ${workdir}/api/v1/config/config.proto ${rust_root_dir}/proto/config.proto
 
 pushd ${rust_root_dir}
 cargo build --release

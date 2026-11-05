@@ -1,4 +1,4 @@
-# Polaris-rust
+# Pole Specification for Rust
 
 [![crates.io](https://img.shields.io/crates/v/pole-specification.svg)](https://crates.io/crates/pole-specification)
 [![docs.rs](https://docs.rs/pole-specification/badge.svg)](https://docs.rs/pole-specification/)

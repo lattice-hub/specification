@@ -1,4 +1,4 @@
-use pole_specification::polaris::metric::v2::{
+use pole_specification::pole::metric::v2::{
     rate_limit_grpc_client::RateLimitGrpcClient, QuotaAccounting, QuotaConsumption,
     QuotaReserveRequest, QuotaSettleRequest, QuotaSettlement, QuotaUpdateRequest, RateLimitCmd,
 };

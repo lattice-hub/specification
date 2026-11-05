@@ -20,7 +20,7 @@ target_link_libraries(your_target PRIVATE PoleSpecification::pole-specification)
 `RateLimitGRPC.Service` 是已发布的历史 RPC 路径，名称与 gRPC C++ 默认生成的
 `Service` 基类冲突。C++ API 因此将该方法暴露为
 `RateLimitGRPC::Stub::Stream(...)`，但生成脚本会把方法描述符严格还原为
-`/polaris.metric.v2.RateLimitGRPC/Service`。仓库测试同时校验 C++ 方法别名、原始
+`/pole.metric.v2.RateLimitGRPC/Service`。仓库测试同时校验 C++ 方法别名、原始
 wire path 和发布包内未修改的权威 Proto，协议兼容性保持不变。
 
 仓库内验证：

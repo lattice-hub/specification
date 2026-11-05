@@ -25,7 +25,7 @@
   <ItemGroup>
     <Protobuf Include="$(MSBuildThisFileDirectory)../../../api/v1/**/*.proto"
               ProtoRoot="$(MSBuildThisFileDirectory)../../../api/v1/%(RecursiveDir)"
-              AdditionalImportDirs="$(MSBuildThisFileDirectory)../../../api/v1/ai;$(MSBuildThisFileDirectory)../../../api/v1/config_manage;$(MSBuildThisFileDirectory)../../../api/v1/fault_tolerance;$(MSBuildThisFileDirectory)../../../api/v1/model;$(MSBuildThisFileDirectory)../../../api/v1/security;$(MSBuildThisFileDirectory)../../../api/v1/service_manage;$(MSBuildThisFileDirectory)../../../api/v1/sidecar;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage/ratelimiter"
+              AdditionalImportDirs="$(MSBuildThisFileDirectory)../../../api/v1/ai;$(MSBuildThisFileDirectory)../../../api/v1/config;$(MSBuildThisFileDirectory)../../../api/v1/config_manage;$(MSBuildThisFileDirectory)../../../api/v1/fault_tolerance;$(MSBuildThisFileDirectory)../../../api/v1/model;$(MSBuildThisFileDirectory)../../../api/v1/security;$(MSBuildThisFileDirectory)../../../api/v1/service_manage;$(MSBuildThisFileDirectory)../../../api/v1/sidecar;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage;$(MSBuildThisFileDirectory)../../../api/v1/traffic_manage/ratelimiter"
               GrpcServices="Both"
               Link="%(Filename)%(Extension)" />
     <None Include="README.md" Pack="true" PackagePath="/" />

@@ -2,22 +2,21 @@
 pub mod v1;
 
 pub mod pole {
+    /// 限流数据面；v2 是该既有协议的版本，与配置中心 v1 独立。
+    pub mod metric {
+        pub mod v2 {
+            include!("pole.metric.v2.rs");
+        }
+    }
+    /// 配置中心统一定义、发布及服务端解析结果协议。
+    pub mod config {
+        pub mod v1 {
+            include!("pole.config.v1.rs");
+        }
+    }
     pub mod sidecar {
         pub mod v1 {
             include!("pole.sidecar.v1.rs");
-        }
-    }
-}
-
-/// 限流数据面 gRPC 协议。
-///
-/// 限流规则通过 `v1::RateLimit::cluster` 选择目标集群，SDK 使用这里的双向流协议
-/// 初始化配额、上报使用量并接收服务器下发的可用配额。协议定义已经由
-/// specification 生成，crate 仅在此公开稳定的 Rust 模块路径。
-pub mod polaris {
-    pub mod metric {
-        pub mod v2 {
-            include!("polaris.metric.v2.rs");
         }
     }
 }
